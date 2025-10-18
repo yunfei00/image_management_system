@@ -24,12 +24,6 @@ class RoleUserSerializer(serializers.ModelSerializer):
         model = RoleUser
         fields = ['id','user','user_repr','role','role_repr','assigned_at']
 
-class DepartmentSerializer(serializers.ModelSerializer):
-    leader_repr = serializers.StringRelatedField(source='leader', read_only=True)
-    class Meta:
-        model = Department
-        fields = ['id','name','code','leader','leader_repr','status','created_at']
-
 class PositionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Position

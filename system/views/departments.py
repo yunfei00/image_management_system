@@ -9,12 +9,11 @@ from rest_framework import viewsets
 from system.filters import Department
 from system.filters.department_filter import DepartmentFilter
 from system.forms import DeptForm
-from system.serializers.user import DepartmentSerializer
+from system.serializers.department import DepartmentSerializer
 from system.utils import export_queryset_to_excel
 from system.views.handle_modal_form import render_modal_form
 
-
-class  DepartmentViewSet(viewsets.ModelViewSet):
+class DepartmentViewSet(viewsets.ModelViewSet):
     queryset = Department.objects.all().order_by('-created_at')
     serializer_class = DepartmentSerializer
 

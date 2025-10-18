@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "projects.apps.ProjectsConfig",
     "detection.apps.DetectionConfig",
     "repo.apps.RepoConfig",
+    'rest_framework',  # 必须添加，否则 DRF 模板无法被搜索到
 ]
 
 MIDDLEWARE = [

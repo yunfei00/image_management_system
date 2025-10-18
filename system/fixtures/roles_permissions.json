@@ -1,95 +1,72 @@
 [
-  {
-    "model": "system.permission",
-    "pk": 1,
-    "fields": {
-      "key": "system.view_user",
-      "name": "查看用户",
-      "description": "允许查看用户列表和详情"
-    }
-  },
-  {
-    "model": "system.permission",
-    "pk": 2,
-    "fields": {
-      "key": "system.add_user",
-      "name": "添加用户",
-      "description": "允许创建新用户"
-    }
-  },
-  {
-    "model": "system.permission",
-    "pk": 3,
-    "fields": {
-      "key": "system.edit_user",
-      "name": "编辑用户",
-      "description": "允许修改用户信息"
-    }
-  },
-  {
-    "model": "system.permission",
-    "pk": 4,
-    "fields": {
-      "key": "system.delete_user",
-      "name": "删除用户",
-      "description": "允许删除用户"
-    }
-  },
-  {
-    "model": "system.permission",
-    "pk": 5,
-    "fields": {
-      "key": "system.view_role",
-      "name": "查看角色",
-      "description": "允许查看角色信息"
-    }
-  },
-  {
-    "model": "system.permission",
-    "pk": 6,
-    "fields": {
-      "key": "system.manage_permissions",
-      "name": "管理权限",
-      "description": "允许分配和编辑权限"
-    }
-  },
+  { "model": "system.permission", "pk": 1, "fields": { "key": "image.view", "name": "查看镜像", "description": "允许查看镜像列表和详情" } },
+  { "model": "system.permission", "pk": 2, "fields": { "key": "image.upload", "name": "上传镜像", "description": "允许上传新镜像" } },
+  { "model": "system.permission", "pk": 3, "fields": { "key": "image.delete", "name": "删除镜像", "description": "允许删除镜像" } },
+
+  { "model": "system.permission", "pk": 4, "fields": { "key": "detect.start", "name": "发起检测", "description": "允许发起镜像检测" } },
+  { "model": "system.permission", "pk": 5, "fields": { "key": "detect.view", "name": "查看检测结果", "description": "允许查看检测报告" } },
+  { "model": "system.permission", "pk": 6, "fields": { "key": "detect.export", "name": "导出检测结果", "description": "允许导出检测结果文件" } },
+
+  { "model": "system.permission", "pk": 7, "fields": { "key": "project.view", "name": "查看项目", "description": "允许查看项目信息" } },
+  { "model": "system.permission", "pk": 8, "fields": { "key": "project.edit", "name": "编辑项目", "description": "允许修改项目信息" } },
+  { "model": "system.permission", "pk": 9, "fields": { "key": "project.delete", "name": "删除项目", "description": "允许删除项目" } },
+
+  { "model": "system.permission", "pk": 10, "fields": { "key": "user.view", "name": "查看用户", "description": "允许查看系统用户" } },
+  { "model": "system.permission", "pk": 11, "fields": { "key": "user.edit", "name": "编辑用户", "description": "允许修改用户信息" } },
+  { "model": "system.permission", "pk": 12, "fields": { "key": "user.delete", "name": "删除用户", "description": "允许删除用户" } },
+
+  { "model": "system.permission", "pk": 13, "fields": { "key": "audit.view", "name": "查看审计日志", "description": "允许查看系统审计日志" } },
+
   {
     "model": "system.role",
     "pk": 1,
     "fields": {
       "name": "超级管理员",
       "code": "super_admin",
-      "description": "系统最高权限用户",
-      "permissions": [1, 2, 3, 4, 5, 6],
+      "description": "系统最高权限用户，拥有所有功能权限",
+      "permissions": [1,2,3,4,5,6,7,8,9,10,11,12,13],
       "status": 1,
       "created_at": "2025-10-18T00:00:00Z",
-      "update_time": "2025-10-18T00:00:00Z"
+      "updated_at": "2025-10-18T00:00:00Z"
     }
   },
   {
     "model": "system.role",
     "pk": 2,
     "fields": {
-      "name": "系统管理员",
-      "code": "admin",
-      "description": "可管理用户与角色，但不可删除系统管理员",
-      "permissions": [1, 2, 3, 5],
+      "name": "项目管理员",
+      "code": "project_admin",
+      "description": "项目内所有权限，包括项目成员、镜像与检测管理",
+      "permissions": [1,2,3,4,5,6,7,8,9],
       "status": 1,
       "created_at": "2025-10-18T00:00:00Z",
-      "update_time": "2025-10-18T00:00:00Z"
+      "updated_at": "2025-10-18T00:00:00Z"
     }
   },
   {
     "model": "system.role",
     "pk": 3,
     "fields": {
-      "name": "普通用户",
-      "code": "user",
-      "description": "普通系统使用者",
-      "permissions": [1],
+      "name": "业务承建方人员",
+      "code": "contractor",
+      "description": "允许上传镜像与查看检测结果",
+      "permissions": [1,2,5],
       "status": 1,
       "created_at": "2025-10-18T00:00:00Z",
-      "update_time": "2025-10-18T00:00:00Z"
+      "updated_at": "2025-10-18T00:00:00Z"
+    }
+  },
+  {
+    "model": "system.role",
+    "pk": 4,
+    "fields": {
+      "name": "审计人员",
+      "code": "auditor",
+      "description": "仅可查看镜像与检测结果，无修改权限",
+      "permissions": [1,5,13],
+      "status": 1,
+      "created_at": "2025-10-18T00:00:00Z",
+      "updated_at": "2025-10-18T00:00:00Z"
     }
   }
 ]

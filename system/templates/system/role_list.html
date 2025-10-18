@@ -30,15 +30,16 @@
 
 <table class="table table-bordered">
   <thead class="table-light">
-    <tr><th><input id="selectAll" type="checkbox" /></th><th>ID</th><th>角色名称</th><th>权限标识</th><th>状态</th><th>操作</th></tr>
+    <tr><th><input id="selectAll" type="checkbox" /></th><th>角色名称</th><th>权限标识</th><th>创建时间</th><th>状态</th><th>操作</th></tr>
   </thead>
   <tbody>
     {% for obj in page_obj %}
       <tr>
         <td><input type="checkbox" class="rowCheckbox" value="{{ obj.id }}"></td>
-        <td>{{ obj.id }}</td>
+
         <td>{{ obj.name }}</td>
         <td>{{ obj.code }}</td>
+          <td>{{ obj.created_at }}</td>
         <td>{{ obj.get_status_display }}</td>
         <td>
           <button class="btn btn-sm btn-warning" onclick="openModal('{% url 'system:role_edit' obj.id %}', '编辑角色')">修改</button>

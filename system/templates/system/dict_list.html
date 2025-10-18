@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block content %}
+<form class="row g-2 mb-3" method="get">
+  <div class="col-auto">
+    <input class="form-control" name="name" placeholder="字典名称" value="{{ request.GET.name }}">
+  </div>
+  <div class="col-auto">
+    <input class="form-control" name="type" placeholder="字典类型" value="{{ request.GET.type }}">
+  </div>
+  <div class="col-auto">
+    <select name="status" class="form-select">
+      <option value="">状态</option>
+      <option value="1" {% if request.GET.status == '1' %}selected{% endif %}>启用</option>
+      <option value="0" {% if request.GET.status == '0' %}selected{% endif %}>停用</option>
+    </select>
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-primary">搜索</button>
+    <a class="btn btn-success" href="?{% if request.GET.name %}name={{ request.GET.name }}&{% endif %}{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}{% if request.GET.status %}status={{ request.GET.status }}&{% endif %}export=1">导出</a>
+  </div>
+  <div class="col-auto ms-auto text-end">
+    <button type="button" class="btn btn-outline-primary" onclick="openModal('{% url 'system:dict_create' %}', '新增字典')">新增</button>
+  </div>
+</form>
+
+<table class="table table-bordered">
+  <thead class="table-light">
+    <tr><th><input id="selectAll" type="checkbox" /></th><th>ID</th><th>字典名称</th><th>字典类型</th><th>状态</th><th>操作</th></tr>
+  </thead>
+  <tbody>
+    {% for obj in page_obj %}
+      <tr>
+        <td><input type="checkbox" class="rowCheckbox" value="{{ obj.id }}"></td>
+        <td>{{ obj.id }}</td>
+        <td>{{ obj.name }}</td>
+        <td>{{ obj.type }}</td>
+        <td>{{ obj.get_status_display }}</td>
+        <td>
+          <button class="btn btn-sm btn-warning" onclick="openModal('{% url 'system:dict_edit' obj.id %}', '编辑字典')">修改</button>
+          <button class="btn btn-sm btn-danger" onclick="postDelete('{% url 'system:dict_delete' obj.id %}')">删除</button>
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="6" class="text-center text-muted">暂无数据</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<nav>
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">上一页</a></li>
+    {% endif %}
+    <li class="page-item disabled"><a class="page-link">第 {{ page_obj.number }} 页 / 共 {{ page_obj.paginator.num_pages }} 页</a></li>
+    {% if page_obj.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">下一页</a></li>
+    {% endif %}
+  </ul>
+</nav>
+
+<script>
+  document.getElementById('selectAll')?.addEventListener('change', function(e){
+    document.querySelectorAll('.rowCheckbox').forEach(ch => ch.checked = e.target.checked);
+  });
+
+  async function postDelete(url){
+    if(!confirm('确认删除？')) return;
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {'X-CSRFToken': getCookie('csrftoken')}
+    });
+    const data = await resp.json();
+    if(data.success) location.reload();
+    else alert('删除失败');
+  }
+</script>
+{% endblock %}

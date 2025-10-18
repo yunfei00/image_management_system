@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<form class="row g-2 mb-3" method="get">
+  <div class="col-auto"><input class="form-control" name="name" placeholder="菜单名称" value="{{ request.GET.name }}"></div>
+  <div class="col-auto">
+    <select name="status" class="form-select">
+      <option value="">状态</option>
+      <option value="1" {% if request.GET.status == '1' %}selected{% endif %}>启用</option>
+      <option value="0" {% if request.GET.status == '0' %}selected{% endif %}>停用</option>
+    </select>
+  </div>
+  <div class="col-auto"><button class="btn btn-primary">搜索</button><a class="btn btn-success" href="?export=1">导出</a></div>
+  <div class="col-auto ms-auto"><button type="button" class="btn btn-outline-primary" onclick="openModal('{% url 'system:menu_create' %}', '新增菜单')">新增</button></div>
+</form>
+
+<table class="table table-bordered">
+  <thead class="table-light"><tr><th>ID</th><th>菜单名称</th><th>路径</th><th>上级菜单</th><th>状态</th><th>操作</th></tr></thead>
+  <tbody>
+    {% for obj in page_obj %}
+      <tr>
+        <td>{{ obj.id }}</td><td>{{ obj.name }}</td><td>{{ obj.path }}</td><td>{{ obj.parent|default:"-" }}</td><td>{{ obj.get_status_display }}</td>
+        <td>
+          <button class="btn btn-sm btn-warning" onclick="openModal('{% url 'system:menu_edit' obj.id %}', '编辑菜单')">修改</button>
+          <button class="btn btn-sm btn-danger" onclick="postDelete('{% url 'system:menu_delete' obj.id %}')">删除</button>
+        </td>
+      </tr>
+    {% empty %}<tr><td colspan="6" class="text-center text-muted">暂无数据</td></tr>{% endfor %}
+  </tbody>
+</table>
+
+{% include 'system/includes/pagination.html' %}
+{% endblock %}

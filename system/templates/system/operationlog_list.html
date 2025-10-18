@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<h5 class="mb-3">操作日志</h5>
+<form class="row g-2 mb-3" method="get">
+  <div class="col-auto"><input class="form-control" name="module" placeholder="系统模块" value="{{ request.GET.module }}"></div>
+  <div class="col-auto"><input class="form-control" name="operator" placeholder="操作人员" value="{{ request.GET.operator }}"></div>
+  <div class="col-auto">
+    <button class="btn btn-primary">搜索</button>
+    <a class="btn btn-success" href="?export=1">导出</a>
+  </div>
+</form>
+
+<table class="table table-bordered">
+  <thead class="table-light"><tr><th>系统模块</th><th>操作人员</th><th>操作IP</th><th>操作内容</th><th>时间</th></tr></thead>
+  <tbody>
+    {% for obj in page_obj %}
+      <tr>
+        <td>{{ obj.module }}</td><td>{{ obj.operator }}</td><td>{{ obj.ip }}</td><td>{{ obj.action }}</td><td>{{ obj.time|date:"Y-m-d H:i:s" }}</td>
+      </tr>
+    {% empty %}<tr><td colspan="5" class="text-center text-muted">暂无数据</td></tr>{% endfor %}
+  </tbody>
+</table>
+
+{% include 'system/includes/pagination.html' %}
+{% endblock %}

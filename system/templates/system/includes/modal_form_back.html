@@ -1,0 +1,21 @@
+<form method="post" onsubmit="return submitModalForm(this)" action="{{ request.path }}">
+  {% csrf_token %}
+  <div class="mb-3">
+    {% for field in form %}
+      <div class="mb-2">
+        <label class="form-label">{{ field.label_tag }}</label>
+        {{ field }}
+        {% if field.help_text %}
+          <div class="form-text">{{ field.help_text }}</div>
+        {% endif %}
+        {% for err in field.errors %}
+          <div class="text-danger small">{{ err }}</div>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+  <div class="text-end">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+    <button type="submit" class="btn btn-primary">保存</button>
+  </div>
+</form>

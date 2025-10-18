@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2>项目详情: {{ project.name }}</h2>
+    <table class="table table-bordered">
+        <tr><th>项目ID</th><td>{{ project.project_id }}</td></tr>
+        <tr><th>业务部门</th><td>{{ project.business_department }}</td></tr>
+        <tr><th>最终用户</th><td>{{ project.final_user }}</td></tr>
+        <tr><th>状态</th><td>{{ project.get_status_display }}</td></tr>
+        <tr><th>预计上线时间</th><td>{{ project.expected_launch }}</td></tr>
+        <tr><th>基础镜像</th><td>{{ project.base_image }}</td></tr>
+        <tr><th>其他组件</th><td>
+            {% for comp in project.components.all %}
+                {{ comp }}{% if not forloop.last %}, {% endif %}
+            {% empty %}
+                无
+            {% endfor %}
+        </td></tr>
+        <tr><th>项目描述</th><td>{{ project.description }}</td></tr>
+    </table>
+    <a href="{% url 'projects:project_list' %}" class="btn btn-secondary">返回列表</a>
+</div>
+{% endblock %}

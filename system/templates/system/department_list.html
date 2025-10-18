@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-3">
+  <h4>部门管理</h4>
+  <form method="get" class="row mb-3">
+    <div class="col-auto">
+      <input type="text" name="keyword" placeholder="搜索部门" class="form-control">
+    </div>
+    <div class="col-auto">
+      <select name="status" class="form-select">
+        <option value="">全部状态</option>
+        <option value="1">启用</option>
+        <option value="0">停用</option>
+      </select>
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-primary">搜索</button>
+      <a href="{% url 'department_add' %}" class="btn btn-success">新增</a>
+      <a href="{% url 'department_export_csv' %}" class="btn btn-secondary">导出 CSV</a>
+    </div>
+  </form>
+
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr><th>ID</th><th>名称</th><th>编码</th><th>状态</th><th>操作</th></tr>
+    </thead>
+    <tbody>
+      {% for d in departments %}
+      <tr>
+        <td>{{ d.id }}</td>
+        <td>{{ d.name }}</td>
+        <td>{{ d.code }}</td>
+        <td>{{ d.status|yesno:"启用,停用" }}</td>
+        <td>
+          <a href="{% url 'department_edit' d.id %}" class="btn btn-sm btn-info">编辑</a>
+          <a href="{% url 'department_delete' d.id %}" class="btn btn-sm btn-danger" onclick="return confirm('确定删除?')">删除</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h3>业务镜像列表</h3>
+
+  <a href="{% url 'images:add_business_image' %}" class="btn btn-success mb-3">添加业务镜像</a>
+
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>镜像名称</th>
+        <th>版本号</th>
+        <th>镜像ID</th>
+        <th>大小</th>
+        <th>创建时间</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for image in images %}
+      <tr>
+        <td>{{ image.name }}</td>
+        <td>{{ image.version }}</td>
+        <td>{{ image.image_id }}</td>
+        <td>{{ image.size }}</td>
+        <td>{{ image.created_at|date:"Y-m-d H:i" }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5" class="text-center text-muted">暂无数据</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<h5 class="mb-3">登录日志</h5>
+<form class="row g-2 mb-3" method="get">
+  <div class="col-auto"><input class="form-control" name="username" placeholder="用户名" value="{{ request.GET.username }}"></div>
+  <div class="col-auto"><input class="form-control" name="ip" placeholder="登录IP" value="{{ request.GET.ip }}"></div>
+  <div class="col-auto">
+    <button class="btn btn-primary">搜索</button>
+    <a class="btn btn-success" href="?export=1">导出</a>
+  </div>
+</form>
+
+<table class="table table-bordered">
+  <thead class="table-light"><tr><th>用户名</th><th>登录IP</th><th>状态</th><th>时间</th></tr></thead>
+  <tbody>
+    {% for obj in page_obj %}
+      <tr>
+        <td>{{ obj.username }}</td>
+        <td>{{ obj.ip }}</td>
+        <td>{{ obj.status }}</td>
+        <td>{{ obj.time|date:"Y-m-d H:i:s" }}</td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="4" class="text-center text-muted">暂无数据</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% include 'system/includes/pagination.html' %}
+{% endblock %}

@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% block content %}
+<form class="row g-2 mb-3" method="get">
+  <div class="col-auto">
+    <input class="form-control" name="name" placeholder="镜像名称" value="{{ request.GET.name }}">
+  </div>
+  <div class="col-auto">
+    <input class="form-control" name="version" placeholder="版本号" value="{{ request.GET.version }}">
+  </div>
+  <div class="col-auto">
+    <select name="status" class="form-select">
+      <option value="">状态</option>
+      {% for key,value in statuses %}
+        <option value="{{ key }}" {% if request.GET.status == key %}selected{% endif %}>{{ value }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="col-auto">
+    <select name="category" class="form-select">
+      <option value="">分类</option>
+      {% for key,value in categories %}
+        <option value="{{ key }}" {% if request.GET.category == key %}selected{% endif %}>{{ value }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="col-auto">
+    <button class="btn btn-primary">搜索</button>
+
+    {# 导出链接：保留当前查询参数并加 export=1 #}
+    <a class="btn btn-success"
+       href="?{% if request.GET.name %}name={{ request.GET.name }}&{% endif %}{% if request.GET.version %}version={{ request.GET.version }}&{% endif %}{% if request.GET.status %}status={{ request.GET.status }}&{% endif %}{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}export=1">
+      导出
+    </a>
+  </div>
+
+  <div class="col-auto ms-auto text-end">
+{#    {% if user.is_superuser %}#}
+      <button type="button" class="btn btn-outline-primary" onclick="openModal('{% url 'images:add_base_image' %}', '新增基础镜像')">新增基础镜像</button>
+{#    {% endif %}#}
+  </div>
+</form>
+
+<table class="table table-bordered">
+  <thead class="table-light">
+    <tr>
+      <th><input id="selectAll" type="checkbox" /></th>
+      <th>镜像名称</th>
+      <th>版本号</th>
+      <th>镜像ID</th>
+      <th>大小</th>
+      <th>分类</th>
+      <th>状态</th>
+      <th>创建时间</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for image in page_obj %}
+      <tr>
+        <td><input type="checkbox" class="rowCheckbox" value="{{ image.id }}"></td>
+        <td>{{ image.name }}</td>
+        <td>{{ image.version }}</td>
+        <td>{{ image.image_id }}</td>
+        <td>{{ image.size }}</td>
+        <td>{{ image.get_category_display }}</td>
+        <td>{{ image.get_status_display }}</td>
+        <td>{{ image.created_at|date:"Y-m-d H:i" }}</td>
+        <td>
+          <button class="btn btn-sm btn-secondary" onclick="openModal('{% url 'base_image_detail' image.id %}', '镜像详情')">查看</button>
+
+          {# 下载按钮：只有平臺镜像(owner is null)、镜像owner为当前用户，或管理员 可见 #}
+          {% if user.is_superuser or image.owner is None or image.owner == user %}
+            <a href="{% url 'download_base_image' image.image_id %}" class="btn btn-sm btn-success">下载</a>
+          {% else %}
+            <button class="btn btn-sm btn-outline-secondary" disabled title="无权限下载">下载</button>
+          {% endif %}
+
+          {# 删除（仅管理员或镜像所有者可删除） 示例：使用POST删除接口 #}
+          {% if user.is_superuser or image.owner == user %}
+            <button class="btn btn-sm btn-danger" onclick="postDelete('{% url 'base_image_delete' image.id %}')">删除</button>
+          {% endif %}
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="9" class="text-center text-muted">暂无数据</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<nav>
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">上一页</a></li>
+    {% endif %}
+    <li class="page-item disabled"><a class="page-link">第 {{ page_obj.number }} 页 / 共 {{ page_obj.paginator.num_pages }} 页</a></li>
+    {% if page_obj.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">下一页</a></li>
+    {% endif %}
+  </ul>
+</nav>
+
+<script>
+  document.getElementById('selectAll')?.addEventListener('change', function(e){
+    document.querySelectorAll('.rowCheckbox').forEach(ch => ch.checked = e.target.checked);
+  });
+
+  // 获取 CSRF token 的小工具
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        // Does this cookie string begin with the name we want?
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  async function postDelete(url){
+    if(!confirm('确认删除？')) return;
+    try {
+      const resp = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': getCookie('csrftoken'),
+          'Accept': 'application/json'
+        }
+      });
+      const data = await resp.json();
+      if(resp.ok && data.success) {
+        location.reload();
+      } else {
+        alert(data.message || '删除失败');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('删除请求出错');
+    }
+  }
+
+  // openModal 函数假定存在：用于打开一个模态窗加载远程 URL（如你现有项目中所用）
+  // 如果项目里没有，可以实现一个简单版本，或改成 location.href 跳转
+  function openModal(url, title) {
+    // 如果你已有全局 modal 工具，调用它；否则使用新窗口打开
+    if (window.showRemoteModal) {
+      window.showRemoteModal(url, title);
+    } else {
+      // 简单回退：新窗口打开详情/新增页面
+      window.open(url, '_blank');
+    }
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,583 @@
+{% load static %}
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}镜像管理系统{% endblock %}</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- 引入图标库增强视觉表现 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+  <style>
+    :root {
+      --primary-color: #165DFF;
+      --secondary-color: #0F3FA8;
+      --sidebar-bg: #0F172A;
+      --sidebar-active: #1E293B;
+      --text-primary: #F8FAFC;
+      --text-secondary: #94A3B8;
+      --content-bg: #F1F5F9;
+      --card-bg: #FFFFFF;
+      --border-color: #E2E8F0;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-color: var(--content-bg);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      padding-top: 56px;
+    }
+
+    /* 顶部导航栏 */
+    .navbar {
+      background-color: var(--primary-color);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      z-index: 1030;
+    }
+
+    .navbar-brand {
+      color: #fff !important;
+      font-size: 1.25rem;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .navbar-brand i {
+      font-size: 1.5rem;
+    }
+
+    .btn-toggle-sidebar {
+      transition: all 0.3s ease;
+    }
+
+    .btn-toggle-sidebar:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .navbar-nav .nav-link {
+      color: rgba(255, 255, 255, 0.9) !important;
+      margin-left: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    .navbar-nav .nav-link:hover {
+      color: #fff !important;
+      transform: translateY(-1px);
+    }
+
+    /* 侧边栏样式 */
+    #sidebar {
+      width: 240px;
+      background-color: var(--sidebar-bg);
+      color: var(--text-primary);
+      transition: all 0.3s ease;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      z-index: 1020;
+    }
+
+    .nav-pills {
+      --bs-nav-pills-link-active-color: #fff;
+      --bs-nav-pills-link-active-bg: var(--primary-color);
+    }
+
+    .nav-pills .nav-link {
+      color: var(--text-secondary);
+      border-radius: 6px;
+      margin-bottom: 4px;
+      padding: 0.6rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-pills .nav-link:hover {
+      color: var(--text-primary);
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-pills .nav-link.active {
+      background-color: var(--primary-color);
+      font-weight: 500;
+    }
+
+    .dropdown-menu {
+      background-color: var(--sidebar-active);
+      border: none;
+      padding: 0.5rem 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .dropdown-item {
+      color: var(--text-secondary);
+      padding: 0.5rem 1.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .dropdown-item:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+    }
+
+    /* 主内容区 */
+    #content {
+      flex: 1;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .container-fluid {
+      max-width: 1400px;
+    }
+
+    /* 通用组件样式 */
+    .btn {
+      border-radius: 6px;
+      padding: 0.375rem 0.75rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--secondary-color);
+      border-color: var(--secondary-color);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(22, 93, 255, 0.3);
+    }
+
+    .btn-outline-primary {
+      color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    .btn-outline-primary:hover {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    /* 卡片样式 */
+    .card {
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 模态框样式优化 */
+    .modal-content {
+      border-radius: 10px;
+      border: none;
+      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .modal-header {
+      background-color: var(--primary-color);
+      color: white;
+      border-bottom: none;
+      border-radius: 10px 10px 0 0;
+    }
+
+    .modal-title {
+      font-weight: 500;
+    }
+
+    /* 响应式调整 */
+    @media (max-width: 768px) {
+      #sidebar {
+        width: 100%;
+        position: fixed;
+        height: auto;
+        display: none;
+      }
+      #content {
+        padding: 1rem;
+      }
+    }
+  </style>
+
+  {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+
+  <!-- 🔹 顶部导航条 -->
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container-fluid">
+      <button class="btn btn-outline-light me-2" id="btn-toggle-sidebar">
+        <i class="bi bi-list"></i>
+      </button>
+      <a class="navbar-brand fw-bold" href="{% url 'system:home' %}">
+        <i class="bi bi-server"></i> 镜像管理系统
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <i class="bi bi-person-circle me-1"></i>{{ user.get_full_name|default:user.username }}
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'system:logout' %}">
+                <i class="bi bi-box-arrow-right me-1"></i>退出
+              </a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'system:home' %}">
+                <i class="bi bi-box-arrow-in-right me-1"></i>登录
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 🔹 页面主体 -->
+  <div class="d-flex">
+    <!-- 左侧导航 -->
+    <aside id="sidebar" class="vh-100 p-3">
+      <ul class="nav nav-pills flex-column">
+ <li class="nav-item">
+          <a class="nav-link" href="{% url 'system:home' %}">
+            <i class="bi bi-speedometer2"></i> 仪表盘
+          </a>
+        </li>
+          {% if is_admin %}
+
+         <li class="nav-item">
+  <a class="nav-link d-flex justify-content-between align-items-center {% if 'system' in request.path %}active{% endif %}"
+     href="#systemMenu"
+     data-bs-toggle="collapse"
+     role="button"
+     aria-expanded="{% if 'system' in request.path %}true{% else %}false{% endif %}"
+     aria-controls="systemMenu">
+    <span><i class="bi bi-gear"></i>系统管理</span>
+    <span class="small text-muted">{% if 'system' in request.path %}▾{% else %}▸{% endif %}</span>
+  </a>
+
+  <div class="collapse {% if 'system' in request.path %}show{% endif %}" id="systemMenu">
+    <ul class="nav flex-column ms-3 mt-1">
+      <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'user_list' %}active{% endif %}"
+           href="{% url 'system:user_list' %}"><i class="bi bi-people me-2"></i>用户管理</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'dept_list' %}active{% endif %}"
+           href="{% url 'system:dept_list' %}"><i class="bi bi-diagram-3 me-2"></i>部门管理</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'role_list' %}active{% endif %}"
+           href="{% url 'system:role_list' %}"><i class="bi bi-person-gear me-2"></i>角色管理</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'dict_list' %}active{% endif %}"
+           href="{% url 'system:dict_list' %}"><i class="bi bi-book me-2"></i>字典管理</a>
+      </li>
+    <!-- 检测工具管理 -->
+  <li class="nav-item">
+    <a class="nav-link {% if request.resolver_match.url_name == 'tool_list' %}active{% endif %}"
+       href="{% url 'system:tool_list' %}">
+      <i class="bi bi-tools me-2"></i>检测工具管理
+    </a>
+  </li>
+
+  <!-- 登录日志 -->
+  <li class="nav-item">
+    <a class="nav-link {% if request.resolver_match.url_name == 'loginlog_list' %}active{% endif %}"
+       href="{% url 'system:loginlog_list' %}">
+      <i class="bi bi-door-open me-2"></i>登录日志
+    </a>
+  </li>
+
+  <!-- 操作日志 -->
+  <li class="nav-item">
+    <a class="nav-link {% if request.resolver_match.url_name == 'operationlog_list' %}active{% endif %}"
+       href="{% url 'system:operationlog_list' %}">
+      <i class="bi bi-journal-text me-2"></i>操作日志
+    </a>
+  </li>
+
+  <!-- 菜单管理 -->
+  <li class="nav-item">
+    <a class="nav-link {% if request.resolver_match.url_name == 'menu_list' %}active{% endif %}"
+       href="{% url 'system:menu_list' %}">
+      <i class="bi bi-menu-button-wide me-2"></i>菜单管理
+    </a>
+  </li>
+
+  <!-- 岗位管理 -->
+  <li class="nav-item">
+    <a class="nav-link {% if request.resolver_match.url_name == 'post_list' %}active{% endif %}"
+       href="{% url 'system:post_list' %}">
+      <i class="bi bi-person-badge me-2"></i>岗位管理
+    </a>
+  </li>
+
+  <!-- 审批流程配置 -->
+  <li class="nav-item">
+    <a class="nav-link {% if request.resolver_match.url_name == 'workflow_list' %}active{% endif %}"
+       href="{% url 'system:workflow_list' %}">
+      <i class="bi bi-diagram-2 me-2"></i>审批流程配置
+    </a>
+  </li>
+    </ul>
+  </div>
+</li>
+        {% endif %}
+
+        <li class="nav-item">
+          <a class="nav-link" href="/projects/">
+            <i class="bi bi-briefcase"></i> 项目管理
+          </a>
+        </li>
+        <!-- 镜像管理菜单 -->
+
+<li class="nav-item">
+  <a class="nav-link d-flex justify-content-between align-items-center {% if 'images' in request.path %}active{% endif %}"
+     href="#imageMenu"
+     data-bs-toggle="collapse"
+     role="button"
+     aria-expanded="{% if 'images' in request.path %}true{% else %}false{% endif %}"
+     aria-controls="imageMenu">
+    <span><i class="bi bi-box-seam"></i> 镜像管理</span>
+    <span class="small text-muted">{% if 'images' in request.path %}▾{% else %}▸{% endif %}</span>
+  </a>
+
+  <div class="collapse {% if 'images' in request.path %}show{% endif %}" id="imageMenu">
+    <ul class="nav flex-column ms-3 mt-1">
+
+      <li class="nav-item">
+        <a class="nav-link {% if '/images/base/' in request.path %}active{% endif %}"
+           href="{% url 'images:home' %}">
+           <i class="bi bi-layers me-2"></i>基础镜像管理
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link {% if '/images/business/' in request.path %}active{% endif %}"
+           href="{% url 'images:home' %}">
+           <i class="bi bi-building me-2"></i>业务镜像管理
+        </a>
+      </li>
+    </ul>
+  </div>
+</li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="/detection/">
+            <i class="bi bi-search"></i> 检测管理
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/repo/">
+            <i class="bi bi-database"></i> 仓库管理
+          </a>
+        </li>
+
+        <li class="nav-item"><hr class="text-secondary"></li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/">
+            <i class="bi bi-sliders"></i> 后台管理
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- 主内容区 -->
+    <main id="content" class="p-4 flex-grow-1">
+      <div class="container-fluid">
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+  </div>
+
+  <!-- 🔹 通用 Modal -->
+  <div class="modal fade" id="commonModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="commonModalLabel">表单</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body" id="commonModalBody"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔹 JS功能 -->
+  <script>
+    // 侧边栏切换（支持页面刷新后保持状态）
+    const btn = document.getElementById('btn-toggle-sidebar');
+    const sidebar = document.getElementById('sidebar');
+
+    // 初始化侧边栏状态
+    if (localStorage.getItem('sidebarHidden') === 'true') {
+      sidebar.style.display = 'none';
+    }
+
+    btn?.addEventListener('click', () => {
+      const isHidden = sidebar.style.display === 'none';
+      sidebar.style.display = isHidden ? 'block' : 'none';
+      localStorage.setItem('sidebarHidden', !isHidden); // 保存状态到本地存储
+    });
+
+    // ---------- 打开 Modal ----------
+    async function openModal(url, title='表单') {
+      const modalTitle = document.getElementById('commonModalLabel');
+      const modalBody = document.getElementById('commonModalBody');
+      modalTitle.innerText = title;
+      modalBody.innerHTML = '<div class="text-center p-3"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">加载中...</span></div></div>';
+
+      const modal = new bootstrap.Modal(document.getElementById('commonModal'));
+      modal.show();
+
+      try {
+        const resp = await fetch(url, {credentials: 'same-origin'});
+        if (!resp.ok) throw new Error('网络请求失败');
+
+        const data = await resp.json();
+        modalBody.innerHTML = data.html || '<div class="text-warning text-center p-3">无内容</div>';
+      } catch (err) {
+        console.error('Modal加载失败:', err);
+        modalBody.innerHTML = `
+          <div class="text-danger text-center p-3">
+            <p>加载失败，请稍后重试</p>
+            <button class="btn btn-sm btn-outline-primary" onclick="openModal('${url}', '${title}')">重新加载</button>
+          </div>
+        `;
+      }
+    }
+
+    // ---------- 提交 Modal 表单 ----------
+    let submitting = false;
+    async function submitModalForm(form, event) {
+      if (event) event.preventDefault();
+      if (submitting) return false;
+      submitting = true;
+
+      // 禁用提交按钮
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> 提交中...';
+      }
+
+      try {
+        const resp = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          credentials: 'same-origin',
+          headers: {'X-CSRFToken': getCookie('csrftoken')}
+        });
+
+        const data = await resp.json();
+        if (data.success) {
+          // 关闭modal并刷新页面
+          const modal = bootstrap.Modal.getInstance(document.getElementById('commonModal'));
+          modal.hide();
+          location.reload();
+        } else {
+          document.getElementById('commonModalBody').innerHTML = data.html || '<div class="text-danger">提交失败，请检查表单内容</div>';
+        }
+      } catch (err) {
+        console.error('表单提交失败:', err);
+        alert('提交失败，请检查网络连接或稍后再试');
+      } finally {
+        // 恢复提交按钮状态
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '保存';
+        }
+        submitting = false;
+      }
+
+      return false;
+    }
+
+    // ---------- 获取 CSRF Token ----------
+    function getCookie(name) {
+      const v = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+      return v ? v.pop() : '';
+    }
+
+    // ---------- systemMenu 折叠菜单持久化（增强版） ----------
+    (function(){
+      const systemMenu = document.getElementById('systemMenu');
+      const systemToggle = document.querySelector('a[href="#systemMenu"]');
+
+      if (!systemMenu || !systemToggle) return;
+
+      // 1) 根据 localStorage 恢复初始展开状态（localStorage 优先覆盖服务器渲染）
+      const saved = localStorage.getItem('systemMenuOpen');
+      if (saved === 'true') {
+        systemMenu.classList.add('show');
+        systemToggle.setAttribute('aria-expanded', 'true');
+      } else if (saved === 'false') {
+        systemMenu.classList.remove('show');
+        systemToggle.setAttribute('aria-expanded', 'false');
+      }
+
+      // 2) 监听 collapse 的 show/hide 来同步 localStorage（用户手动点击折叠切换时仍然有效）
+      systemMenu.addEventListener('show.bs.collapse', function(){
+        localStorage.setItem('systemMenuOpen', 'true');
+      });
+      systemMenu.addEventListener('hide.bs.collapse', function(){
+        localStorage.setItem('systemMenuOpen', 'false');
+      });
+
+      // 3) 对子菜单链接使用捕获阶段监听：在点击的最早阶段就保存为展开，并阻止事件冒泡到折叠控件
+      const innerLinks = systemMenu.querySelectorAll('a.nav-link');
+      innerLinks.forEach(link => {
+        link.addEventListener('click', function(evt){
+          try {
+            // 马上设置为展开，确保页面导航/跳转后仍保持展开
+            localStorage.setItem('systemMenuOpen', 'true');
+            // 阻止事件冒泡到上层（防止意外触发折叠组件的 hide/show）
+            evt.stopPropagation();
+            // 允许默认行为（即导航）继续发生
+          } catch (e) {
+            // 忍受错误，不阻断导航
+            console.error('systemMenu click handler error', e);
+          }
+        }, {capture: true});
+      });
+
+      // 4) 在页面卸载前再一次确保状态为展开（以防某些浏览器在快速跳转中未执行 click 捕获）
+      window.addEventListener('beforeunload', function(){
+        try {
+          // 如果当前 path 包含 /system 或当前 collapse 已展开，则保存为 true
+          if (location.pathname.indexOf('/system') !== -1 || systemMenu.classList.contains('show')) {
+            localStorage.setItem('systemMenuOpen', 'true');
+          }
+        } catch (e) {}
+      });
+    })();
+  </script>
+
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

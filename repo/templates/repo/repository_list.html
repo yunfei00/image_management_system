@@ -1,0 +1,23 @@
+<h2>仓库列表</h2>
+<a href="{% url 'repository_add' %}">新增仓库</a>
+<table>
+    <tr>
+        <th>仓库名称</th><th>类型</th><th>镜像数量</th><th>镜像列表</th><th>操作</th>
+    </tr>
+    {% for repo in repos %}
+    <tr>
+        <td>{{ repo.name }}</td>
+        <td>{{ repo.get_repo_type_display }}</td>
+        <td>{{ repo.image_count }}</td>
+        <td>
+            {% for img in repo.images.all %}
+            {{ img.name }}:{{ img.version }}<br>
+            {% endfor %}
+        </td>
+        <td>
+            <a href="{% url 'repository_package' repo.pk %}">打包</a>
+            <a href="{% url 'repository_download' repo.pk %}">下载</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>

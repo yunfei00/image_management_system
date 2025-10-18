@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<form class="row g-2 mb-3" method="get">
+  <div class="col-auto"><input class="form-control" name="name" placeholder="流程名称" value="{{ request.GET.name }}"></div>
+  <div class="col-auto"><button class="btn btn-primary">搜索</button><a class="btn btn-success" href="?export=1">导出</a></div>
+  <div class="col-auto ms-auto"><button type="button" class="btn btn-outline-primary" onclick="openModal('{% url 'system:workflow_create' %}', '新增流程')">新增</button></div>
+</form>
+
+<table class="table table-bordered">
+  <thead class="table-light"><tr><th>ID</th><th>流程名称</th><th>步骤</th><th>状态</th><th>操作</th></tr></thead>
+  <tbody>
+    {% for obj in page_obj %}
+      <tr>
+        <td>{{ obj.id }}</td><td>{{ obj.name }}</td><td><pre>{{ obj.steps }}</pre></td><td>{{ obj.get_status_display }}</td>
+        <td>
+          <button class="btn btn-sm btn-warning" onclick="openModal('{% url 'system:workflow_edit' obj.id %}', '编辑流程')">修改</button>
+          <button class="btn btn-sm btn-danger" onclick="postDelete('{% url 'system:workflow_delete' obj.id %}')">删除</button>
+        </td>
+      </tr>
+    {% empty %}<tr><td colspan="5" class="text-center text-muted">暂无数据</td></tr>{% endfor %}
+  </tbody>
+</table>
+
+{% include 'system/includes/pagination.html' %}
+{% endblock %}

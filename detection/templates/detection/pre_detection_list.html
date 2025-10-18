@@ -1,0 +1,21 @@
+<h2>预检测列表</h2>
+<a href="{% url 'pre_detection_add' %}">发起检测</a>
+<table>
+    <tr>
+        <th>业务方</th><th>检测项</th><th>时间</th><th>状态</th><th>漏洞数量</th><th>报告</th>
+    </tr>
+    {% for item in detections %}
+    <tr>
+        <td>{{ item.user.username }}</td>
+        <td>{% for t in item.tools.all %}{{ t.name }} {% endfor %}</td>
+        <td>{{ item.requested_at }}</td>
+        <td>{{ item.status }}</td>
+        <td>{{ item.vulnerabilities_count }}</td>
+        <td>
+            {% if item.report_file %}
+            <a href="{% url 'pre_detection_download' item.pk %}">下载</a>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>

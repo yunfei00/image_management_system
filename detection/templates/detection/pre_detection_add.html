@@ -1,0 +1,5 @@
+<h2>发起预检测</h2>
+<form method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">发起检测</button>
+</form>

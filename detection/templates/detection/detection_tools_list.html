@@ -1,0 +1,9 @@
+<h2>检测工具列表</h2>
+<a href="{% url 'detection_tools_add' %}">新增选择</a>
+<ul>
+    {% for item in tools %}
+    <li>{{ item.tool.name }} - {{ item.tool.description }}</li>
+    {% empty %}
+    <li>暂无工具</li>
+    {% endfor %}
+</ul>

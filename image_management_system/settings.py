@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "system.apps.SystemConfig",
 ]
 
 MIDDLEWARE = [
@@ -121,3 +122,6 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# 自定义用户模型（必须在第一次迁移前设置）
+AUTH_USER_MODEL = "system.User"

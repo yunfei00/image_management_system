@@ -31,7 +31,7 @@
         <td>{{ obj.name }}</td>
           <td>{{ obj.leader }}</td>
         <td>{{ obj.get_status_display }}</td>
-          <td>{{ obj.create_time }}</td>
+          <td>{{ obj.created_at }}</td>
         <td>
           <button class="btn btn-sm btn-warning" onclick="openModal('{% url 'system:dept_edit' obj.id %}', '编辑部门')">修改</button>
           <button class="btn btn-sm btn-danger" onclick="postDelete('{% url 'system:dept_delete' obj.id %}')">删除</button>

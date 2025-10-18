@@ -6,16 +6,16 @@ from django.views import View
 from django.views.generic import DeleteView
 from rest_framework import viewsets
 
-from system.filters_all import DepartmentFilter
+from system.filters import Department
+from system.filters.department_filter import DepartmentFilter
 from system.forms import DeptForm
-from system.models_all import Department
-from system.serializers import DepartmentSerializer
+from system.serializers.user import DepartmentSerializer
 from system.utils import export_queryset_to_excel
-from system.views_all import render_modal_form
+from system.views.handle_modal_form import render_modal_form
 
 
-class   DepartmentViewSet(viewsets.ModelViewSet):
-    queryset = Department.objects.all().order_by('-create_time')
+class  DepartmentViewSet(viewsets.ModelViewSet):
+    queryset = Department.objects.all().order_by('-created_at')
     serializer_class = DepartmentSerializer
 
 

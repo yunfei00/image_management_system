@@ -6,12 +6,12 @@ from django.views import View
 from django.views.generic import DeleteView
 from rest_framework import viewsets
 
-from system.filters_all import RoleFilter
-from system.forms import  RoleForm
-from system.models_all import  Role
-from system.serializers import RoleSerializer
+from system.filters.role_filter import RoleFilter
+from system.forms import RoleForm
+from system.models import Role
+from system.serializers.role import RoleSerializer
 from system.utils import export_queryset_to_excel
-from system.views_all import render_modal_form
+from system.views.handle_modal_form import render_modal_form
 
 
 class RoleViewSet(viewsets.ModelViewSet):

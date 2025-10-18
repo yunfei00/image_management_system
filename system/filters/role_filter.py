@@ -1,5 +1,5 @@
 import django_filters
-from system.models_all.role import Role
+from system.models.role import Role
 
 class RoleFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(lookup_expr="icontains")

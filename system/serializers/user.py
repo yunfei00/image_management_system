@@ -6,10 +6,7 @@ from system.models import (Permission, Role, RoleUser, Department, Position, Det
 User = get_user_model()
 
 
-class PositionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Position
-        fields = '__all__'
+
 
 class DetectToolSerializer(serializers.ModelSerializer):
     class Meta:

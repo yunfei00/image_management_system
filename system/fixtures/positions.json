@@ -1,0 +1,182 @@
+[
+  {
+    "model": "system.position",
+    "pk": 1,
+    "fields": {
+      "name": "前端开发工程师",
+      "code": "DEV-FRONT-001",
+      "description": "负责Web前端页面开发、Vue/React框架应用及浏览器兼容性处理",
+      "status": 1,
+      "created_at": "2025-01-10T09:30:00Z",
+      "updated_at": "2025-01-10T09:30:00Z"
+    }
+  },
+  {
+    "model": "system.position",
+    "pk": 2,
+    "fields": {
+      "name": "后端开发工程师",
+      "code": "DEV-BACK-002",
+      "description": "基于Python/Java开发服务端接口，设计数据库表结构及性能优化",
+      "status": 1,
+      "created_at": "2025-01-15T14:20:00Z",
+      "updated_at": "2025-02-20T10:15:00Z"
+    }
+  },
+  {
+    "model": "system.position",
+    "pk": 3,
+    "fields": {
+      "name": "产品经理",
+      "code": "PM-003",
+      "description": "负责产品需求分析、原型设计、PRD编写及项目进度跟进",
+      "status": 1,
+      "created_at": "2025-01-20T11:00:00Z",
+      "updated_at": "2025-03-10T16:40:00Z"
+    }
+  },
+  {
+    "model": "system.position",
+    "pk": 4,
+    "fields": {
+      "name": "自动化测试工程师",
+      "code": "TEST-AUTO-004",
+      "description": "设计自动化测试框架，编写UI/接口测试脚本，生成测试报告",
+      "status": 0,
+      "created_at": "2025-02-05T15:30:00Z",
+      "updated_at": "2025-04-01T09:20:00Z"
+    }
+  },
+  {
+    "model": "system.position",
+    "pk": 5,
+    "fields": {
+      "name": "运维工程师",
+      "code": "OPS-005",
+      "description": "负责服务器部署、监控告警、CI/CD流程搭建及日常运维",
+      "status": 1,
+      "created_at": "2025-02-10T08:45:00Z",
+      "updated_at": "2025-02-10T08:45:00Z"
+    }
+  },
+  {
+    "model": "system.position",
+    "pk": 6,
+    "fields": {
+      "name": "UI/UX设计师",
+      "code": "DESIGN-UI-006",
+      "description": "负责产品界面设计、用户体验优化、设计规范制定及切图输出",
+      "status": 1,
+      "created_at": "2025-02-25T10:15:00Z",
+      "updated_at": "2025-05-18T14:50:00Z"
+    }
+  },
+  {
+    "model": "system.position",
+    "pk": 7,
+    "fields": {
+      "name": "数据分析师",
+      "code": "DATA-007",
+      "description": "基于SQL/Excel分析业务数据，制作可视化报表，提供决策支持",
+      "status": 0,
+      "created_at": "2025-03-03T13:30:00Z",
+      "updated_at": "2025-07-02T11:20:00Z"
+    }
+  },
+  {
+    "model": "system.position",
+    "pk": 8,
+    "fields": {
+      "name": "人力资源专员",
+      "code": "HR-008",
+      "description": "负责招聘流程管理、员工入离职办理、社保公积金缴纳及考勤统计",
+      "status": 1,
+      "created_at": "2025-03-15T09:00:00Z",
+      "updated_at": "2025-06-30T16:10:00Z"
+    }
+  },
+  {
+    "model": "system.position",
+    "pk": 9,
+    "fields": {
+      "name": "销售部经理",
+      "code": "SALE-MGR-009",
+      "description": "制定销售策略，管理销售团队，拓展客户资源，达成月度/季度销售目标",
+      "status": 1,
+      "created_at": "2025-04-01T14:20:00Z",
+      "updated_at": "2025-07-08T10:05:00Z"
+    }
+  },
+  {
+    "model": "system.position",
+    "pk": 10,
+    "fields": {
+      "name": "财务专员",
+      "code": "FIN-010",
+      "description": "处理日常账务、费用报销审核、编制财务报表及税务申报",
+      "status": 0,
+      "created_at": "2025-04-10T11:50:00Z",
+      "updated_at": "2025-08-15T15:30:00Z"
+    }
+  },
+  {
+    "model": "system.position",
+    "pk": 11,
+    "fields": {
+      "name": "移动端开发工程师",
+      "code": "DEV-APP-011",
+      "description": "开发iOS/Android原生应用，集成Flutter跨平台框架，优化App性能",
+      "status": 1,
+      "created_at": "2025-05-05T09:20:00Z",
+      "updated_at": "2025-09-02T14:20:00Z"
+    }
+  },
+  {
+    "model": "system.position",
+    "pk": 12,
+    "fields": {
+      "name": "内容运营",
+      "code": "OP-CONTENT-012",
+      "description": "负责公众号/短视频平台内容策划、撰写及发布，提升用户活跃度",
+      "status": 1,
+      "created_at": "2025-05-20T15:10:00Z",
+      "updated_at": "2025-05-20T15:10:00Z"
+    }
+  },
+  {
+    "model": "system.position",
+    "pk": 13,
+    "fields": {
+      "name": "算法工程师",
+      "code": "DEV-ALGO-013",
+      "description": "研究机器学习算法，优化推荐系统，处理大规模数据训练",
+      "status": 0,
+      "created_at": "2025-06-10T10:30:00Z",
+      "updated_at": "2025-09-15T08:40:00Z"
+    }
+  },
+  {
+    "model": "system.position",
+    "pk": 14,
+    "fields": {
+      "name": "行政专员",
+      "code": "ADMIN-014",
+      "description": "负责办公用品采购、会议安排、固定资产管理及后勤保障",
+      "status": 1,
+      "created_at": "2025-06-25T13:40:00Z",
+      "updated_at": "2025-08-01T11:20:00Z"
+    }
+  },
+  {
+    "model": "system.position",
+    "pk": 15,
+    "fields": {
+      "name": "客服专员",
+      "code": "CS-015",
+      "description": "接听客户咨询电话，处理投诉工单，记录反馈并跟进解决",
+      "status": 1,
+      "created_at": "2025-07-05T09:10:00Z",
+      "updated_at": "2025-07-05T09:10:00Z"
+    }
+  }
+]

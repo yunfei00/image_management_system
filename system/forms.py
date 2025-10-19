@@ -34,10 +34,10 @@ class MenuForm(forms.ModelForm):
         fields = ['name', 'path', 'parent', 'status']
 
 
-# class PostForm(forms.ModelForm):
-#     class Meta:
-#         model = Post
-#         fields = ['name', 'code', 'status']
+class PositionForm(forms.ModelForm):
+    class Meta:
+        model = Position
+        fields = ['name', 'code', 'status']
 
 
 # class WorkflowConfigForm(forms.ModelForm):

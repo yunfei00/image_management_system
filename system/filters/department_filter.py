@@ -6,4 +6,4 @@ class DepartmentFilter(django_filters.FilterSet):
 
     class Meta:
         model = Department
-        fields = ['status', 'name', 'created_at']
+        fields = ['status', 'name']

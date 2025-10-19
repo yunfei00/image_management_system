@@ -15,11 +15,11 @@
 </form>
 
 <table class="table table-bordered">
-  <thead class="table-light"><tr><th>ID</th><th>岗位名称</th><th>岗位编码</th><th>状态</th><th>操作</th></tr></thead>
+  <thead class="table-light"><tr><th>ID</th><th>岗位名称</th><th>岗位编码</th><th>状态</th><th>创建时间</th><th>操作</th></tr></thead>
   <tbody>
     {% for obj in page_obj %}
       <tr>
-        <td>{{ obj.id }}</td><td>{{ obj.name }}</td><td>{{ obj.code }}</td><td>{{ obj.get_status_display }}</td>
+        <td>{{ obj.id }}</td><td>{{ obj.name }}</td><td>{{ obj.code }}</td><td>{{ obj.get_status_display }}</td><td>{{ obj.created_at }}</td>
         <td>
           <button class="btn btn-sm btn-warning" onclick="openModal('{% url 'system:post_edit' obj.id %}', '编辑岗位')">修改</button>
           <button class="btn btn-sm btn-danger" onclick="postDelete('{% url 'system:post_delete' obj.id %}')">删除</button>

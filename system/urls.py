@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import departments, roles
+from .views import departments, roles, post
 from .views.home import home
 
 app_name = 'system'
@@ -19,5 +19,11 @@ urlpatterns = [
     path('role/create/', roles.RoleCreateView.as_view(), name='role_create'),
     path('role/<int:pk>/edit/', roles.RoleUpdateView.as_view(), name='role_edit'),
     path('role/<int:pk>/delete/', roles.RoleDeleteView.as_view(), name='role_delete'),
+
+    # 岗位管理
+    path('post/', post.PostListView.as_view(), name='post_list'),
+    path('post/create/', post.PostCreateView.as_view(), name='post_create'),
+    path('post/<int:pk>/edit/', post.PostUpdateView.as_view(), name='post_edit'),
+    path('post/<int:pk>/delete/', post.PostDeleteView.as_view(), name='post_delete'),
 
 ]

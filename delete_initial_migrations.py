@@ -48,7 +48,7 @@ def delete_files(file_list):
     if confirm != 'y':
         print("已取消删除。")
         return
-
+    # return
     # 执行删除
     deleted = 0
     failed = 0

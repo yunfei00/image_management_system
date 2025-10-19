@@ -22,10 +22,12 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 from system.views.departments import DepartmentViewSet
 from system.views.roles import RoleViewSet
+from system.views.post import PositionViewSet
 
 router = routers.DefaultRouter()
 router.register('departments', DepartmentViewSet)
 router.register('roles', RoleViewSet)
+router.register('positions', PositionViewSet)
 # router.register('users', UserViewSet)
 urlpatterns = [
     path("admin/", admin.site.urls),

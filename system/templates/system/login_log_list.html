@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block content %}
+<form class="row g-2 mb-3" method="get">
+  <div class="col-auto">
+    <input class="form-control" name="username" placeholder="用户名" value="{{ request.GET.username }}">
+  </div>
+  <div class="col-auto">
+    <input class="form-control" name="ip" placeholder="登录IP" value="{{ request.GET.ip }}">
+  </div>
+  <div class="col-auto">
+    <select name="status" class="form-select">
+      <option value="">登录状态</option>
+      <option value="success" {% if request.GET.status == 'success' %}selected{% endif %}>成功</option>
+      <option value="fail" {% if request.GET.status == 'fail' %}selected{% endif %}>失败</option>
+    </select>
+  </div>
+  <div class="col-auto">
+    <input type="date" class="form-control" name="start_time" value="{{ request.GET.start_time }}">
+  </div>
+  <div class="col-auto">
+    <input type="date" class="form-control" name="end_time" value="{{ request.GET.end_time }}">
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-primary">搜索</button>
+    <a class="btn btn-success" href="?{% if request.GET.username %}username={{ request.GET.username }}&{% endif %}{% if request.GET.ip %}ip={{ request.GET.ip }}&{% endif %}{% if request.GET.status %}status={{ request.GET.status }}&{% endif %}{% if request.GET.start_time %}start_time={{ request.GET.start_time }}&{% endif %}{% if request.GET.end_time %}end_time={{ request.GET.end_time }}&{% endif %}export=1">导出</a>
+  </div>
+</form>
+
+<table class="table table-bordered align-middle">
+  <thead class="table-light">
+    <tr class="text-center">
+      <th><input id="selectAll" type="checkbox" /></th>
+      <th>ID</th>
+      <th>用户名</th>
+      <th>登录时间</th>
+      <th>登录IP</th>
+      <th>状态</th>
+      <th>登录结果</th>
+      <th>操作</th>  <!-- ✅ 新增删除列 -->
+    </tr>
+  </thead>
+  <tbody>
+    {% for obj in page_obj %}
+      <tr class="text-center">
+        <td><input type="checkbox" class="rowCheckbox" value="{{ obj.id }}"></td>
+        <td>{{ obj.id }}</td>
+        <td>{{ obj.username }}</td>
+        <td>{{ obj.login_time|date:"Y-m-d H:i:s" }}</td>
+        <td>{{ obj.ip }}</td>
+        <td>
+          {% if obj.status == 'success' %}
+            <span class="badge bg-success">成功</span>
+          {% else %}
+            <span class="badge bg-danger">失败</span>
+          {% endif %}
+        </td>
+        <td>{{ obj.result }}</td>
+        <td>
+          <button class="btn btn-sm btn-danger" onclick="postDelete('{% url 'system:login_log_delete' obj.id %}')">删除</button>
+        </td> <!-- ✅ 新增删除按钮 -->
+      </tr>
+    {% empty %}
+      <tr><td colspan="8" class="text-center text-muted">暂无数据</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<nav>
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">上一页</a></li>
+    {% endif %}
+    <li class="page-item disabled"><a class="page-link">第 {{ page_obj.number }} 页 / 共 {{ page_obj.paginator.num_pages }} 页</a></li>
+    {% if page_obj.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">下一页</a></li>
+    {% endif %}
+  </ul>
+</nav>
+
+<script>
+  // 全选
+  document.getElementById('selectAll')?.addEventListener('change', function(e){
+    document.querySelectorAll('.rowCheckbox').forEach(ch => ch.checked = e.target.checked);
+  });
+
+  // 批量删除（如果你需要这个功能）
+  async function postDelete(url){
+    if(!confirm('确认删除？')) return;
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {'X-CSRFToken': getCookie('csrftoken')}
+    });
+    const data = await resp.json();
+    if(data.success) location.reload();
+    else alert('删除失败');
+  }
+</script>
+{% endblock %}

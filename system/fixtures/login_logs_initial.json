@@ -1,0 +1,35 @@
+[
+  {
+    "model": "system.loginlog",
+    "pk": 1,
+    "fields": {
+      "username": "admin",
+      "login_time": "2025-10-18T09:30:00Z",
+      "ip": "192.168.1.10",
+      "status": "success",
+      "result": "登录成功"
+    }
+  },
+  {
+    "model": "system.loginlog",
+    "pk": 2,
+    "fields": {
+      "username": "contractor",
+      "login_time": "2025-10-18T10:15:00Z",
+      "ip": "192.168.1.21",
+      "status": "fail",
+      "result": "密码错误"
+    }
+  },
+  {
+    "model": "system.loginlog",
+    "pk": 3,
+    "fields": {
+      "username": "auditor",
+      "login_time": "2025-10-19T08:45:00Z",
+      "ip": "10.0.0.5",
+      "status": "success",
+      "result": "登录成功"
+    }
+  }
+]

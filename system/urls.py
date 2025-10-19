@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import departments, roles, post, users, tools
+from .views import departments, roles, post, users, tools, login_log
 from .views.home import home
 
 app_name = 'system'
@@ -37,4 +37,10 @@ urlpatterns = [
     path('tool/create/', tools.ToolCreateView.as_view(), name='tool_create'),
     path('tool/<int:pk>/edit/', tools.ToolUpdateView.as_view(), name='tool_edit'),
     path('tool/<int:pk>/delete/', tools.ToolDeleteView.as_view(), name='tool_delete'),
+    # 日志管理
+    path('loginlog/', login_log.LoginLogListView.as_view(), name='login_log_list'),
+    path('loginlog/<int:pk>/delete/', login_log.LoginLogDeleteView.as_view(), name='login_log_delete'),
+
+    # path('operationlog/', views_all.OperationLogListView.as_view(), name='operationlog_list'),
+
 ]

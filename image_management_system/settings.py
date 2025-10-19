@@ -42,9 +42,27 @@ INSTALLED_APPS = [
     "projects.apps.ProjectsConfig",
     "detection.apps.DetectionConfig",
     "repo.apps.RepoConfig",
+    "django_filters",
     'rest_framework',  # 必须添加，否则 DRF 模板无法被搜索到
 ]
 
+# Django REST framework 全局配置
+REST_FRAMEWORK = {
+    # ✅ 默认过滤后端
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+
+    # ✅ 可选：分页配置（推荐）
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
+
+    # ✅ 可选：默认渲染器（可以保留 HTML 浏览器界面）
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
+}
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",

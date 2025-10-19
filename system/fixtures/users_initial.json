@@ -4,7 +4,7 @@
     "pk": 1,
     "fields": {
       "username": "admin",
-      "password": "pbkdf2_sha256$720000$ZbR8cNWhFGg8I4oUVBAX9r$5FXG3sh7Nckz3o3zVx5qzATdAr0D0EpvkI/RovCwA2g=",
+      "password": "pbkdf2_sha256$1000000$2gV70Gthsljqc37fZm2V3p$b3T/wmGuk2oUYcDI7+CYI20uqQhP8ZLNxvEbL4VbLfI=",
       "email": "admin@example.com",
       "phone": "13800000000",
       "company": "容器管理中心",
@@ -23,7 +23,7 @@
     "pk": 2,
     "fields": {
       "username": "project_admin",
-      "password": "pbkdf2_sha256$720000$zGk4hHjeDpv8xW7a9BftvR$noE6Bv7Xv5Z1KzWhvA98bTQEYzE2Y91VvU1V+dCnRAk=",
+      "password": "pbkdf2_sha256$1000000$0ORy7QuEx5s8Cw7geevJTH$vlDW0WGLV6STTK9ZX8A0HnuOPZfb963ac6ZmzIWM0jQ=",
       "email": "project_admin@example.com",
       "phone": "13900000001",
       "company": "容器管理中心",
@@ -42,7 +42,7 @@
     "pk": 3,
     "fields": {
       "username": "contractor",
-      "password": "pbkdf2_sha256$720000$ByczTqZJzMy9T1GvLXbPqV$2rXDF1BGCEW7i80eA0cpgT4ePRP9WeeRcA0zQj2aM0A=",
+      "password": "pbkdf2_sha256$1000000$pvB5PRJftqjbypqj3xtFBD$Xa/ShZCr7JRPjmGx+ihU0VmJ6j4nUsr1VCo9cKO8wO8=",
       "email": "contractor@example.com",
       "phone": "13700000002",
       "company": "业务承建方A公司",
@@ -61,7 +61,7 @@
     "pk": 4,
     "fields": {
       "username": "auditor",
-      "password": "pbkdf2_sha256$720000$kKjv7G5V9fRL1K8b1Qh3Yy$D6EOCbQfyM8p7bHfR+o4V1nV1rErp6vXWz2iqTczLKg=",
+      "password": "pbkdf2_sha256$1000000$oAfUIjA6602XnpKs2qnZBH$BuVz5p5ahygWHJK1K0eln8b9cZPV3WRdVrCoeoKDuRc=",
       "email": "auditor@example.com",
       "phone": "13600000003",
       "company": "审计中心",

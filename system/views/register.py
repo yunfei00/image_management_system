@@ -50,20 +50,20 @@ def register_view(request):
             messages.error(request, "该用户名已存在，请更换用户名。")
             return render(request, "system/accounts/register.html", context)
 
-        # # 1️⃣ 检查是否已存在于用户表
-        # if User.objects.filter(phone=phone).exists():
-        #     messages.error(request, "该手机号已存在，请直接登录。")
-        #     return redirect('register_request')
+        # 1️⃣ 检查是否已存在于用户表
+        if User.objects.filter(phone=phone).exists():
+            messages.error(request, "该手机号已存在，请直接登录。")
+            return redirect('system:register_request')
 
         # 2️⃣ 检查是否在注册表中
         existing_req = RegisterRequest.objects.filter(name=username).order_by('-created_at').first()
         if existing_req:
             if existing_req.status == 'pending':
                 messages.warning(request, "您的注册申请正在审批中，请耐心等待。")
-                return redirect('register_request')
+                return redirect('system:register_request')
             elif existing_req.status == 'approved':
                 messages.warning(request, "该用户已注册，请直接登录。")
-                return redirect('register_request')
+                return redirect('system:register_request')
             elif existing_req.status == 'rejected':
                 # 允许重新申请，覆盖旧记录
                 existing_req.name = username
@@ -120,7 +120,7 @@ def register_approval_view(request, pk):
         req.status = 'rejected'
     req.save()
     messages.success(request, f"审批已{ '通过' if action == 'approve' else '拒绝' }。")
-    return redirect('register_request_list')
+    return redirect('system:register_request_list')
 
 # def register_view(request):
 #     # 🚀 先从数据库读取所有启用状态的部门和角色

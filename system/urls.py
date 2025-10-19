@@ -1,6 +1,7 @@
 from django.urls import path
 
-from .views import departments, roles, post, users, tools, login_log, register
+from .views import (departments, roles, post, users, tools, login_log, register,
+                    register_approval_view, auth_views)
 from .views.home import home
 
 app_name = 'system'
@@ -9,12 +10,18 @@ urlpatterns = [
     path('', home, name='home'),
 
     path('register/', register.register_view, name='register'),
-    path('login/', departments.DeptListView.as_view(), name='login'),
-    # path('logout/', accounts_views.logout_view, name='logout'),
+    path('login/', auth_views.login_view, name='login'),
+    path('logout/', auth_views.logout_view, name='logout'),
     # path('applications/', accounts_views.application_list, name='application_list'),
     # path('applications/approve/<int:app_id>/', accounts_views.approve_application, name='approve_application'),
     # path('applications/reject/<int:app_id>/', accounts_views.reject_application, name='reject_application'),
-    # path("", views_all.dashboard, name="dashboard"),
+    path("", home, name="home"),
+    path('register/requests/', register_approval_view.register_request_list,
+         name='register_request_list'),
+    path('register/approve/<int:pk>/', register_approval_view.register_request_approve,
+         name='register_request_approve'),
+    path('register/reject/<int:pk>/', register_approval_view.register_request_reject,
+         name='register_request_reject'),
 
     # 部门管理
     path('dept/', departments.DeptListView.as_view(), name='dept_list'),

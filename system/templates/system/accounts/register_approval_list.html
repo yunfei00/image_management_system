@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-3">
+  <h4 class="mb-3">注册申请审批</h4>
+
+  <form method="get" class="row g-2 mb-3">
+    <div class="col-auto">
+      <select name="status" class="form-select" onchange="this.form.submit()">
+        <option value="">全部状态</option>
+        <option value="pending" {% if status == 'pending' %}selected{% endif %}>待审批</option>
+        <option value="approved" {% if status == 'approved' %}selected{% endif %}>已通过</option>
+        <option value="rejected" {% if status == 'rejected' %}selected{% endif %}>已拒绝</option>
+      </select>
+    </div>
+  </form>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr>
+        <th>姓名</th>
+        <th>电话</th>
+        <th>公司</th>
+        <th>岗位</th>
+        <th>角色</th>
+        <th>状态</th>
+        <th>申请时间</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for req in requests %}
+      <tr>
+        <td>{{ req.name }}</td>
+        <td>{{ req.phone }}</td>
+        <td>{{ req.company }}</td>
+        <td>{{ req.position }}</td>
+        <td>{{ req.role }}</td>
+        <td>
+          {% if req.status == 'pending' %}
+            <span class="badge bg-warning text-dark">待审批</span>
+          {% elif req.status == 'approved' %}
+            <span class="badge bg-success">已通过</span>
+          {% else %}
+            <span class="badge bg-danger">已拒绝</span>
+          {% endif %}
+        </td>
+        <td>{{ req.created_at|date:"Y-m-d H:i" }}</td>
+        <td>
+          {% if req.status == 'pending' %}
+            <!-- 通过按钮 -->
+            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approveModal{{ req.id }}">通过</button>
+
+            <!-- 拒绝按钮 -->
+            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#rejectModal{{ req.id }}">拒绝</button>
+          {% else %}
+            <small>{{ req.reviewer }}<br>{{ req.reviewed_at|date:"Y-m-d H:i" }}</small>
+          {% endif %}
+        </td>
+      </tr>
+
+      <!-- 通过 Modal -->
+      <div class="modal fade" id="approveModal{{ req.id }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+          <form method="post" action="{% url 'system:register_request_approve' req.id %}">
+            {% csrf_token %}
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">审批通过 - {{ req.name }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <label>审批意见：</label>
+                <textarea name="comment" class="form-control" rows="3"></textarea>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="submit" class="btn btn-success">确认通过</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- 拒绝 Modal -->
+      <div class="modal fade" id="rejectModal{{ req.id }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+          <form method="post" action="{% url 'system:register_request_reject' req.id %}">
+            {% csrf_token %}
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">拒绝申请 - {{ req.name }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <label>拒绝原因：</label>
+                <textarea name="comment" class="form-control" rows="3"></textarea>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="submit" class="btn btn-danger">确认拒绝</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

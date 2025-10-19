@@ -2,7 +2,7 @@
 {% block content %}
 <form class="row g-2 mb-3" method="get">
   <div class="col-auto">
-    <input class="form-control" name="name" placeholder="用户名称" value="{{ request.GET.username }}">
+    <input class="form-control" name="username" placeholder="用户名称" value="{{ request.GET.username }}">
   </div>
   <div class="col-auto">
     <input class="form-control" name="phone" placeholder="手机号码" value="{{ request.GET.mobile }}">
@@ -26,7 +26,7 @@
 <table class="table table-bordered">
   <thead class="table-light">
 {#    <tr><th><input id="selectAll" type="checkbox" /></th><th>ID</th><th>用户名称</th><th>手机号码</th><th>状态</th><th>操作</th></tr>#}
-  <tr><th><input id="selectAll" type="checkbox" /></th><th>用户名称</th><th>手机号码</th><th>部门名称</th><th>公司名称</th><th>角色</th><th>状态</th><th>操作</th></tr>
+  <tr><th><input id="selectAll" type="checkbox" /></th><th>用户名称</th><th>手机号码</th><th>邮箱</th><th>角色</th><th>部门</th><th>状态</th><th>操作</th></tr>
 
   </thead>
   <tbody>
@@ -34,19 +34,12 @@
       <tr>
         <td><input type="checkbox" class="rowCheckbox" value="{{ obj.id }}"></td>
 {#        <td>{{ obj.id }}</td>#}
-        <td>{{ obj.name }}</td>
+        <td>{{ obj.username }}</td>
         <td>{{ obj.phone }}</td>
-          <td>{{ obj.dept }}</td>
-          <td>{{ obj.company }}</td>
+          <td>{{ obj.email }}</td>
+          <td>{{ obj.role }}</td>
+          <td>{{ obj.department }}</td>
 
-       <td>
-          {% for role in obj.roles.all %}
-{#            <span class="badge bg-primary">{{ role.name }}</span>#}
-              <span >{{ role.name }}</span>
-          {% empty %}
-            <span class="text-muted">无角色</span>
-          {% endfor %}
-        </td>
 {#      <td>{{ obj.roles.all }}</td>#}
 
         <td>{{ obj.get_status_display }}</td>

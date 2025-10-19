@@ -54,11 +54,12 @@
 
       <div class="row">
         <div class="col-md-6 mb-3">
-          <label class="form-label">所属部门</label>
-          <select name="dept" class="form-select" required>
-            <option value="">请选择部门</option>
-            {% for dept in depts %}
-              <option value="{{ dept.id }}" {% if dept.id == dept_id|default:0 %}selected{% endif %}>{{ dept.name }}</option>
+          <label class="form-label">岗位</label>
+          <select name="position" class="form-select" required>
+            <option value="">请选择岗位</option>
+            {% for position in positions %}
+{#              <option value="{{ position.id }}" {% if position.id == position_ids|default:0 %}selected{% endif %}>{{ position.name }}</option>#}
+                <option value="{{ position.id }}" {% if position.id in position_ids %}selected{% endif %}>{{ position.name }}</option>
             {% endfor %}
           </select>
         </div>

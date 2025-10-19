@@ -1,12 +1,20 @@
 from django.urls import path
 
-from .views import departments, roles, post, users, tools, login_log
+from .views import departments, roles, post, users, tools, login_log, register
 from .views.home import home
 
 app_name = 'system'
 
 urlpatterns = [
     path('', home, name='home'),
+
+    path('register/', register.register_view, name='register'),
+    path('login/', departments.DeptListView.as_view(), name='login'),
+    # path('logout/', accounts_views.logout_view, name='logout'),
+    # path('applications/', accounts_views.application_list, name='application_list'),
+    # path('applications/approve/<int:app_id>/', accounts_views.approve_application, name='approve_application'),
+    # path('applications/reject/<int:app_id>/', accounts_views.reject_application, name='reject_application'),
+    # path("", views_all.dashboard, name="dashboard"),
 
     # 部门管理
     path('dept/', departments.DeptListView.as_view(), name='dept_list'),

@@ -9,19 +9,17 @@ python manage.py loaddata users_initial.json
 python manage.py loaddata detect_tools_initial.json
 python manage.py loaddata login_logs_initial.json
 
-
-
 python manage.py add_default_users
 
 1. 添加模型
-7. 过滤器
-5. 添加序列化
-3. 添加路径
-6. 添加form
-2. 添加视图
-4. 添加html
-9. 添加用户api
-8. 添加admin 支持后台管理
+2. 过滤器
+3. 添加序列化
+4. 添加路径
+5. 添加form
+6. 添加视图
+7. 添加html
+8. 添加用户api
+9. 添加admin 支持后台管理
 10. 初始化数据
 
 

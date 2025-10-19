@@ -14,7 +14,7 @@ class RoleForm(forms.ModelForm):
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'phone', 'company', 'department', 'role', 'status']
+        fields = ['username', 'phone', 'email', 'role', 'department', 'status']
 #
 # class DictForm(forms.ModelForm):
 #     class Meta:

@@ -1,43 +1,32 @@
-from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from system.models import (Permission, Role, RoleUser, Department, Position, DetectTool,
-                     LoginLog, OperationLog, Menu, ApprovalFlow)
+from rest_framework import serializers
 
 User = get_user_model()
 
 
-
-
-class DetectToolSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = DetectTool
-        fields = '__all__'
-
-class LoginLogSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = LoginLog
-        fields = '__all__'
-
-class OperationLogSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OperationLog
-        fields = '__all__'
-
-class MenuSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Menu
-        fields = '__all__'
-
-class ApprovalFlowSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ApprovalFlow
-        fields = '__all__'
-
-# User serializer for admin APIs
 class UserSerializer(serializers.ModelSerializer):
-    roles = serializers.SerializerMethodField()
+    # 显示外键对象的名称，而不是 id
+    role_name = serializers.CharField(source='role.name', read_only=True)
+    department_name = serializers.CharField(source='department.name', read_only=True)
+    position_name = serializers.CharField(source='position.name', read_only=True)
+
     class Meta:
         model = User
-        fields = ['id','username','email','is_active','roles']
-    def get_roles(self,obj):
-        return [r.role.code for r in obj.role_links.all()]
+        fields = [
+            'id',
+            'username',
+            'email',
+            'phone',
+            'company',
+            'department', 'department_name',
+            'role', 'role_name',
+            'position', 'position_name',
+            'is_active',
+            'is_staff',
+            'is_superuser',
+            'date_joined',
+            'last_login',
+            'created_at',  # 来自 BaseModel
+            'updated_at',  # 来自 BaseModel
+        ]
+        read_only_fields = ['id', 'date_joined', 'last_login', 'created_at', 'updated_at']

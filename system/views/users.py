@@ -1,17 +1,16 @@
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
-from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import DeleteView
 from rest_framework import viewsets
 
-from system.filters_all import UserFilter
+from system.filters.user_filter import UserFilter
 from system.forms import UserForm
-from system.models_all import User
-from system.serializers import UserSerializer
+from system.models import User
+from system.serializers.user import UserSerializer
 from system.utils import export_queryset_to_excel
-from system.views_all import render_modal_form
+from system.views.handle_modal_form import render_modal_form
 
 
 class UserViewSet(viewsets.ModelViewSet):

@@ -1,0 +1,78 @@
+[
+  {
+    "model": "system.user",
+    "pk": 1,
+    "fields": {
+      "username": "admin",
+      "password": "pbkdf2_sha256$720000$ZbR8cNWhFGg8I4oUVBAX9r$5FXG3sh7Nckz3o3zVx5qzATdAr0D0EpvkI/RovCwA2g=",
+      "email": "admin@example.com",
+      "phone": "13800000000",
+      "company": "容器管理中心",
+      "department": 1,
+      "role": 1,
+      "position": 3,
+      "is_superuser": true,
+      "is_staff": true,
+      "is_active": true,
+      "created_at": "2025-10-19T08:00:00Z",
+      "updated_at": "2025-10-19T08:00:00Z"
+    }
+  },
+  {
+    "model": "system.user",
+    "pk": 2,
+    "fields": {
+      "username": "project_admin",
+      "password": "pbkdf2_sha256$720000$zGk4hHjeDpv8xW7a9BftvR$noE6Bv7Xv5Z1KzWhvA98bTQEYzE2Y91VvU1V+dCnRAk=",
+      "email": "project_admin@example.com",
+      "phone": "13900000001",
+      "company": "容器管理中心",
+      "department": 2,
+      "role": 2,
+      "position": 2,
+      "is_superuser": false,
+      "is_staff": true,
+      "is_active": true,
+      "created_at": "2025-10-19T08:10:00Z",
+      "updated_at": "2025-10-19T08:10:00Z"
+    }
+  },
+  {
+    "model": "system.user",
+    "pk": 3,
+    "fields": {
+      "username": "contractor",
+      "password": "pbkdf2_sha256$720000$ByczTqZJzMy9T1GvLXbPqV$2rXDF1BGCEW7i80eA0cpgT4ePRP9WeeRcA0zQj2aM0A=",
+      "email": "contractor@example.com",
+      "phone": "13700000002",
+      "company": "业务承建方A公司",
+      "department": 3,
+      "role": 3,
+      "position": 1,
+      "is_superuser": false,
+      "is_staff": false,
+      "is_active": true,
+      "created_at": "2025-10-19T08:20:00Z",
+      "updated_at": "2025-10-19T08:20:00Z"
+    }
+  },
+  {
+    "model": "system.user",
+    "pk": 4,
+    "fields": {
+      "username": "auditor",
+      "password": "pbkdf2_sha256$720000$kKjv7G5V9fRL1K8b1Qh3Yy$D6EOCbQfyM8p7bHfR+o4V1nV1rErp6vXWz2iqTczLKg=",
+      "email": "auditor@example.com",
+      "phone": "13600000003",
+      "company": "审计中心",
+      "department": 6,
+      "role": 4,
+      "position": 14,
+      "is_superuser": false,
+      "is_staff": false,
+      "is_active": true,
+      "created_at": "2025-10-19T08:30:00Z",
+      "updated_at": "2025-10-19T08:30:00Z"
+    }
+  }
+]

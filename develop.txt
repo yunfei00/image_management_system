@@ -6,7 +6,7 @@ python manage.py loaddata departments_initial.json
 python manage.py loaddata roles_permissions.json
 python manage.py loaddata positions.json
 python manage.py loaddata users_initial.json
-
+python manage.py loaddata detect_tools_initial.json
 
 
 
@@ -16,11 +16,12 @@ python manage.py add_default_users
 7. 过滤器
 5. 添加序列化
 3. 添加路径
+6. 添加form
 2. 添加视图
 4. 添加html
-6. 添加form
 9. 添加用户api
 8. 添加admin 支持后台管理
+10. 初始化数据
 
 
 

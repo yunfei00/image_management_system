@@ -1,0 +1,59 @@
+[
+  {
+    "model": "system.detecttool",
+    "pk": 1,
+    "fields": {
+      "name": "绿盟检测接口",
+      "type": "green",
+      "api_url": "https://api.nsfocus.com/v1/detect",
+      "config": {
+        "api_key": "NSFOCUS-API-KEY-123456",
+        "timeout": 30,
+        "verify_ssl": true
+      },
+      "status": 1,
+      "last_test_time": "2025-10-15T09:30:00Z",
+      "created_at": "2025-10-10T08:00:00Z",
+      "updated_at": "2025-10-15T09:30:00Z"
+    }
+  },
+  {
+    "model": "system.detecttool",
+    "pk": 2,
+    "fields": {
+      "name": "小佑漏洞检测平台",
+      "type": "xiaoyou",
+      "api_url": "https://api.xiaoyousec.cn/detect",
+      "config": {
+        "token": "XYSEC-TOKEN-789012",
+        "retry": 3,
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "status": 1,
+      "last_test_time": "2025-10-16T10:45:00Z",
+      "created_at": "2025-10-11T09:00:00Z",
+      "updated_at": "2025-10-16T10:45:00Z"
+    }
+  },
+  {
+    "model": "system.detecttool",
+    "pk": 3,
+    "fields": {
+      "name": "默安安全检测引擎",
+      "type": "moan",
+      "api_url": "https://api.moresec.cn/v2/scan",
+      "config": {
+        "access_id": "MOAN-ID-345678",
+        "access_secret": "MOAN-SECRET-ABCDEFG",
+        "scan_mode": "deep",
+        "callback_url": "https://container-system.local/api/detect/callback"
+      },
+      "status": 1,
+      "last_test_time": "2025-10-17T14:20:00Z",
+      "created_at": "2025-10-12T09:15:00Z",
+      "updated_at": "2025-10-17T14:20:00Z"
+    }
+  }
+]

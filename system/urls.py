@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import departments, roles, post, users
+from .views import departments, roles, post, users, tools
 from .views.home import home
 
 app_name = 'system'
@@ -32,4 +32,9 @@ urlpatterns = [
     path('user/<int:pk>/edit/', users.UserUpdateView.as_view(), name='user_edit'),
     path('user/<int:pk>/delete/', users.UserDeleteView.as_view(), name='user_delete'),
 
+    # 检测工具管理
+    path('tool/', tools.ToolListView.as_view(), name='tool_list'),
+    path('tool/create/', tools.ToolCreateView.as_view(), name='tool_create'),
+    path('tool/<int:pk>/edit/', tools.ToolUpdateView.as_view(), name='tool_edit'),
+    path('tool/<int:pk>/delete/', tools.ToolDeleteView.as_view(), name='tool_delete'),
 ]

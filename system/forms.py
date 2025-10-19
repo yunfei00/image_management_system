@@ -22,11 +22,11 @@ class UserForm(forms.ModelForm):
 #         fields = ['name', 'type', 'value', 'status']
 #
 #
-# class ToolForm(forms.ModelForm):
-#     class Meta:
-#         model = Tool
-#         fields = ['name', 'api_url', 'description', 'status']
-#
+class ToolForm(forms.ModelForm):
+    class Meta:
+        model = DetectTool
+        fields = ['name', 'type', 'api_url', 'config', 'status']
+
 
 class MenuForm(forms.ModelForm):
     class Meta:

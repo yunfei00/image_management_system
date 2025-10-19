@@ -6,60 +6,61 @@ from django.views import View
 from django.views.generic import DeleteView
 from rest_framework import viewsets
 
-from system.filters.department_filter import DepartmentFilter
-from system.forms import DeptForm
-from system.models import Department
-from system.serializers.department import DepartmentSerializer
+from system.filters import DetectToolFilter
+from system.forms import ToolForm
+from system.models import DetectTool
+from system.serializers.detect_tool import DetectToolSerializer
 from system.utils import export_queryset_to_excel
 from system.views.handle_modal_form import render_modal_form
 
-class DepartmentViewSet(viewsets.ModelViewSet):
-    queryset = Department.objects.all().order_by('-created_at')
-    serializer_class = DepartmentSerializer
+class ToolViewSet(viewsets.ModelViewSet):
+    queryset = DetectTool.objects.all().order_by('-created_at')
+    serializer_class = DetectToolSerializer
 
-
-# ---------- Department ----------
-class DeptListView(View):
+# ---------- Detect Tool ----------
+class ToolListView(View):
     def get(self, request):
-        f = DepartmentFilter(request.GET, queryset=Department.objects.all())
+        f = DetectToolFilter(request.GET, queryset=DetectTool.objects.all())
         qs = f.qs.order_by('-id')
         paginator = Paginator(qs, 10)
         page = request.GET.get('page')
         objs = paginator.get_page(page)
         if 'export' in request.GET:
-            cols = [('id','ID'), ('name','部门名称'), ('status','状态')]
-            return export_queryset_to_excel(f.qs, cols, 'departments')
-        return render(request, 'system/dept_list.html', {'filter': f, 'page_obj': objs})
+            cols = [('id','ID'), ('name','工具名称'), ('type','类型'), ('api_url','API地址'),
+                    ('config','配置参数'), ('last_test_time','最后测试时间'), ('status','状态')]
+            return export_queryset_to_excel(f.qs, cols, 'detect_tool')
+        return render(request, 'system/tool_list.html', {'filter': f, 'page_obj': objs})
 
-class DeptCreateView(View):
+
+class ToolCreateView(View):
     def get(self, request):
-        form = DeptForm()
+        form = ToolForm()
         return render_modal_form(request, form)
 
     def post(self, request):
-        form = DeptForm(request.POST)
+        form = ToolForm(request.POST)
         if form.is_valid():
             form.save()
             return JsonResponse({'success': True})
         return render_modal_form(request, form)
 
-class DeptUpdateView(View):
+class ToolUpdateView(View):
     def get(self, request, pk):
-        obj = get_object_or_404(Department, pk=pk)
-        form = DeptForm(instance=obj)
+        obj = get_object_or_404(DetectTool, pk=pk)
+        form = ToolForm(instance=obj)
         return render_modal_form(request, form, context_extra={'obj': obj})
 
     def post(self, request, pk):
-        obj = get_object_or_404(Department, pk=pk)
-        form = DeptForm(request.POST, instance=obj)
+        obj = get_object_or_404(DetectTool, pk=pk)
+        form = ToolForm(request.POST, instance=obj)
         if form.is_valid():
             form.save()
             return JsonResponse({'success': True})
         return render_modal_form(request, form, context_extra={'obj': obj})
 
-class DeptDeleteView(DeleteView):
-    model = Department
-    success_url = reverse_lazy('system:dept_list')
+class ToolDeleteView(DeleteView):
+    model = DetectTool
+    success_url = reverse_lazy('system:tool_list')
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.delete()

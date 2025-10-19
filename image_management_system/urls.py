@@ -23,6 +23,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from system.views.departments import DepartmentViewSet
 from system.views.roles import RoleViewSet
 from system.views.post import PositionViewSet
+from system.views.tools import ToolViewSet
 from system.views.users import UserViewSet
 
 router = routers.DefaultRouter()
@@ -30,6 +31,7 @@ router.register('departments', DepartmentViewSet)
 router.register('roles', RoleViewSet)
 router.register('positions', PositionViewSet)
 router.register('users', UserViewSet)
+router.register('detect-tools', ToolViewSet)
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('', include('system.urls', namespace='system')),

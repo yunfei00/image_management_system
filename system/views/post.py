@@ -6,7 +6,6 @@ from django.views import View
 from django.views.generic import DeleteView
 from rest_framework import viewsets
 
-from system.filters import Department
 from system.filters.post_filter import PositionFilter
 from system.forms import PositionForm
 from system.models import Position
@@ -21,7 +20,7 @@ class PositionViewSet(viewsets.ModelViewSet):
 # ---------- Position ----------
 class PostListView(View):
     def get(self, request):
-        f = PositionFilter(request.GET, queryset=Department.objects.all())
+        f = PositionFilter(request.GET, queryset=Position.objects.all())
         qs = f.qs.order_by('-id')
         paginator = Paginator(qs, 10)
         page = request.GET.get('page')

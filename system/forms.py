@@ -68,3 +68,10 @@ class LoginLogSearchForm(forms.Form):
     )
     start_time = forms.DateTimeField(required=False, label="开始时间", widget=forms.DateInput(attrs={'type': 'date'}))
     end_time = forms.DateTimeField(required=False, label="结束时间", widget=forms.DateInput(attrs={'type': 'date'}))
+
+class OperationLogSearchForm(forms.Form):
+    start_time = forms.DateTimeField(required=False, label="开始时间", widget=forms.DateInput(attrs={'type': 'date'}))
+    end_time = forms.DateTimeField(required=False, label="结束时间", widget=forms.DateInput(attrs={'type': 'date'}))
+    module = forms.CharField(required=False, max_length=128, label="模块")
+    operator = forms.CharField(required=False, max_length=64, label="操作员")
+    ip = forms.CharField(required=False, max_length=45, label="登录IP")

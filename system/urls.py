@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import (departments, roles, post, users, tools, login_log, register,
+from .views import (departments, roles, post, users, tools, login_log, oper_log, register,
                     register_approval_view, auth_views)
 from .views.home import home
 
@@ -52,10 +52,12 @@ urlpatterns = [
     path('tool/create/', tools.ToolCreateView.as_view(), name='tool_create'),
     path('tool/<int:pk>/edit/', tools.ToolUpdateView.as_view(), name='tool_edit'),
     path('tool/<int:pk>/delete/', tools.ToolDeleteView.as_view(), name='tool_delete'),
+
     # 日志管理
     path('loginlog/', login_log.LoginLogListView.as_view(), name='login_log_list'),
     path('loginlog/<int:pk>/delete/', login_log.LoginLogDeleteView.as_view(), name='login_log_delete'),
 
-    # path('operationlog/', views_all.OperationLogListView.as_view(), name='operationlog_list'),
+    path('operationlog/', oper_log.OperationLogListView.as_view(), name='oper_log_list'),
+    path('operationlog/<int:pk>/delete/', login_log.LoginLogDeleteView.as_view(), name='oper_log_delete'),
 
 ]

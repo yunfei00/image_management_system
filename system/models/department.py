@@ -2,8 +2,8 @@ from .base_model import BaseModel
 from django.db import models
 
 class Department(BaseModel):
-    name = models.CharField(max_length=64, verbose_name="部门名称")
-    code = models.CharField(max_length=64, verbose_name="部门编码")
+    name = models.CharField(max_length=64, verbose_name="部门名称", unique=True)
+    code = models.CharField(max_length=64, verbose_name="部门编码", unique=True)
     leader = models.ForeignKey(
         'system.User',
         null=True,

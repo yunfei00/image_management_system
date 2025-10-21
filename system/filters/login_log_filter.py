@@ -1,6 +1,6 @@
 # system/filters/login_log_filter.py
 import django_filters
-from system.models.login_log import LoginLog
+from system.models.log_manager import LoginLog
 
 
 class LoginLogFilter(django_filters.FilterSet):

@@ -1,5 +1,7 @@
 import django_filters
-from system.models.detect_tool import DetectTool
+
+from detection.models import DetectTool
+
 
 class DetectToolFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(lookup_expr="icontains")

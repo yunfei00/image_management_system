@@ -1,6 +1,6 @@
 # system/serializers/login_log_serializer.py
 from rest_framework import serializers
-from system.models.login_log import LoginLog
+from system.models.log_manager import LoginLog
 
 
 class LoginLogSerializer(serializers.ModelSerializer):

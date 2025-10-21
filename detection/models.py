@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+
 # Create your models here.
 class DetectTool(models.Model):
     name = models.CharField(max_length=255, verbose_name="工具名称")
@@ -9,6 +10,7 @@ class DetectTool(models.Model):
     config = models.JSONField(verbose_name="配置参数")
     status = models.CharField(max_length=50, verbose_name="状态")
     last_test_time = models.DateTimeField(verbose_name="最后测试时间")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
 
     class Meta:
         verbose_name = "检测工具"
@@ -27,7 +29,7 @@ class ProjectDetectTool(models.Model):
         related_name='detect_tool_links'
     )
     detect_tool = models.ForeignKey(
-        'system.DetectTool',
+        DetectTool,
         on_delete=models.RESTRICT,
         verbose_name=_('检测工具'),
         related_name='project_links'
@@ -47,11 +49,11 @@ class ProjectDetectTool(models.Model):
             models.UniqueConstraint(fields=['project', 'detect_tool'],
                                     name='uk_project_tool'),
         ]
-        indexes = [
-            models.Index(fields=['project'], name='idx_project'),
-            models.Index(fields=['detect_tool'], name='idx_tool'),
-            models.Index(fields=['status'], name='idx_status'),
-        ]
+        # indexes = [
+        #     models.Index(fields=['project'], name='idx_project'),
+        #     models.Index(fields=['detect_tool'], name='idx_tool'),
+        #     models.Index(fields=['status'], name='idx_status'),
+        # ]
 
     def __str__(self):
         return f'{self.project_id} - {self.detect_tool_id}'
@@ -71,7 +73,7 @@ class PreDetectionRecord(models.Model):
         related_name='pre_detection_records'
     )
     tool = models.ForeignKey(
-        'system.DetectTool',
+        DetectTool,
         on_delete=models.RESTRICT,
         verbose_name=_('检测工具'),
         related_name='pre_detection_records'
@@ -87,20 +89,16 @@ class PreDetectionRecord(models.Model):
         db_table = 'pre_detect_records'
         verbose_name = _('预检测记录')
         verbose_name_plural = _('预检测记录管理')
-        indexes = [
-            models.Index(fields=['project'], name='idx_project'),
-            models.Index(fields=['tool'], name='idx_tool'),
-            models.Index(fields=['status'], name='idx_status'),
-            models.Index(fields=['vulnerability_count'], name='idx_vulnerability_count'),
-        ]
+        # indexes = [
+        #     models.Index(fields=['project'], name='predetect_idx_project'),
+        #     models.Index(fields=['tool'], name='predetect_idx_tool'),
+        #     models.Index(fields=['status'], name='predetect_idx_status'),
+        #     models.Index(fields=['vulnerability_count'], name='predetect_idx_vulnerability_count'),
+        # ]
 
     def __str__(self):
         return f'{self.project} - {self.tool} ({self.get_status_display()})'
 
-
-# apps/security/models.py
-from django.db import models
-from django.utils.translation import gettext_lazy as _
 
 class SecurityDetectionApplication(models.Model):
     class Status(models.IntegerChoices):
@@ -129,10 +127,10 @@ class SecurityDetectionApplication(models.Model):
         db_table = 'security_detect_apply'
         verbose_name = _('安全检测申请')
         verbose_name_plural = _('安全检测申请管理')
-        indexes = [
-            models.Index(fields=['project'], name='idx_project'),
-            models.Index(fields=['status'], name='idx_status'),
-        ]
+        # indexes = [
+        #     models.Index(fields=['project'], name='idx_project'),
+        #     models.Index(fields=['status'], name='idx_status'),
+        # ]
 
     def __str__(self):
         return f'{self.project} - {self.get_status_display()}'

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Department, User, Role, DetectTool, LoginLog, OperationLog, Menu, Position, ApprovalFlow
+from .models import Department, User, Role, LoginLog, OperationLog, Menu, Position
 
 class DeptForm(forms.ModelForm):
     class Meta:
@@ -14,7 +14,8 @@ class RoleForm(forms.ModelForm):
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'phone', 'email', 'role', 'department', 'status']
+        fields = ['username', 'email']
+        # fields = ['username', 'phone', 'email', 'role', 'department', 'status']
 #
 # class DictForm(forms.ModelForm):
 #     class Meta:
@@ -22,10 +23,10 @@ class UserForm(forms.ModelForm):
 #         fields = ['name', 'type', 'value', 'status']
 #
 #
-class ToolForm(forms.ModelForm):
-    class Meta:
-        model = DetectTool
-        fields = ['name', 'type', 'api_url', 'config', 'status']
+# class ToolForm(forms.ModelForm):
+#     class Meta:
+#         model = DetectTool
+#         fields = ['name', 'type', 'api_url', 'config', 'status']
 
 
 class MenuForm(forms.ModelForm):

@@ -6,9 +6,11 @@ from django.views import View
 from django.views.generic import DeleteView
 from rest_framework import viewsets
 
-from system.filters import DetectToolFilter
-from system.forms import ToolForm
-from system.models import DetectTool
+from detection.filters.detect_tool_filter import DetectToolFilter
+from detection.models import DetectTool
+# from system.filters import DetectToolFilter
+# from system.forms import ToolForm
+# from system.models import DetectTool
 from system.serializers.detect_tool import DetectToolSerializer
 from system.utils import export_queryset_to_excel
 from system.views.handle_modal_form import render_modal_form

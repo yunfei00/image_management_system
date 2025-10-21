@@ -13,7 +13,7 @@ class User(AbstractUser, BaseModel):
     )
     phone = models.CharField(max_length=20, blank=True, null=True, verbose_name="手机号")
     company = models.CharField(max_length=200, blank=True, null=True, verbose_name="公司名称")  # ← 新增字段
-    department_id = models.ForeignKey(
+    department = models.ForeignKey(
         'system.Department',
         on_delete=models.SET_NULL,
         null=True,
@@ -22,7 +22,7 @@ class User(AbstractUser, BaseModel):
         verbose_name="所属部门")
 
     # 外键关联（对应role_id、department_id、position_id）
-    role_id  = models.ForeignKey(
+    role  = models.ForeignKey(
         'system.Role',
         on_delete=models.SET_NULL,
         null=True,
@@ -30,7 +30,7 @@ class User(AbstractUser, BaseModel):
         related_name="users",
         verbose_name="角色"
     )
-    position_id = models.ForeignKey(
+    position = models.ForeignKey(
         'system.Position',
         on_delete=models.SET_NULL,
         null=True,

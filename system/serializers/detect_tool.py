@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from system.models import DetectTool
+
+from detection.models import DetectTool
+
 
 class DetectToolSerializer(serializers.ModelSerializer):
     class Meta:

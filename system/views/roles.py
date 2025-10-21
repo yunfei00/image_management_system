@@ -22,6 +22,7 @@ class RoleViewSet(viewsets.ModelViewSet):
 # ---------- Role ----------
 class RoleListView(View):
     def get(self, request):
+        print(f'{self.__class__.__name__} receive get data is {request.GET}')
         f = RoleFilter(request.GET, queryset=Role.objects.all())
         qs = f.qs.order_by('-id')
         paginator = Paginator(qs, 10)
@@ -37,6 +38,7 @@ class RoleCreateView(View):
 
     def post(self, request):
         form = RoleForm(request.POST)
+        print(f'{self.__class__.__name__} receive data is {request.POST}')
         if form.is_valid():
             form.save()
             return JsonResponse({'success': True})

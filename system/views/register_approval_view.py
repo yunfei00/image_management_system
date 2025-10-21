@@ -42,10 +42,10 @@ def register_request_approve(request, pk):
 
     print('fuck save here')
     # ✅ 创建正式用户（使用注册时的加密密码）
-    if not User.objects.filter(username=req.phone).exists():
+    if not User.objects.filter(username=req.name).exists():
         User.objects.create(
-            username=req.phone,
-            first_name=req.name,
+            username=req.name,
+            phone=req.phone,
             password=req.password,  # 已加密
         )
 

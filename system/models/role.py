@@ -14,7 +14,7 @@ class Permission(models.Model):
         verbose_name_plural = '权限管理'
 
     def __str__(self):
-        return self.key
+        return self.name
 
 
 class Role(BaseModel):

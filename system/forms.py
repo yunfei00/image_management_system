@@ -1,5 +1,6 @@
 from django import forms
-from .models import Department, User, Role, LoginLog, OperationLog, Menu, Position
+from .models import Department, User, Role, LoginLog, OperationLog, Menu, Position, Permission
+
 
 class DeptForm(forms.ModelForm):
     class Meta:
@@ -7,9 +8,15 @@ class DeptForm(forms.ModelForm):
         fields = ['name', 'leader', 'status']
 
 class RoleForm(forms.ModelForm):
+    # 自定义permissions字段：使用checkbox多选，显示Permission的name
+    permissions = forms.ModelMultipleChoiceField(
+        queryset=Permission.objects.all(),  # 可选的权限列表
+        widget=forms.CheckboxSelectMultiple(attrs={"class": "permission-checkboxes"}),  # 核心：使用checkbox控件
+        label="权限"
+    )
     class Meta:
         model = Role
-        fields = ['name', 'code', 'status']
+        fields = ['name', 'code', 'permissions', 'status']
 
 class UserForm(forms.ModelForm):
     class Meta:

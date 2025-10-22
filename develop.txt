@@ -6,10 +6,13 @@ python manage.py loaddata departments_initial.json
 python manage.py loaddata roles_permissions.json
 python manage.py loaddata positions.json
 python manage.py loaddata users_initial.json
-python manage.py loaddata detect_tools_initial.json
+
 python manage.py loaddata login_logs_initial.json
 
 python manage.py seed_operation_logs --count 100
+
+python manage.py loaddata detect_tools_initial.json
+python manage.py loaddata menus_initial.json
 
 
 

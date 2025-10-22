@@ -266,7 +266,7 @@
             <i class="bi bi-speedometer2"></i> 仪表盘
           </a>
         </li>
-          {% if is_admin %}
+          {% if True %}
 
          <li class="nav-item">
   <a class="nav-link d-flex justify-content-between align-items-center {% if 'system' in request.path %}active{% endif %}"
@@ -282,20 +282,16 @@
   <div class="collapse {% if 'system' in request.path %}show{% endif %}" id="systemMenu">
     <ul class="nav flex-column ms-3 mt-1">
       <li class="nav-item">
-        <a class="nav-link {% if request.resolver_match.url_name == 'user_list' %}active{% endif %}"
+        <a class="nav-link {% if request.resolver_match.url_name == 'system:user_list' %}active{% endif %}"
            href="{% url 'system:user_list' %}"><i class="bi bi-people me-2"></i>用户管理</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if request.resolver_match.url_name == 'dept_list' %}active{% endif %}"
+        <a class="nav-link {% if request.resolver_match.url_name == 'system:dept_list' %}active{% endif %}"
            href="{% url 'system:dept_list' %}"><i class="bi bi-diagram-3 me-2"></i>部门管理</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if request.resolver_match.url_name == 'role_list' %}active{% endif %}"
+        <a class="nav-link {% if request.resolver_match.url_name == 'system:role_list' %}active{% endif %}"
            href="{% url 'system:role_list' %}"><i class="bi bi-person-gear me-2"></i>角色管理</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link {% if request.resolver_match.url_name == 'dict_list' %}active{% endif %}"
-           href="{% url 'system:dict_list' %}"><i class="bi bi-book me-2"></i>字典管理</a>
       </li>
     <!-- 检测工具管理 -->
   <li class="nav-item">
@@ -307,16 +303,16 @@
 
   <!-- 登录日志 -->
   <li class="nav-item">
-    <a class="nav-link {% if request.resolver_match.url_name == 'loginlog_list' %}active{% endif %}"
-       href="{% url 'system:loginlog_list' %}">
+    <a class="nav-link {% if request.resolver_match.url_name == 'system:loginlog' %}active{% endif %}"
+       href="{% url 'system:login_log_list' %}">
       <i class="bi bi-door-open me-2"></i>登录日志
     </a>
   </li>
 
   <!-- 操作日志 -->
   <li class="nav-item">
-    <a class="nav-link {% if request.resolver_match.url_name == 'operationlog_list' %}active{% endif %}"
-       href="{% url 'system:operationlog_list' %}">
+    <a class="nav-link {% if request.resolver_match.url_name == 'system:oper_log_list' %}active{% endif %}"
+       href="{% url 'system:oper_log_list' %}">
       <i class="bi bi-journal-text me-2"></i>操作日志
     </a>
   </li>
@@ -340,7 +336,7 @@
   <!-- 审批流程配置 -->
   <li class="nav-item">
     <a class="nav-link {% if request.resolver_match.url_name == 'workflow_list' %}active{% endif %}"
-       href="{% url 'system:workflow_list' %}">
+       href="{% url 'system:tool_list' %}">
       <i class="bi bi-diagram-2 me-2"></i>审批流程配置
     </a>
   </li>

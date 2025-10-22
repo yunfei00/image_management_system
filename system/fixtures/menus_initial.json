@@ -1,0 +1,53 @@
+[
+  {
+    "model": "system.menu",
+    "pk": 1,
+    "fields": {
+      "name": "仪表盘",
+      "parent": null,
+      "path": "/dashboard",
+      "icon": "bi-speedometer",
+      "sort": 10,
+      "status": 1,
+      "visible": true,
+      "is_external": false,
+      "permission": "",
+      "created_at": "2025-01-01T08:00:00Z",
+      "updated_at": "2025-01-01T08:00:00Z"
+    }
+  },
+  {
+    "model": "system.menu",
+    "pk": 2,
+    "fields": {
+      "name": "系统管理",
+      "parent": null,
+      "path": "/system",
+      "icon": "bi-gear",
+      "sort": 90,
+      "status": 1,
+      "visible": true,
+      "is_external": false,
+      "permission": "",
+      "created_at": "2025-01-01T09:00:00Z",
+      "updated_at": "2025-01-01T09:00:00Z"
+    }
+  },
+  {
+    "model": "system.menu",
+    "pk": 3,
+    "fields": {
+      "name": "菜单管理",
+      "parent": 2,
+      "path": "/system/menus",
+      "icon": "bi-list",
+      "sort": 30,
+      "status": 1,
+      "visible": true,
+      "is_external": false,
+      "permission": "",
+      "created_at": "2025-01-01T09:30:00Z",
+      "updated_at": "2025-01-01T09:30:00Z"
+    }
+  }
+]

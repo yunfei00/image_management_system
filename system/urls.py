@@ -1,8 +1,9 @@
 from django.urls import path
 
 from .views import (departments, roles, post, users, tools, login_log, oper_log, register,
-                    register_approval_view, auth_views)
+                    register_approval_view, auth_views, menu)
 from .views.home import home
+from .views.menu import MenuUpdateView, MenuDeleteView
 
 app_name = 'system'
 
@@ -59,5 +60,9 @@ urlpatterns = [
 
     path('operationlog/', oper_log.OperationLogListView.as_view(), name='oper_log_list'),
     path('operationlog/<int:pk>/delete/', login_log.LoginLogDeleteView.as_view(), name='oper_log_delete'),
-
+# 菜单管理
+    path('menus/', menu.MenuListView.as_view(), name='menu_list'),
+    path('menus/create/', menu.MenuCreateView.as_view(), name='menu_create'),
+    path('menus/<int:pk>/edit/', MenuUpdateView.as_view(), name='menu_edit'),
+    path('menus/<int:pk>/delete/', MenuDeleteView.as_view(), name='menu_delete'),
 ]

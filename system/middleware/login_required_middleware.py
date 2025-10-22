@@ -11,9 +11,6 @@ DEFAULT_WHITELIST_PREFIXES = [
     '/login',
     '/logout',
     '/register',
-    '/system',
-    '/dept',
-    '/'
 ]
 
 class LoginRequiredMiddleware:

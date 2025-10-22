@@ -23,24 +23,35 @@ class UserForm(forms.ModelForm):
         model = User
         fields = ['username', 'email']
         # fields = ['username', 'phone', 'email', 'role', 'department', 'status']
-#
-# class DictForm(forms.ModelForm):
-#     class Meta:
-#         model = DictItem
-#         fields = ['name', 'type', 'value', 'status']
-#
-#
+
 # class ToolForm(forms.ModelForm):
 #     class Meta:
 #         model = DetectTool
 #         fields = ['name', 'type', 'api_url', 'config', 'status']
 
 
+# class MenuForm(forms.ModelForm):
+#     class Meta:
+#         model = Menu
+#         fields = ['name', 'path', 'parent', 'status']
+
+
 class MenuForm(forms.ModelForm):
     class Meta:
         model = Menu
-        fields = ['name', 'path', 'parent', 'status']
+        fields = ['name', 'parent', 'path', 'icon', 'sort',
+                  'status', 'visible', 'is_external', 'permission', 'groups']
+        widgets = {
+            'groups': forms.SelectMultiple(attrs={'class': 'form-select'}),
+        }
 
+    def clean(self):
+        cleaned = super().clean()
+        path = cleaned.get('path') or ''
+        is_external = cleaned.get('is_external')
+        if not is_external and not path.startswith('/'):
+            raise forms.ValidationError('非外链路径必须以 “/” 开头。')
+        return cleaned
 
 class PositionForm(forms.ModelForm):
     class Meta:

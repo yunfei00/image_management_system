@@ -26,6 +26,7 @@ from system.views.post import PositionViewSet
 from system.views.tools import ToolViewSet
 from system.views.users import UserViewSet
 from system.views.login_log import LoginLogViewSet
+from system.views.menu import MenuViewSet
 
 
 router = routers.DefaultRouter()
@@ -35,6 +36,7 @@ router.register('positions', PositionViewSet)
 router.register('users', UserViewSet)
 router.register('detect-tools', ToolViewSet)
 router.register('logs/login', LoginLogViewSet)
+router.register('menus', MenuViewSet)
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('', include('system.urls', namespace='system')),

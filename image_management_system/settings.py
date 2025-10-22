@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "repo.apps.RepoConfig",
     "django_filters",
     'rest_framework',  # 必须添加，否则 DRF 模板无法被搜索到
+
 ]
 
 # Django REST framework 全局配置
@@ -71,6 +72,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'system.middleware.login_required_middleware.LoginRequiredMiddleware',
 ]
 
 ROOT_URLCONF = "image_management_system.urls"
@@ -143,3 +145,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # 自定义用户模型（必须在第一次迁移前设置）
 AUTH_USER_MODEL = "system.User"
+
+LOGIN_URL = "/login"
+LOGOUT_URL = "/logout"

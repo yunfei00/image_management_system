@@ -11,7 +11,7 @@ def find_initial_migrations(root_dir):
     """
     initial_files = []
     # 匹配 0001_initial.py 或 0001_initial.pyc 格式的文件
-    pattern = re.compile(r'^0\d\d\d_initial\.py[co]?$')  # 包含 .py、.pyc、.pyo
+    pattern = re.compile(r'^00\d{2}.*\.py[co]?$')  # 包含 .py、.pyc、.pyo
 
     # 遍历项目根目录下的所有文件夹
     for dirpath, _, filenames in os.walk(root_dir):

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Role, Permission, RoleUser, LoginLog, OperationLog
+from .models import Role, Permission, RoleUser, LoginLog, OperationLog, Menu
 
 
 @admin.register(Permission)
@@ -38,3 +38,24 @@ class OperationLogAdmin(admin.ModelAdmin):
     def short_content(self, obj):
         return (obj.operation_content[:80] + '...') if len(obj.operation_content) > 80 else obj.operation_content
     short_content.short_description = '操作内容'
+
+
+@admin.register(Menu)
+class MenuAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'parent', 'path', 'icon', 'sort', 'status', 'visible', 'is_external')
+    list_filter = ('status', 'visible', 'is_external')
+    search_fields = ('name', 'path', 'permission')
+    ordering = ('sort', 'id')
+    filter_horizontal = ('groups',)
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'parent', 'path', 'icon', 'sort', 'status', 'visible', 'is_external')
+        }),
+        ('权限与可见性', {
+            'fields': ('permission', 'groups')
+        }),
+        ('时间', {
+            'fields': ('created_at', 'updated_at'),
+        }),
+    )
+    readonly_fields = ('created_at', 'updated_at')

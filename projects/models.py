@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils.translation import gettext_lazy as _  # 正确导入
 
 # Create your models here.
 class Project(models.Model):
@@ -30,19 +29,19 @@ class ProjectApproval(models.Model):
 
 class ApprovalFlow(models.Model):
     class Status(models.IntegerChoices):
-        DISABLED = 0, _('禁用')
-        ENABLED  = 1, _('启用')
+        DISABLED = 0, '禁用'
+        ENABLED  = 1, '启用'
 
-    name = models.CharField(_('流程名称'), max_length=100, unique=True)
-    nodes_config = models.JSONField(_('审批节点配置'))  # JSON 结构见下方示例
-    status = models.PositiveSmallIntegerField(_('状态'), choices=Status.choices, default=Status.ENABLED)
-    created_at = models.DateTimeField(_('创建时间'), auto_now_add=True)
-    updated_at = models.DateTimeField(_('更新时间'), auto_now=True)
+    name = models.CharField('流程名称', max_length=100, unique=True)
+    nodes_config = models.JSONField('审批节点配置')  # JSON 结构见下方示例
+    status = models.PositiveSmallIntegerField('状态', choices=Status.choices, default=Status.ENABLED)
+    created_at = models.DateTimeField('创建时间', auto_now_add=True)
+    updated_at = models.DateTimeField('更新时间', auto_now=True)
 
     class Meta:
         db_table = 'approval_flows'
-        verbose_name = _('审批流程配置')
-        verbose_name_plural = _('审批流程配置')
+        verbose_name = '审批流程配置'
+        verbose_name_plural = '审批流程配置'
         indexes = [
             models.Index(fields=['status'], name='idx_flow_status'),
         ]

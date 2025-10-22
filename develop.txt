@@ -16,6 +16,8 @@ python manage.py loaddata menus_initial.json
 python manage.py loaddata base_images_initial.json
 
 python manage.py loaddata approvals_initial.json
+
+
 python manage.py loaddata business_images_initial.json
 
 

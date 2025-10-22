@@ -21,6 +21,7 @@ from rest_framework import routers
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 from images.views import BaseImageViewSet, BusinessImageViewSet
+from projects.views import ProjectViewSet
 from system.views.approvals_views import ApprovalFlowViewSet
 from system.views.departments import DepartmentViewSet
 from system.views.roles import RoleViewSet
@@ -42,6 +43,7 @@ router.register('menus', MenuViewSet)
 router.register('images/base', BaseImageViewSet)
 router.register('images/business', BusinessImageViewSet)
 router.register('approval-flows', ApprovalFlowViewSet)
+router.register('projects', ProjectViewSet)
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('', include('system.urls', namespace='system')),

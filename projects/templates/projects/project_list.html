@@ -1,36 +1,115 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block content %}
-<div class="container mt-5">
-    <h2>项目列表</h2>
-    <a href="{% url 'projects:project_create' %}" class="btn btn-primary mb-3">创建项目</a>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>项目名称</th>
-                <th>项目ID</th>
-                <th>业务部门</th>
-                <th>最终用户</th>
-                <th>状态</th>
-                <th>预计上线时间</th>
-                <th>操作</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for project in projects %}
-            <tr>
-                <td>{{ project.name }}</td>
-                <td>{{ project.project_id }}</td>
-                <td>{{ project.business_department }}</td>
-                <td>{{ project.final_user }}</td>
-                <td>{{ project.get_status_display }}</td>
-                <td>{{ project.expected_launch }}</td>
-                <td>
-                    <a href="{% url 'projects:project_edit' project.id %}" class="btn btn-sm btn-warning">编辑</a>
-                    <a href="{% url 'projects:project_detail' project.id %}" class="btn btn-sm btn-info">详情</a>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
+<form class="row g-2 mb-3" method="get">
+  <div class="col-auto">
+    <input class="form-control" name="name" placeholder="项目名称" value="{{ request.GET.name }}">
+  </div>
+  <div class="col-auto">
+    <input class="form-control" name="code" placeholder="项目编码" value="{{ request.GET.code }}">
+  </div>
+  <div class="col-auto">
+    <select name="status" class="form-select">
+      <option value="">项目状态</option>
+      <option value="1" {% if request.GET.status == '1' %}selected{% endif %}>启用</option>
+      <option value="0" {% if request.GET.status == '0' %}selected{% endif %}>禁用</option>
+    </select>
+  </div>
+  <div class="col-auto">
+    <select name="approval_status" class="form-select">
+      <option value="">审批状态</option>
+      <option value="0" {% if request.GET.approval_status == '0' %}selected{% endif %}>待审批</option>
+      <option value="1" {% if request.GET.approval_status == '1' %}selected{% endif %}>已通过</option>
+      <option value="2" {% if request.GET.approval_status == '2' %}selected{% endif %}>已拒绝</option>
+    </select>
+  </div>
+  <div class="col-auto">
+    <select name="department" class="form-select">
+      <option value="">部门</option>
+      {% for d in filter.form.fields.department.queryset %}
+        <option value="{{ d.id }}" {% if request.GET.department == d.id|stringformat:'s' %}selected{% endif %}>{{ d }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-auto">
+    <select name="base_image" class="form-select">
+      <option value="">基础镜像</option>
+      {% for bi in filter.form.fields.base_image.queryset %}
+        <option value="{{ bi.id }}" {% if request.GET.base_image == bi.id|stringformat:'s' %}selected{% endif %}>{{ bi }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-auto">
+    <input type="date" class="form-control" name="plan_online_date_after" value="{{ request.GET.plan_online_date_after }}" placeholder="上线起">
+  </div>
+  <div class="col-auto">
+    <input type="date" class="form-control" name="plan_online_date_before" value="{{ request.GET.plan_online_date_before }}" placeholder="上线止">
+  </div>
+
+  <div class="col-auto">
+    <button class="btn btn-primary">搜索</button>
+    <a class="btn btn-success" href="?{% if request.GET.name %}name={{ request.GET.name|urlencode }}&{% endif %}{% if request.GET.code %}code={{ request.GET.code|urlencode }}&{% endif %}{% if request.GET.status %}status={{ request.GET.status }}&{% endif %}{% if request.GET.approval_status %}approval_status={{ request.GET.approval_status }}&{% endif %}{% if request.GET.department %}department={{ request.GET.department }}&{% endif %}{% if request.GET.base_image %}base_image={{ request.GET.base_image }}&{% endif %}{% if request.GET.plan_online_date_after %}plan_online_date_after={{ request.GET.plan_online_date_after }}&{% endif %}{% if request.GET.plan_online_date_before %}plan_online_date_before={{ request.GET.plan_online_date_before }}&{% endif %}export=1">导出</a>
+  </div>
+  <div class="col-auto ms-auto text-end">
+    <button type="button" class="btn btn-outline-primary" onclick="openModal('{% url 'projects:project_create' %}', '新增项目')">新增</button>
+  </div>
+</form>
+
+<table class="table table-bordered">
+  <thead class="table-light">
+    <tr>
+      <th><input id="selectAll" type="checkbox" /></th>
+      <th>项目编码</th>
+      <th>项目名称</th>
+      <th>部门</th>
+      <th>申请人</th>
+      <th>基础镜像</th>
+      <th>审批状态</th>
+      <th>状态</th>
+      <th>预计上线</th>
+      <th>提交时间</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for obj in page_obj %}
+      <tr>
+        <td><input type="checkbox" class="rowCheckbox" value="{{ obj.id }}"></td>
+        <td>{{ obj.code }}</td>
+        <td>{{ obj.name }}</td>
+        <td>{{ obj.department }}</td>
+        <td>{{ obj.applicant }}</td>
+        <td>{{ obj.base_image }}</td>
+        <td>{{ obj.get_approval_status_display }}</td>
+        <td>{{ obj.get_status_display }}</td>
+        <td>{{ obj.plan_online_date|date:'Y-m-d' }}</td>
+        <td>{{ obj.submit_at|date:'Y-m-d H:i' }}</td>
+        <td>
+          <button class="btn btn-sm btn-warning" onclick="openModal('{% url 'projects:project_edit' obj.id %}', '编辑项目')">修改</button>
+          <button class="btn btn-sm btn-danger" onclick="postDelete('{% url 'projects:project_delete' obj.id %}')">删除</button>
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="11" class="text-center text-muted">暂无数据</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% include "system/includes/pagination.html" %}
+
+<script>
+  document.getElementById('selectAll')?.addEventListener('change', function(e){
+    document.querySelectorAll('.rowCheckbox').forEach(ch => ch.checked = e.target.checked);
+  });
+
+  async function postDelete(url){
+    if(!confirm('确认删除？')) return;
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {'X-CSRFToken': getCookie('csrftoken')}
+    });
+    const data = await resp.json();
+    if(data.success) location.reload();
+    else alert('删除失败');
+  }
+</script>
 {% endblock %}

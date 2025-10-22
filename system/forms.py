@@ -1,7 +1,7 @@
 from django import forms
 
 from detection.models import DetectTool
-from .models import Department, User, Role, LoginLog, OperationLog, Menu, Position, Permission
+from .models import Department, User, Role, LoginLog, OperationLog, Menu, Position, Permission, ApprovalFlow
 
 
 class DeptForm(forms.ModelForm):
@@ -96,3 +96,16 @@ class OperationLogSearchForm(forms.Form):
     module = forms.CharField(required=False, max_length=128, label="模块")
     operator = forms.CharField(required=False, max_length=64, label="操作员")
     ip = forms.CharField(required=False, max_length=45, label="登录IP")
+
+
+class ApprovalFlowForm(forms.ModelForm):
+    # Django 5 自带 JSONField 表单字段，可自动校验 JSON
+    nodes_config = forms.JSONField(label="审批节点配置")
+
+    class Meta:
+        model = ApprovalFlow
+        fields = ["name", "nodes_config", "status"]
+        widgets = {
+            "name": forms.TextInput(attrs={"class": "form-control", "placeholder": "请输入流程名称"}),
+            "status": forms.Select(attrs={"class": "form-select"}),
+        }

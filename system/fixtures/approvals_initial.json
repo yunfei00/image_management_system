@@ -1,0 +1,117 @@
+[
+  {
+    "model": "system.approvalflow",
+    "pk": 1,
+    "fields": {
+      "name": "单节点-安全负责人审批",
+      "nodes_config": {
+        "version": 1,
+        "mode": "SEQUENTIAL",
+        "nodes": [
+          {
+            "id": "n1",
+            "name": "安全负责人审批",
+            "approvers": {"type": "ROLE", "value": "SECURITY_LEAD"},
+            "decision": {"type": "ANY"},
+            "sla": {"hours": 24}
+          }
+        ]
+      },
+      "status": 1,
+      "created_at": "2025-01-02T08:00:00Z",
+      "updated_at": "2025-01-02T08:00:00Z"
+    }
+  },
+  {
+    "model": "system.approvalflow",
+    "pk": 2,
+    "fields": {
+      "name": "两节点-项目管理员→安全负责人",
+      "nodes_config": {
+        "version": 1,
+        "mode": "SEQUENTIAL",
+        "nodes": [
+          {
+            "id": "n1",
+            "name": "项目管理员审批",
+            "approvers": {"type": "ROLE", "value": "PROJECT_ADMIN"},
+            "decision": {"type": "ANY"}
+          },
+          {
+            "id": "n2",
+            "name": "安全负责人审批",
+            "approvers": {"type": "ROLE", "value": "SECURITY_LEAD"},
+            "decision": {"type": "ANY"},
+            "sla": {"hours": 24, "escalate_to": {"type": "ROLE", "value": "SECURITY_MANAGER"}}
+          }
+        ]
+      },
+      "status": 1,
+      "created_at": "2025-01-02T09:00:00Z",
+      "updated_at": "2025-01-02T09:00:00Z"
+    }
+  },
+  {
+    "model": "system.approvalflow",
+    "pk": 3,
+    "fields": {
+      "name": "并行-安全与合规（多数通过）",
+      "nodes_config": {
+        "version": 1,
+        "mode": "PARALLEL",
+        "nodes": [
+          {
+            "id": "n1",
+            "name": "安全团队会签",
+            "approvers": {"type": "ROLE", "value": "SECURITY_REVIEWERS"},
+            "decision": {"type": "MAJORITY"}
+          },
+          {
+            "id": "n2",
+            "name": "合规团队会签",
+            "approvers": {"type": "ROLE", "value": "COMPLIANCE_REVIEWERS"},
+            "decision": {"type": "MAJORITY"}
+          }
+        ]
+      },
+      "status": 1,
+      "created_at": "2025-01-02T09:30:00Z",
+      "updated_at": "2025-01-02T09:30:00Z"
+    }
+  },
+  {
+    "model": "system.approvalflow",
+    "pk": 4,
+    "fields": {
+      "name": "高风险镜像-三节点（含条件）",
+      "nodes_config": {
+        "version": 1,
+        "mode": "SEQUENTIAL",
+        "nodes": [
+          {
+            "id": "n1",
+            "name": "项目负责人审批",
+            "approvers": {"type": "ROLE", "value": "PROJECT_OWNER"},
+            "decision": {"type": "ANY"}
+          },
+          {
+            "id": "n2",
+            "name": "安全负责人审批（风险≥80时必审）",
+            "approvers": {"type": "ROLE", "value": "SECURITY_LEAD"},
+            "decision": {"type": "ANY"},
+            "conditions": [{"when": "context.risk_score >= 80", "required": true}]
+          },
+          {
+            "id": "n3",
+            "name": "平台管理员会签",
+            "approvers": {"type": "ROLE", "value": "PLATFORM_ADMINS"},
+            "decision": {"type": "ALL"}
+          }
+        ]
+      },
+      "status": 1,
+      "created_at": "2025-01-02T10:00:00Z",
+      "updated_at": "2025-01-02T10:00:00Z"
+    }
+  }
+]

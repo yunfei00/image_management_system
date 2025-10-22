@@ -14,7 +14,10 @@ python manage.py seed_operation_logs --count 100
 python manage.py loaddata detect_tools_initial.json
 python manage.py loaddata menus_initial.json
 python manage.py loaddata base_images_initial.json
+
+python manage.py loaddata approvals_initial.json
 python manage.py loaddata business_images_initial.json
+
 
 
 

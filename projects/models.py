@@ -27,27 +27,27 @@ class ProjectApproval(models.Model):
         verbose_name_plural = "项目审批管理"
 
 
-class ApprovalFlow(models.Model):
-    class Status(models.IntegerChoices):
-        DISABLED = 0, '禁用'
-        ENABLED  = 1, '启用'
-
-    name = models.CharField('流程名称', max_length=100, unique=True)
-    nodes_config = models.JSONField('审批节点配置')  # JSON 结构见下方示例
-    status = models.PositiveSmallIntegerField('状态', choices=Status.choices, default=Status.ENABLED)
-    created_at = models.DateTimeField('创建时间', auto_now_add=True)
-    updated_at = models.DateTimeField('更新时间', auto_now=True)
-
-    class Meta:
-        db_table = 'approval_flows'
-        verbose_name = '审批流程配置'
-        verbose_name_plural = '审批流程配置'
-        indexes = [
-            models.Index(fields=['status'], name='idx_flow_status'),
-        ]
-
-    def __str__(self):
-        return self.name
+# class ApprovalFlow(models.Model):
+#     class Status(models.IntegerChoices):
+#         DISABLED = 0, '禁用'
+#         ENABLED  = 1, '启用'
+#
+#     name = models.CharField('流程名称', max_length=100, unique=True)
+#     nodes_config = models.JSONField('审批节点配置')  # JSON 结构见下方示例
+#     status = models.PositiveSmallIntegerField('状态', choices=Status.choices, default=Status.ENABLED)
+#     created_at = models.DateTimeField('创建时间', auto_now_add=True)
+#     updated_at = models.DateTimeField('更新时间', auto_now=True)
+#
+#     class Meta:
+#         db_table = 'approval_flows'
+#         verbose_name = '审批流程配置'
+#         verbose_name_plural = '审批流程配置'
+#         indexes = [
+#             models.Index(fields=['status'], name='idx_flow_status'),
+#         ]
+#
+#     def __str__(self):
+#         return self.name
 
 
 # [

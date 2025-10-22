@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Role, Permission, RoleUser, LoginLog, OperationLog, Menu
+from .models import Role, Permission, RoleUser, LoginLog, OperationLog, Menu, ApprovalFlow
 
 
 @admin.register(Permission)
@@ -59,3 +59,10 @@ class MenuAdmin(admin.ModelAdmin):
         }),
     )
     readonly_fields = ('created_at', 'updated_at')
+
+@admin.register(ApprovalFlow)
+class ApprovalFlowAdmin(admin.ModelAdmin):
+    list_display = ("id", "name", "status", "created_at")
+    list_filter = ("status",)
+    search_fields = ("name",)
+    ordering = ("-created_at",)

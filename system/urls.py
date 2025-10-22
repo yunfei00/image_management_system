@@ -1,7 +1,8 @@
 from django.urls import path
 
 from .views import (departments, roles, post, users, tools, login_log, oper_log, register,
-                    register_approval_view, auth_views, menu)
+                    register_approval_view, auth_views, menu, approvals_views)
+
 from .views.home import home
 from .views.menu import MenuUpdateView, MenuDeleteView
 
@@ -65,4 +66,9 @@ urlpatterns = [
     path('menus/create/', menu.MenuCreateView.as_view(), name='menu_create'),
     path('menus/<int:pk>/edit/', MenuUpdateView.as_view(), name='menu_edit'),
     path('menus/<int:pk>/delete/', MenuDeleteView.as_view(), name='menu_delete'),
+
+    path("approval-flows/", approvals_views.ApprovalFlowListView.as_view(), name="approval_flow_list"),
+    path("approval-flows/create/", approvals_views.ApprovalFlowCreateView.as_view(), name="approval_flow_create"),
+    path("approval-flows/<int:pk>/update/", approvals_views.ApprovalFlowUpdateView.as_view(), name="approval_flow_update"),
+    path("approval-flows/<int:pk>/delete/", approvals_views.ApprovalFlowDeleteView.as_view(), name="approval_flow_delete"),
 ]

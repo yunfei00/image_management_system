@@ -17,4 +17,7 @@ db.sqlite3
 .vscode/
 .idea/
 /doc/容器全生命周期管控系统需求描述文档new.docx
-/migrations/
+/images/migrations
+/projects/migrations
+/system/migrations
+/detection/migrations

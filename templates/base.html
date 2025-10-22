@@ -368,14 +368,14 @@
 
       <li class="nav-item">
         <a class="nav-link {% if '/images/base/' in request.path %}active{% endif %}"
-           href="{% url 'images:home' %}">
+           href="{% url 'images:base_list' %}">
            <i class="bi bi-layers me-2"></i>基础镜像管理
         </a>
       </li>
 
       <li class="nav-item">
         <a class="nav-link {% if '/images/business/' in request.path %}active{% endif %}"
-           href="{% url 'images:home' %}">
+           href="{% url 'images:biz_list' %}">
            <i class="bi bi-building me-2"></i>业务镜像管理
         </a>
       </li>

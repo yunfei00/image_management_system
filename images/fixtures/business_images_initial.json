@@ -1,0 +1,44 @@
+[
+  {
+    "model": "images.businessimage",
+    "pk": 1,
+    "fields": {
+      "name": "order-service",
+      "version": "1.0.0",
+      "image_id": "registry.local/order:1.0.0",
+      "project": 1,
+      "detect_status": "待检测",
+      "approve_status": "无需",
+      "size": 200000000,
+      "created_at": "2025-01-02T00:00:00Z"
+    }
+  },
+  {
+    "model": "images.businessimage",
+    "pk": 2,
+    "fields": {
+      "name": "gateway",
+      "version": "0.9.0",
+      "image_id": "registry.local/gateway:0.9.0",
+      "project": 1,
+      "detect_status": "检测中",
+      "approve_status": "待审批",
+      "size": 180000000,
+      "created_at": "2025-01-02T01:00:00Z"
+    }
+  },
+  {
+    "model": "images.businessimage",
+    "pk": 3,
+    "fields": {
+      "name": "billing",
+      "version": "1.1.0",
+      "image_id": "registry.local/billing:1.1.0",
+      "project": 1,
+      "detect_status": "通过",
+      "approve_status": "已通过",
+      "size": 220000000,
+      "created_at": "2025-01-02T02:00:00Z"
+    }
+  }
+]

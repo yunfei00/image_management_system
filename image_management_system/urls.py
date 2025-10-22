@@ -20,6 +20,7 @@ from django.urls import path, include
 from rest_framework import routers
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
+from images.views import BaseImageViewSet, BusinessImageViewSet
 from system.views.departments import DepartmentViewSet
 from system.views.roles import RoleViewSet
 from system.views.post import PositionViewSet
@@ -37,6 +38,8 @@ router.register('users', UserViewSet)
 router.register('detect-tools', ToolViewSet)
 router.register('logs/login', LoginLogViewSet)
 router.register('menus', MenuViewSet)
+router.register('images/base', BaseImageViewSet)
+router.register('images/business', BusinessImageViewSet)
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('', include('system.urls', namespace='system')),

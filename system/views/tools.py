@@ -36,7 +36,7 @@ class ToolListView(View):
 
 class ToolCreateView(View):
     def get(self, request):
-        form = ToolForm()
+        form = ToolF()
         return render_modal_form(request, form)
 
     def post(self, request):

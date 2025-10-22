@@ -1,33 +1,96 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container mt-4">
-  <h3>业务镜像列表</h3>
+<form class="row g-2 mb-3" method="get">
+  <div class="col-auto">
+    <input class="form-control" name="name" placeholder="镜像名称" value="{{ request.GET.name }}">
+  </div>
+  <div class="col-auto">
+    <input class="form-control" name="version" placeholder="版本" value="{{ request.GET.version }}">
+  </div>
+  <div class="col-auto">
+    <input class="form-control" name="detect_status" placeholder="检测状态" list="detectOptions" value="{{ request.GET.detect_status }}">
+    <datalist id="detectOptions">
+      <option value="待检测"><option value="检测中"><option value="通过"><option value="不通过">
+    </datalist>
+  </div>
+  <div class="col-auto">
+    <input class="form-control" name="approve_status" placeholder="审批状态" list="approveOptions" value="{{ request.GET.approve_status }}">
+    <datalist id="approveOptions">
+      <option value="无需"><option value="待审批"><option value="已通过"><option value="已拒绝">
+    </datalist>
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-primary">搜索</button>
+    <a class="btn btn-success"
+       href="?{% if request.GET.name %}name={{ request.GET.name|urlencode }}&{% endif %}
+              {% if request.GET.version %}version={{ request.GET.version|urlencode }}&{% endif %}
+              {% if request.GET.detect_status %}detect_status={{ request.GET.detect_status|urlencode }}&{% endif %}
+              {% if request.GET.approve_status %}approve_status={{ request.GET.approve_status|urlencode }}&{% endif %}export=1">
+      导出
+    </a>
+  </div>
+  <div class="col-auto ms-auto text-end">
+    <button type="button" class="btn btn-outline-primary"
+            onclick="openModal('{% url 'images:biz_create' %}', '登记业务镜像')">登记</button>
+  </div>
+</form>
 
-  <a href="{% url 'images:add_business_image' %}" class="btn btn-success mb-3">添加业务镜像</a>
+<table class="table table-bordered">
+  <thead class="table-light">
+    <tr>
+      <th><input id="selectAllBiz" type="checkbox" /></th>
+      <th>镜像名称</th>
+      <th>版本</th>
+      <th>镜像ID</th>
+      <th>项目</th>
+      <th>检测状态</th>
+      <th>审批状态</th>
+      <th>大小</th>
+      <th>创建时间</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for obj in page_obj %}
+      <tr>
+        <td><input type="checkbox" class="rowCheckboxBiz" value="{{ obj.id }}"></td>
+        <td>{{ obj.name }}</td>
+        <td>{{ obj.version }}</td>
+        <td class="text-truncate" style="max-width:320px;" title="{{ obj.image_id }}">{{ obj.image_id }}</td>
+        <td>{{ obj.project }}</td>
+        <td>{{ obj.get_detect_status_display|default:obj.detect_status }}</td>
+        <td>{{ obj.get_approve_status_display|default:obj.approve_status }}</td>
+        <td>{{ obj.size }}</td>
+        <td>{{ obj.created_at|date:"Y-m-d H:i" }}</td>
+        <td>
+          <button class="btn btn-sm btn-warning"
+                  onclick="openModal('{% url 'images:biz_edit' obj.id %}', '编辑业务镜像')">修改</button>
+          <button class="btn btn-sm btn-danger"
+                  onclick="postDeleteBiz('{% url 'images:biz_delete' obj.id %}')">删除</button>
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="10" class="text-center text-muted">暂无数据</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
 
-  <table class="table table-striped table-hover">
-    <thead>
-      <tr>
-        <th>镜像名称</th>
-        <th>版本号</th>
-        <th>镜像ID</th>
-        <th>大小</th>
-        <th>创建时间</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for image in images %}
-      <tr>
-        <td>{{ image.name }}</td>
-        <td>{{ image.version }}</td>
-        <td>{{ image.image_id }}</td>
-        <td>{{ image.size }}</td>
-        <td>{{ image.created_at|date:"Y-m-d H:i" }}</td>
-      </tr>
-      {% empty %}
-      <tr><td colspan="5" class="text-center text-muted">暂无数据</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+{% include "system/includes/pagination.html" %}
+
+<script>
+  document.getElementById('selectAllBiz')?.addEventListener('change', function(e){
+    document.querySelectorAll('.rowCheckboxBiz').forEach(ch => ch.checked = e.target.checked);
+  });
+
+  async function postDeleteBiz(url){
+    if(!confirm('确认删除？')) return;
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {'X-CSRFToken': getCookie('csrftoken')}
+    });
+    const data = await resp.json();
+    if(data.success) location.reload();
+    else alert(data.message || '删除失败');
+  }
+</script>
 {% endblock %}

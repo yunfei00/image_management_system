@@ -13,6 +13,8 @@ python manage.py seed_operation_logs --count 100
 
 python manage.py loaddata detect_tools_initial.json
 python manage.py loaddata menus_initial.json
+python manage.py loaddata base_images_initial.json
+python manage.py loaddata business_images_initial.json
 
 
 
@@ -27,6 +29,16 @@ python manage.py add_default_users
 7. 添加html
 8. 添加用户api
 9. 添加admin 支持后台管理
+10. 初始化数据
+
+
+2. 过滤器
+3. 添加序列化
+4. 添加路径
+5. 添加form
+6. 添加视图
+7. 添加html
+8. 添加用户api
 10. 初始化数据
 
 

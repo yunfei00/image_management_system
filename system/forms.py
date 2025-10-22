@@ -1,4 +1,6 @@
 from django import forms
+
+from detection.models import DetectTool
 from .models import Department, User, Role, LoginLog, OperationLog, Menu, Position, Permission
 
 
@@ -24,10 +26,10 @@ class UserForm(forms.ModelForm):
         fields = ['username', 'email']
         # fields = ['username', 'phone', 'email', 'role', 'department', 'status']
 
-# class ToolForm(forms.ModelForm):
-#     class Meta:
-#         model = DetectTool
-#         fields = ['name', 'type', 'api_url', 'config', 'status']
+class ToolForm(forms.ModelForm):
+    class Meta:
+        model = DetectTool
+        fields = ['name', 'type', 'api_url', 'config', 'status']
 
 
 # class MenuForm(forms.ModelForm):

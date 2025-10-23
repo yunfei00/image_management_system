@@ -269,7 +269,7 @@
           {% if True %}
 
          <li class="nav-item">
-  <a class="nav-link d-flex justify-content-between align-items-center {% if 'system' in request.path %}active{% endif %}"
+  <a class="nav-link d-flex justify-content-between align-items-center {% if 'system1111' in request.path %}active{% endif %}"
      href="#systemMenu"
      data-bs-toggle="collapse"
      role="button"
@@ -279,7 +279,7 @@
     <span class="small text-muted">{% if 'system' in request.path %}▾{% else %}▸{% endif %}</span>
   </a>
 
-  <div class="collapse {% if 'system' in request.path %}show{% endif %}" id="systemMenu">
+  <div class="collapse {% if 'system1111' in request.path %}show{% endif %}" id="systemMenu">
     <ul class="nav flex-column ms-3 mt-1">
       <li class="nav-item">
         <a class="nav-link {% if request.resolver_match.url_name == 'system:user_list' %}active{% endif %}"
@@ -295,7 +295,7 @@
       </li>
     <!-- 检测工具管理 -->
   <li class="nav-item">
-    <a class="nav-link {% if request.resolver_match.url_name == 'tool_list' %}active{% endif %}"
+    <a class="nav-link {% if request.resolver_match.url_name == '1111tool_list' %}active{% endif %}"
        href="{% url 'system:tool_list' %}">
       <i class="bi bi-tools me-2"></i>检测工具管理
     </a>
@@ -319,7 +319,7 @@
 
   <!-- 菜单管理 -->
   <li class="nav-item">
-    <a class="nav-link {% if request.resolver_match.url_name == 'menu_list' %}active{% endif %}"
+    <a class="nav-link {% if request.resolver_match.url_name == '1111menu_list' %}active{% endif %}"
        href="{% url 'system:menu_list' %}">
       <i class="bi bi-menu-button-wide me-2"></i>菜单管理
     </a>
@@ -327,7 +327,7 @@
 
   <!-- 岗位管理 -->
   <li class="nav-item">
-    <a class="nav-link {% if request.resolver_match.url_name == 'post_list' %}active{% endif %}"
+    <a class="nav-link {% if request.resolver_match.url_name == '1111post_list' %}active{% endif %}"
        href="{% url 'system:post_list' %}">
       <i class="bi bi-person-badge me-2"></i>岗位管理
     </a>
@@ -353,28 +353,28 @@
         <!-- 镜像管理菜单 -->
 
 <li class="nav-item">
-  <a class="nav-link d-flex justify-content-between align-items-center {% if 'images' in request.path %}active{% endif %}"
+  <a class="nav-link d-flex justify-content-between align-items-center {% if '1111images' in request.path %}active{% endif %}"
      href="#imageMenu"
      data-bs-toggle="collapse"
      role="button"
      aria-expanded="{% if 'images' in request.path %}true{% else %}false{% endif %}"
      aria-controls="imageMenu">
     <span><i class="bi bi-box-seam"></i> 镜像管理</span>
-    <span class="small text-muted">{% if 'images' in request.path %}▾{% else %}▸{% endif %}</span>
+    <span class="small text-muted">{% if '1111images' in request.path %}▾{% else %}▸{% endif %}</span>
   </a>
 
   <div class="collapse {% if 'images' in request.path %}show{% endif %}" id="imageMenu">
     <ul class="nav flex-column ms-3 mt-1">
 
       <li class="nav-item">
-        <a class="nav-link {% if '/images/base/' in request.path %}active{% endif %}"
+        <a class="nav-link {% if '/1111images/base/' in request.path %}active{% endif %}"
            href="{% url 'images:base_list' %}">
            <i class="bi bi-layers me-2"></i>基础镜像管理
         </a>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link {% if '/images/business/' in request.path %}active{% endif %}"
+        <a class="nav-link {% if '/1111images/business/' in request.path %}active{% endif %}"
            href="{% url 'images:biz_list' %}">
            <i class="bi bi-building me-2"></i>业务镜像管理
         </a>

@@ -30,6 +30,7 @@ from system.views.tools import ToolViewSet
 from system.views.users import UserViewSet
 from system.views.login_log import LoginLogViewSet
 from system.views.menu import MenuViewSet
+from system.views.oper_log import OperationLogViewSet
 
 
 router = routers.DefaultRouter()
@@ -39,6 +40,7 @@ router.register('positions', PositionViewSet)
 router.register('users', UserViewSet)
 router.register('detect-tools', ToolViewSet)
 router.register('logs/login', LoginLogViewSet)
+router.register('logs/operation', OperationLogViewSet)
 router.register('menus', MenuViewSet)
 router.register('images/base', BaseImageViewSet)
 router.register('images/business', BusinessImageViewSet)

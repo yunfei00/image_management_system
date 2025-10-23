@@ -23,6 +23,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from detection.views import ProjectDetectToolViewSet, PreDetectViewSet
 from images.views import BaseImageViewSet, BusinessImageViewSet
 from projects.views import ProjectViewSet
+from repo.views import RepositoryViewSet
 from system.views.approvals_views import ApprovalFlowViewSet
 from system.views.departments import DepartmentViewSet
 from system.views.roles import RoleViewSet
@@ -49,6 +50,8 @@ router.register('images/business', BusinessImageViewSet)
 router.register('approval-flows', ApprovalFlowViewSet)
 router.register('detect-tools', ProjectDetectToolViewSet)
 router.register('pre-detection', PreDetectViewSet)
+router.register('repositories', RepositoryViewSet)
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('', include('system.urls', namespace='system')),

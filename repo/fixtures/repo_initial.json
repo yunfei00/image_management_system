@@ -1,0 +1,119 @@
+[
+  {
+    "model": "repo.repository",
+    "pk": 1,
+    "fields": {
+      "name": "系统仓库",
+      "type": "system",
+      "images_json": "{\"image1\": \"v1.0\", \"image2\": \"v2.0\"}",
+      "environment_config": "{\"production\": \"config1\", \"test\": \"config2\"}",
+      "created_by": 1,
+      "created_at": "2025-01-01T08:00:00Z",
+      "updated_at": "2025-01-01T08:00:00Z"
+    }
+  },
+  {
+    "model": "repo.repository",
+    "pk": 2,
+    "fields": {
+      "name": "测试仓库",
+      "type": "test",
+      "images_json": "{\"image3\": \"v1.1\", \"image4\": \"v2.1\"}",
+      "environment_config": "{\"test\": \"config3\"}",
+      "created_by": 2,
+      "created_at": "2025-01-01T09:00:00Z",
+      "updated_at": "2025-01-01T09:00:00Z"
+    }
+  },
+  {
+    "model": "repo.repository",
+    "pk": 3,
+    "fields": {
+      "name": "生产仓库",
+      "type": "production",
+      "images_json": "{\"image5\": \"v3.0\", \"image6\": \"v4.0\"}",
+      "environment_config": "{\"production\": \"config4\"}",
+      "created_by": 3,
+      "created_at": "2025-01-01T10:00:00Z",
+      "updated_at": "2025-01-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "repo.repository",
+    "pk": 4,
+    "fields": {
+      "name": "开发仓库",
+      "type": "system",
+      "images_json": "{\"dev_image1\": \"v1.2\", \"dev_image2\": \"v2.2\"}",
+      "environment_config": "{\"dev\": \"config5\"}",
+      "created_by": 4,
+      "created_at": "2025-01-01T11:00:00Z",
+      "updated_at": "2025-01-01T11:00:00Z"
+    }
+  },
+  {
+    "model": "repo.repository",
+    "pk": 5,
+    "fields": {
+      "name": "临时仓库",
+      "type": "test",
+      "images_json": "{\"temp_image1\": \"v1.0\"}",
+      "environment_config": "{\"test\": \"temp_config\"}",
+      "created_by": 1,
+      "created_at": "2025-01-01T12:00:00Z",
+      "updated_at": "2025-01-01T12:00:00Z"
+    }
+  },
+  {
+    "model": "repo.repository",
+    "pk": 6,
+    "fields": {
+      "name": "实验仓库",
+      "type": "system",
+      "images_json": "{\"exp_image1\": \"v2.0\", \"exp_image2\": \"v3.0\"}",
+      "environment_config": "{\"test\": \"exp_config\"}",
+      "created_by": 2,
+      "created_at": "2025-01-01T13:00:00Z",
+      "updated_at": "2025-01-01T13:00:00Z"
+    }
+  },
+  {
+    "model": "repo.repository",
+    "pk": 7,
+    "fields": {
+      "name": "正式生产仓库",
+      "type": "production",
+      "images_json": "{\"prod_image1\": \"v1.0\"}",
+      "environment_config": "{\"production\": \"prod_config\"}",
+      "created_by": 3,
+      "created_at": "2025-01-01T14:00:00Z",
+      "updated_at": "2025-01-01T14:00:00Z"
+    }
+  },
+  {
+    "model": "repo.repository",
+    "pk": 8,
+    "fields": {
+      "name": "云服务仓库",
+      "type": "system",
+      "images_json": "{\"cloud_image1\": \"v1.0\", \"cloud_image2\": \"v2.0\"}",
+      "environment_config": "{\"production\": \"cloud_prod_config\"}",
+      "created_by": 3,
+      "created_at": "2025-01-01T15:00:00Z",
+      "updated_at": "2025-01-01T15:00:00Z"
+    }
+  },
+  {
+    "model": "repo.repository",
+    "pk": 9,
+    "fields": {
+      "name": "旧版本仓库",
+      "type": "production",
+      "images_json": "{\"old_image1\": \"v0.9\", \"old_image2\": \"v0.8\"}",
+      "environment_config": "{\"test\": \"old_config\"}",
+      "created_by": 2,
+      "created_at": "2025-01-01T16:00:00Z",
+      "updated_at": "2025-01-01T16:00:00Z"
+    }
+  }
+]

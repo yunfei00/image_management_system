@@ -1,0 +1,8 @@
+[
+  { "model": "projects.projectmember", "pk": 1, "fields": { "project": 1, "user": 1, "role": "owner", "joined_at": "2025-01-05T09:05:00Z" } },
+  { "model": "projects.projectmember", "pk": 2, "fields": { "project": 2, "user": 1, "role": "owner", "joined_at": "2025-01-12T08:25:00Z" } },
+  { "model": "projects.projectmember", "pk": 3, "fields": { "project": 3, "user": 1, "role": "owner", "joined_at": "2025-01-15T02:05:00Z" } },
+  { "model": "projects.projectmember", "pk": 4, "fields": { "project": 4, "user": 1, "role": "owner", "joined_at": "2025-01-18T03:35:00Z" } },
+  { "model": "projects.projectmember", "pk": 5, "fields": { "project": 5, "user": 1, "role": "owner", "joined_at": "2025-01-20T06:05:00Z" } },
+  { "model": "projects.projectmember", "pk": 6, "fields": { "project": 6, "user": 1, "role": "owner", "joined_at": "2025-01-23T01:05:00Z" } }
+]

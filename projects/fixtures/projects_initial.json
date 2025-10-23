@@ -1,0 +1,134 @@
+[
+  {
+    "model": "projects.project",
+    "pk": 1,
+    "fields": {
+      "code": "P2025-PLAT-0001",
+      "name": "平台重构",
+      "applicant": 1,
+      "department": 2,
+      "end_user": "内部平台部",
+      "description": "统一技术栈与规范，梳理镜像基线与发布流程。",
+      "plan_online_date": "2025-03-01",
+      "base_image": 1,
+      "components": [
+        {"name": "redis", "version": "7.2"},
+        {"name": "nginx", "version": "1.25"}
+      ],
+      "status": 1,
+      "approval_status": 1,
+      "submit_at": "2025-01-05T09:00:00Z",
+      "updated_at": "2025-01-10T10:30:00Z"
+    }
+  },
+  {
+    "model": "projects.project",
+    "pk": 2,
+    "fields": {
+      "code": "P2025-APP-0001",
+      "name": "移动端 App 改版",
+      "applicant": 1,
+      "department": 3,
+      "end_user": "终端用户",
+      "description": "重构移动端接口与灰度发布方案，提升稳定性。",
+      "plan_online_date": "2025-04-15",
+      "base_image": 2,
+      "components": [
+        {"name": "postgres", "version": "16"},
+        {"name": "minio", "version": "RELEASE.2025-01-01"}
+      ],
+      "status": 1,
+      "approval_status": 0,
+      "submit_at": "2025-01-12T08:20:00Z",
+      "updated_at": "2025-01-12T08:20:00Z"
+    }
+  },
+  {
+    "model": "projects.project",
+    "pk": 3,
+    "fields": {
+      "code": "P2025-QA-0001",
+      "name": "自动化测试平台",
+      "applicant": 1,
+      "department": 4,
+      "end_user": "测试中心",
+      "description": "落地用例管理、覆盖率统计与镜像级别的环境隔离。",
+      "plan_online_date": "2025-05-01",
+      "base_image": 1,
+      "components": [
+        {"name": "jenkins", "version": "2.462"},
+        {"name": "selenium-grid", "version": "4.20"}
+      ],
+      "status": 1,
+      "approval_status": 1,
+      "submit_at": "2025-01-15T02:00:00Z",
+      "updated_at": "2025-01-20T07:45:00Z"
+    }
+  },
+  {
+    "model": "projects.project",
+    "pk": 4,
+    "fields": {
+      "code": "P2025-MKT-0001",
+      "name": "CDP 营销整合",
+      "applicant": 1,
+      "department": 5,
+      "end_user": "市场部",
+      "description": "统一用户画像，打通触达渠道，建立报表体系。",
+      "plan_online_date": "2025-06-01",
+      "base_image": 3,
+      "components": [
+        {"name": "kafka", "version": "3.7"},
+        {"name": "clickhouse", "version": "24.1"}
+      ],
+      "status": 1,
+      "approval_status": 2,
+      "submit_at": "2025-01-18T03:30:00Z",
+      "updated_at": "2025-01-19T09:10:00Z"
+    }
+  },
+  {
+    "model": "projects.project",
+    "pk": 5,
+    "fields": {
+      "code": "P2025-OPS-0001",
+      "name": "运维可观测性",
+      "applicant": 1,
+      "department": 6,
+      "end_user": "IT 运维",
+      "description": "引入日志/指标/链路统一采集与告警分派。",
+      "plan_online_date": "2025-03-20",
+      "base_image": 2,
+      "components": [
+        {"name": "prometheus", "version": "2.53"},
+        {"name": "grafana", "version": "11.0"}
+      ],
+      "status": 1,
+      "approval_status": 1,
+      "submit_at": "2025-01-20T06:00:00Z",
+      "updated_at": "2025-01-22T11:00:00Z"
+    }
+  },
+  {
+    "model": "projects.project",
+    "pk": 6,
+    "fields": {
+      "code": "P2025-SEC-0001",
+      "name": "镜像合规与漏洞治理",
+      "applicant": 1,
+      "department": 2,
+      "end_user": "安全与合规",
+      "description": "接入漏洞扫描、SBOM 与高危阻断策略，闭环整改。",
+      "plan_online_date": "2025-04-01",
+      "base_image": 1,
+      "components": [
+        {"name": "trivy", "version": "0.53"},
+        {"name": "grype", "version": "0.78"}
+      ],
+      "status": 1,
+      "approval_status": 0,
+      "submit_at": "2025-01-23T01:00:00Z",
+      "updated_at": "2025-01-23T01:00:00Z"
+    }
+  }
+]

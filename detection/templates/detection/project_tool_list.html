@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% block content %}
+<form class="row g-2 mb-3" method="get">
+  <div class="col-auto">
+    <input class="form-control" name="project" placeholder="项目ID" value="{{ request.GET.project }}">
+  </div>
+  <div class="col-auto">
+    <input class="form-control" name="tool_name" placeholder="工具名称" value="{{ request.GET.tool_name }}">
+  </div>
+  <div class="col-auto">
+    <select name="tool_type" class="form-select">
+      <option value="">工具类型</option>
+      <option value="STATIC_CODE" {% if request.GET.tool_type == 'STATIC_CODE' %}selected{% endif %}>静态代码扫描</option>
+      <option value="IMAGE_VULN" {% if request.GET.tool_type == 'IMAGE_VULN' %}selected{% endif %}>镜像漏洞扫描</option>
+      <option value="SCA" {% if request.GET.tool_type == 'SCA' %}selected{% endif %}>依赖成分分析</option>
+      <option value="LICENSE" {% if request.GET.tool_type == 'LICENSE' %}selected{% endif %}>许可证合规</option>
+      <option value="DAST" {% if request.GET.tool_type == 'DAST' %}selected{% endif %}>动态安全测试</option>
+    </select>
+  </div>
+  <div class="col-auto">
+    <select name="available" class="form-select">
+      <option value="">可用性</option>
+      <option value="1" {% if request.GET.available == '1' %}selected{% endif %}>可用</option>
+      <option value="2" {% if request.GET.available == '2' %}selected{% endif %}>不可用</option>
+      <option value="0" {% if request.GET.available == '0' %}selected{% endif %}>未知</option>
+    </select>
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-primary">搜索</button>
+    <a class="btn btn-success"
+       href="?{% if request.GET.project %}project={{ request.GET.project }}&{% endif %}
+              {% if request.GET.tool_name %}tool_name={{ request.GET.tool_name }}&{% endif %}
+              {% if request.GET.tool_type %}tool_type={{ request.GET.tool_type }}&{% endif %}
+              {% if request.GET.available %}available={{ request.GET.available }}&{% endif %}export=1">导出</a>
+  </div>
+  <div class="col-auto ms-auto text-end">
+    <button type="button" class="btn btn-outline-secondary me-2" onclick="batchTest()">批量测试</button>
+    <button type="button" class="btn btn-outline-primary"
+            onclick="openModal('{% url 'detection:project_tool_create' %}', '新增项目工具')">新增</button>
+  </div>
+</form>
+
+<table class="table table-bordered">
+  <thead class="table-light">
+    <tr>
+      <th><input id="selectAll" type="checkbox" /></th>
+      <th>项目</th>
+      <th>检测工具</th>
+      <th>工具类型</th>
+      <th>可用性</th>
+      <th>更新时间</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for obj in page_obj %}
+      <tr>
+        <td><input type="checkbox" class="rowCheckbox" value="{{ obj.id }}"></td>
+        <td>{{ obj.project }}</td>
+        <td>{{ obj.tool }}</td>
+        <td>{{ obj.tool.get_type_display }}</td>
+        <td>
+          {% if obj.available == 1 %}<span class="text-success">可用</span>
+          {% elif obj.available == 2 %}<span class="text-danger">不可用</span>
+          {% else %}<span class="text-muted">未知</span>{% endif %}
+        </td>
+        <td>{{ obj.updated_at }}</td>
+        <td>
+          <button class="btn btn-sm btn-warning"
+                  onclick="openModal('{% url 'detection:project_tool_edit' obj.id %}', '编辑项目工具')">修改</button>
+          <button class="btn btn-sm btn-danger"
+                  onclick="postDelete('{% url 'detection:project_tool_delete' obj.id %}')">删除</button>
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="7" class="text-center text-muted">暂无数据</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% include "system/includes/pagination.html" %}
+
+<script>
+  document.getElementById('selectAll')?.addEventListener('change', function(e){
+    document.querySelectorAll('.rowCheckbox').forEach(ch => ch.checked = e.target.checked);
+  });
+
+  async function batchTest(){
+    const ids = Array.from(document.querySelectorAll('.rowCheckbox:checked')).map(x => x.value);
+    if(ids.length === 0){ alert('请先选择要测试的记录'); return; }
+    const project = new URLSearchParams(location.search).get('project') || '';
+    const url = `/api/project-detect-tools/test${project ? ('?project=' + project) : ''}`;
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json','X-CSRFToken': getCookie('csrftoken')},
+      body: JSON.stringify({ ids })
+    });
+    const data = await resp.json();
+    if(data.updated >= 0) location.reload(); else alert('测试失败');
+  }
+
+  async function postDelete(url){
+    if(!confirm('确认删除？')) return;
+    const resp = await fetch(url, { method: 'POST', headers: {'X-CSRFToken': getCookie('csrftoken')} });
+    const data = await resp.json();
+    if(data.success) location.reload(); else alert('删除失败');
+  }
+</script>
+{% endblock %}

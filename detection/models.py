@@ -1,129 +1,95 @@
 from django.db import models
 
-
-# Create your models here.
-class DetectTool(models.Model):
-    name = models.CharField(max_length=255, verbose_name="工具名称")
-    type = models.CharField(max_length=100, verbose_name="类型")
-    api_url = models.URLField(max_length=255, verbose_name="API地址")
-    config = models.JSONField(verbose_name="配置参数")
-    status = models.CharField(max_length=50, verbose_name="状态")
-    last_test_time = models.DateTimeField(verbose_name="最后测试时间")
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
-
-    class Meta:
-        verbose_name = "检测工具"
-        verbose_name_plural = "检测工具管理"
+from system.models.base_model import BaseModel
 
 
-class ProjectDetectTool(models.Model):
+class DetectTool(BaseModel):
+    """检测工具管理（供项目选择）"""
     class Status(models.IntegerChoices):
-        DISABLED = 0, '禁用'
-        ENABLED  = 1, '启用'
+        DISABLED = 0, "禁用"
+        ENABLED  = 1, "启用"
 
-    project = models.ForeignKey(
-        'projects.Project',
-        on_delete=models.CASCADE,
-        verbose_name='项目',
-        related_name='detect_tool_links'
-    )
-    detect_tool = models.ForeignKey(
-        DetectTool,
-        on_delete=models.RESTRICT,
-        verbose_name='检测工具',
-        related_name='project_links'
-    )
-    config = models.JSONField('工具配置（JSON）')   # 见下方推荐结构
-    status = models.PositiveSmallIntegerField('状态',
-                                              choices=Status.choices,
-                                              default=Status.ENABLED)
-    created_at = models.DateTimeField('创建时间', auto_now_add=True)
-    updated_at = models.DateTimeField('更新时间', auto_now=True)
+    class Type(models.TextChoices):
+        STATIC_CODE = "STATIC_CODE", "静态代码扫描"
+        IMAGE_VULN  = "IMAGE_VULN",  "镜像漏洞扫描"
+        SCA         = "SCA",         "依赖成分分析"
+        LICENSE     = "LICENSE",     "许可证合规"
+        DAST        = "DAST",        "动态安全测试"
+
+    name = models.CharField(max_length=64, unique=True, verbose_name="工具名称")
+    type = models.CharField(max_length=32, choices=Type.choices, verbose_name="工具类型")
+    api_url = models.URLField(verbose_name="服务地址")
+    config = models.JSONField(default=dict, blank=True, verbose_name="默认配置")
+    status = models.IntegerField(choices=Status.choices, default=Status.ENABLED, verbose_name="状态")
+    last_test_time = models.DateTimeField(null=True, blank=True, verbose_name="最近连通时间")
 
     class Meta:
-        db_table = 'project_detect_tools'
-        verbose_name = '项目检测工具配置'
-        verbose_name_plural = '项目检测工具配置'
-        constraints = [
-            models.UniqueConstraint(fields=['project', 'detect_tool'],
-                                    name='uk_project_tool'),
-        ]
-        # indexes = [
-        #     models.Index(fields=['project'], name='idx_project'),
-        #     models.Index(fields=['detect_tool'], name='idx_tool'),
-        #     models.Index(fields=['status'], name='idx_status'),
-        # ]
+        db_table = "detect_tools"
+        verbose_name = "检测工具管理"
+        verbose_name_plural = verbose_name
 
     def __str__(self):
-        return f'{self.project_id} - {self.detect_tool_id}'
+        return self.name
 
 
-class PreDetectionRecord(models.Model):
-    class Status(models.IntegerChoices):
-        PENDING    = 1, '待检测'
-        IN_PROGRESS = 2, '检测中'
-        COMPLETED  = 3, '已完成'
-        FAILED     = 4, '已失败'
+class ProjectDetectTool(BaseModel):
+    """项目-检测工具 关联（检测策略项）"""
+    class Availability(models.IntegerChoices):
+        UNKNOWN = 0, "未知"
+        OK      = 1, "可用"
+        FAIL    = 2, "不可用"
 
     project = models.ForeignKey(
-        'projects.Project',
-        on_delete=models.CASCADE,
-        verbose_name='项目',
-        related_name='pre_detection_records'
-    )
+        "projects.Project", on_delete=models.CASCADE, related_name="detect_strategy", verbose_name="项目")
     tool = models.ForeignKey(
-        DetectTool,
-        on_delete=models.RESTRICT,
-        verbose_name='检测工具',
-        related_name='pre_detection_records'
-    )
-    status = models.PositiveSmallIntegerField('状态', choices=Status.choices, default=Status.PENDING)
-    report_path = models.CharField('报告路径', max_length=255, null=True, blank=True)
-    vulnerability_count = models.IntegerField('漏洞数量', default=0)
-    detect_time = models.DateTimeField('检测时间', auto_now_add=True)
-    created_at = models.DateTimeField('创建时间', auto_now_add=True)
-    updated_at = models.DateTimeField('更新时间', auto_now=True)
+        DetectTool, on_delete=models.PROTECT, related_name="project_bindings", verbose_name="检测工具")
+    config = models.JSONField(default=dict, blank=True, verbose_name="项目级配置")
+    available = models.IntegerField(choices=Availability.choices, default=Availability.UNKNOWN, verbose_name="可用性")
 
     class Meta:
-        db_table = 'pre_detect_records'
-        verbose_name = '预检测记录'
-        verbose_name_plural = '预检测记录管理'
+        db_table = "project_detect_tools"
+        verbose_name = "项目检测工具策略"
+        verbose_name_plural = verbose_name
+        unique_together = [("project", "tool")]
+        indexes = [models.Index(fields=["project", "tool"])]
 
     def __str__(self):
-        return f'{self.project} - {self.tool} ({self.get_status_display()})'
+        return f"{self.project} - {self.tool}"
 
 
-class SecurityDetectionApplication(models.Model):
-    class Status(models.IntegerChoices):
-        PENDING    = 1, '待检测'
-        IN_PROGRESS = 2, '检测中'
-        COMPLETED  = 3, '已完成'
-        FAILED     = 4, '已失败'
+class PreDetectRecord(BaseModel):
+    """预检测记录（由 SDK/CI 触发的异步检测）"""
+    class Status(models.TextChoices):
+        PENDING  = "PENDING",  "排队中"
+        RUNNING  = "RUNNING",  "检测中"
+        SUCCESS  = "SUCCESS",  "成功"
+        FAILED   = "FAILED",   "失败"
+        TIMEOUT  = "TIMEOUT",  "超时"
+        CANCELED = "CANCELED", "已取消"
 
     project = models.ForeignKey(
-        'projects.Project',
-        on_delete=models.CASCADE,
-        verbose_name='项目',
-        related_name='security_detection_applications'
-    )
-    file_paths = models.JSONField('文件路径')
-    detect_items = models.JSONField('检测项')
-    description = models.CharField('检测描述', max_length=255, null=True, blank=True)
-    assign_team = models.CharField('指定检测团队', max_length=255, null=True, blank=True)
-    status = models.PositiveSmallIntegerField('状态', choices=Status.choices, default=Status.PENDING)
-    result = models.CharField('检测结果', max_length=255, null=True, blank=True)
-    feedback = models.TextField('检测反馈', null=True, blank=True)
-    created_at = models.DateTimeField('创建时间', auto_now_add=True)
-    updated_at = models.DateTimeField('更新时间', auto_now=True)
+        "projects.Project", on_delete=models.PROTECT, related_name="pre_detects", verbose_name="项目")
+    tool = models.ForeignKey(
+        DetectTool, on_delete=models.PROTECT, related_name="pre_detects", verbose_name="检测工具")
+    request_id = models.CharField(max_length=64, blank=True, default="", verbose_name="幂等请求ID")
+    payload = models.JSONField(default=dict, verbose_name="检测请求载荷")
+    status = models.CharField(max_length=16, choices=Status.choices, default=Status.PENDING, verbose_name="状态")
+    report_path = models.CharField(max_length=512, blank=True, default="", verbose_name="报告路径")
+    vulnerability_count = models.IntegerField(default=0, verbose_name="漏洞数量")
+    error_message = models.TextField(blank=True, default="", verbose_name="错误信息")
+    started_at = models.DateTimeField(null=True, blank=True, verbose_name="开始时间")
+    detect_time = models.DateTimeField(null=True, blank=True, verbose_name="结束时间")
+    rerun_of = models.ForeignKey(
+        "self", null=True, blank=True, on_delete=models.SET_NULL, verbose_name="重跑来源")
 
     class Meta:
-        db_table = 'security_detect_apply'
-        verbose_name = '安全检测申请'
-        verbose_name_plural = '安全检测申请管理'
-        # indexes = [
-        #     models.Index(fields=['project'], name='idx_project'),
-        #     models.Index(fields=['status'], name='idx_status'),
-        # ]
+        db_table = "pre_detect_records"
+        verbose_name = "预检测记录"
+        verbose_name_plural = verbose_name
+        indexes = [
+            models.Index(fields=["project", "tool", "status"]),
+            models.Index(fields=["request_id"]),
+        ]
 
     def __str__(self):
-        return f'{self.project} - {self.get_status_display()}'
+        return f"{self.project} - {self.tool} - {self.get_status_display()}"

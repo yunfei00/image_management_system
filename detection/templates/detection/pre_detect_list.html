@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block content %}
+<form class="row g-2 mb-3" method="get">
+  <div class="col-auto">
+    <input class="form-control" name="project" placeholder="项目ID" value="{{ request.GET.project }}">
+  </div>
+  <div class="col-auto">
+    <input class="form-control" name="tool" placeholder="工具ID" value="{{ request.GET.tool }}">
+  </div>
+  <div class="col-auto">
+    <select name="status" class="form-select">
+      <option value="">状态</option>
+{% for s, display in status_choices %}
+    <option value="{{ s }}" {% if request.GET.status == s %}selected{% endif %}>{{ display }}</option>
+{% endfor %}
+
+    </select>
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-primary">搜索</button>
+    <a class="btn btn-success"
+       href="?{% if request.GET.project %}project={{ request.GET.project }}&{% endif %}
+              {% if request.GET.tool %}tool={{ request.GET.tool }}&{% endif %}
+              {% if request.GET.status %}status={{ request.GET.status }}&{% endif %}export=1">导出</a>
+  </div>
+  <div class="col-auto ms-auto text-end">
+    <button type="button" class="btn btn-outline-primary"
+            onclick="openModal('{% url 'detection:pre_detect_create' %}', '发起预检测')">新增</button>
+  </div>
+</form>
+
+<table class="table table-bordered">
+  <thead class="table-light">
+    <tr>
+      <th><input id="selectAll" type="checkbox" /></th>
+      <th>业务方名称</th>
+      <th>检测项</th>
+      <th>检测时间</th>
+      <th>状态</th>
+      <th>漏洞数量</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for obj in page_obj %}
+      <tr>
+        <td><input type="checkbox" class="rowCheckbox" value="{{ obj.id }}"></td>
+        <td>{{ obj.project }}</td>
+        <td>{{ obj.tool }}</td>
+        <td>{{ obj.detect_time|default:"-" }}</td>
+        <td>{{ obj.status }}</td>
+        <td>{{ obj.vulnerability_count }}</td>
+        <td>
+          <button class="btn btn-sm btn-info" onclick="downloadReport({{ obj.id }})">下载报告</button>
+          <button class="btn btn-sm btn-secondary" onclick="rerun({{ obj.id }})">重新检测</button>
+          <button class="btn btn-sm btn-warning"
+                  onclick="openModal('{% url 'detection:pre_detect_edit' obj.id %}', '编辑记录')">修改</button>
+          <button class="btn btn-sm btn-danger"
+                  onclick="postDelete('{% url 'detection:pre_detect_delete' obj.id %}')">删除</button>
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="7" class="text-center text-muted">暂无数据</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% include "system/includes/pagination.html" %}
+
+<script>
+  document.getElementById('selectAll')?.addEventListener('change', function(e){
+    document.querySelectorAll('.rowCheckbox').forEach(ch => ch.checked = e.target.checked);
+  });
+
+  async function downloadReport(id){
+    const resp = await fetch(`/api/pre-detection/${id}/report/`);
+    const data = await resp.json();
+    if(data.report_path){
+      // demo：直接打开报告地址；真实可换成签名URL
+      window.open('/' + data.report_path, '_blank');
+    }else{
+      alert('报告暂不可用');
+    }
+  }
+
+  async function rerun(id){
+    if(!confirm('确认重新检测？')) return;
+    const resp = await fetch(`/api/pre-detection/${id}/rerun/`, {
+      method: 'POST',
+      headers: { 'X-CSRFToken': getCookie('csrftoken') }
+    });
+    if(resp.ok) location.reload(); else alert('重新检测失败');
+  }
+
+  async function postDelete(url){
+    if(!confirm('确认删除？')) return;
+    const resp = await fetch(url, { method: 'POST', headers: {'X-CSRFToken': getCookie('csrftoken')} });
+    const data = await resp.json();
+    if(data.success) location.reload(); else alert('删除失败');
+  }
+</script>
+{% endblock %}

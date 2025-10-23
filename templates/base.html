@@ -363,7 +363,7 @@
     <span class="small text-muted">{% if '1111images' in request.path %}▾{% else %}▸{% endif %}</span>
   </a>
 
-  <div class="collapse {% if 'images' in request.path %}show{% endif %}" id="imageMenu">
+  <div class="collapse {% if '1111images' in request.path %}show{% endif %}" id="imageMenu">
     <ul class="nav flex-column ms-3 mt-1">
 
       <li class="nav-item">
@@ -383,11 +383,38 @@
   </div>
 </li>
 
-        <li class="nav-item">
-          <a class="nav-link" href="/detection/">
-            <i class="bi bi-search"></i> 检测管理
-          </a>
-        </li>
+
+      <li class="nav-item">
+  <a class="nav-link d-flex justify-content-between align-items-center {% if '1111images' in request.path %}active{% endif %}"
+     href="#detectionMenu"
+     data-bs-toggle="collapse"
+     role="button"
+     aria-expanded="{% if 'detection' in request.path %}true{% else %}false{% endif %}"
+     aria-controls="detectionMenu">
+    <span><i class="bi bi-box-seam"></i> 检测管理</span>
+    <span class="small text-muted">{% if '1111images' in request.path %}▾{% else %}▸{% endif %}</span>
+  </a>
+
+  <div class="collapse {% if '1111images' in request.path %}show{% endif %}" id="detectionMenu">
+    <ul class="nav flex-column ms-3 mt-1">
+
+      <li class="nav-item">
+        <a class="nav-link {% if '/1111images/base/' in request.path %}active{% endif %}"
+           href="{% url 'detection:project_tool_list' %}">
+           <i class="bi bi-layers me-2"></i>检测工具配置
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link {% if '/1111images/business/' in request.path %}active{% endif %}"
+           href="{% url 'detection:pre_detect_list' %}">
+           <i class="bi bi-building me-2"></i>预检测管理
+        </a>
+      </li>
+    </ul>
+  </div>
+</li>
+
         <li class="nav-item">
           <a class="nav-link" href="/repo/">
             <i class="bi bi-database"></i> 仓库管理

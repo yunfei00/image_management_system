@@ -1,0 +1,92 @@
+[
+  {
+    "model": "notification.notification",
+    "pk": 1001,
+    "fields": {
+      "user": 1,
+      "type": "APPROVAL",
+      "status": "UNREAD",
+      "level": "INFO",
+      "title": "审批已通过",
+      "content": "项目A的镜像入库申请（#123）已通过，点击查看详情。",
+      "link_url": "/approvals/123/detail",
+      "extra": {"project_id": 7, "approval_id": 123},
+      "dedup_key": "approval_passed_123_u1",
+      "created_at": "2025-10-24T09:00:00Z",
+      "updated_at": "2025-10-24T09:00:00Z",
+      "read_at": null
+    }
+  },
+  {
+    "model": "notification.notification",
+    "pk": 1002,
+    "fields": {
+      "user": 1,
+      "type": "DETECT",
+      "status": "READ",
+      "level": "INFO",
+      "title": "检测完成",
+      "content": "项目A-镜像 v1.2.3 漏洞扫描完成，共发现 2 个中危、0 个高危。",
+      "link_url": "/detect/tasks/556/detail",
+      "extra": {"task_id": 556, "project_id": 7},
+      "dedup_key": "detect_finish_556_u1",
+      "created_at": "2025-10-24T08:30:00Z",
+      "updated_at": "2025-10-24T08:35:00Z",
+      "read_at": "2025-10-24T08:35:00Z"
+    }
+  },
+  {
+    "model": "notification.notification",
+    "pk": 1003,
+    "fields": {
+      "user": 2,
+      "type": "SYSTEM",
+      "status": "UNREAD",
+      "level": "WARN",
+      "title": "系统维护通知",
+      "content": "今日 23:00-23:30 进行例行维护，期间服务可能短暂不可用。",
+      "link_url": "",
+      "extra": {"window": "23:00-23:30"},
+      "dedup_key": "system_maint_20251024_u2",
+      "created_at": "2025-10-24T06:00:00Z",
+      "updated_at": "2025-10-24T06:00:00Z",
+      "read_at": null
+    }
+  },
+  {
+    "model": "notification.notification",
+    "pk": 1004,
+    "fields": {
+      "user": 1,
+      "type": "DETECT",
+      "status": "UNREAD",
+      "level": "ERROR",
+      "title": "检测失败",
+      "content": "镜像 v1.2.4 扫描任务（#557）执行失败，点击查看日志并重试。",
+      "link_url": "/detect/tasks/557/detail",
+      "extra": {"task_id": 557, "project_id": 7, "reason": "scanner timeout"},
+      "dedup_key": "detect_fail_557_u1",
+      "created_at": "2025-10-24T09:10:00Z",
+      "updated_at": "2025-10-24T09:10:00Z",
+      "read_at": null
+    }
+  },
+  {
+    "model": "notification.notification",
+    "pk": 1005,
+    "fields": {
+      "user": 2,
+      "type": "APPROVAL",
+      "status": "ARCHIVED",
+      "level": "INFO",
+      "title": "审批已拒绝",
+      "content": "项目B 权限申请被拒绝：缺少业务负责人审批。",
+      "link_url": "/approvals/88/detail",
+      "extra": {"approval_id": 88, "project_id": 12},
+      "dedup_key": "approval_reject_88_u2",
+      "created_at": "2025-10-23T10:00:00Z",
+      "updated_at": "2025-10-23T10:00:00Z",
+      "read_at": "2025-10-23T10:05:00Z"
+    }
+  }
+]

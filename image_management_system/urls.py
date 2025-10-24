@@ -22,6 +22,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 from detection.views import ProjectDetectToolViewSet, PreDetectViewSet, DetectDeviceViewSet, DetectCenterConfigViewSet
 from images.views import BaseImageViewSet, BusinessImageViewSet
+from notification.views import NotificationViewSet
 from projects.views import ProjectViewSet
 from repo.views import RepositoryViewSet
 from system.views.approvals_views import ApprovalFlowViewSet
@@ -55,6 +56,8 @@ router.register('repositories', RepositoryViewSet)
 router.register('detect-center/config', DetectCenterConfigViewSet)
 router.register('detect-devices', DetectDeviceViewSet)
 
+router.register(r'notifications', NotificationViewSet, basename='notifications')
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('', include('system.urls', namespace='system')),
@@ -62,6 +65,7 @@ urlpatterns = [
     path("projects/", include("projects.urls")),
     path("detection/", include("detection.urls")),
     path("repo/", include("repo.urls")),
+    path('notifications/', include("notification.urls", namespace="notifications")),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema')),
     path('api/', include(router.urls)),

@@ -1,0 +1,41 @@
+[
+  {
+    "model": "notification.notificationtemplate",
+    "pk": 1,
+    "fields": {
+      "code": "approval_passed",
+      "type": "APPROVAL",
+      "title": "审批已通过",
+      "content": "【{{project_name}}】的审批单（#{{approval_id}}）已通过，点击查看详情。",
+      "enabled": true,
+      "created_at": "2025-10-24T00:00:00Z",
+      "updated_at": "2025-10-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "notification.notificationtemplate",
+    "pk": 2,
+    "fields": {
+      "code": "detect_finished",
+      "type": "DETECT",
+      "title": "检测完成",
+      "content": "镜像 {{image_tag}} 漏洞扫描完成：高危 {{high}} 个，中危 {{medium}} 个。",
+      "enabled": true,
+      "created_at": "2025-10-24T00:00:00Z",
+      "updated_at": "2025-10-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "notification.notificationtemplate",
+    "pk": 3,
+    "fields": {
+      "code": "system_announce",
+      "type": "SYSTEM",
+      "title": "系统公告",
+      "content": "{{message}}",
+      "enabled": true,
+      "created_at": "2025-10-24T00:00:00Z",
+      "updated_at": "2025-10-24T00:00:00Z"
+    }
+  }
+]

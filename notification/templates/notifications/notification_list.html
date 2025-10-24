@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% block content %}
+<form class="row g-2 mb-3" method="get">
+  <div class="col-auto">
+    <select name="type" class="form-select">
+      <option value="">消息类型</option>
+      <option value="APPROVAL" {% if request.GET.type == 'APPROVAL' %}selected{% endif %}>审批通知</option>
+      <option value="DETECT" {% if request.GET.type == 'DETECT' %}selected{% endif %}>检测通知</option>
+      <option value="SYSTEM" {% if request.GET.type == 'SYSTEM' %}selected{% endif %}>系统通知</option>
+    </select>
+  </div>
+  <div class="col-auto">
+    <select name="status" class="form-select">
+      <option value="">状态</option>
+      <option value="UNREAD" {% if request.GET.status == 'UNREAD' %}selected{% endif %}>未读</option>
+      <option value="READ" {% if request.GET.status == 'READ' %}selected{% endif %}>已读</option>
+      <option value="ARCHIVED" {% if request.GET.status == 'ARCHIVED' %}selected{% endif %}>已归档</option>
+    </select>
+  </div>
+  <div class="col-auto">
+    <input class="form-control" type="date" name="start" placeholder="开始时间" value="{{ request.GET.start }}">
+  </div>
+  <div class="col-auto">
+    <input class="form-control" type="date" name="end" placeholder="结束时间" value="{{ request.GET.end }}">
+  </div>
+
+  <div class="col-auto">
+    <button class="btn btn-primary">搜索</button>
+    <a class="btn btn-success"
+       href="?{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}{% if request.GET.status %}status={{ request.GET.status }}&{% endif %}{% if request.GET.start %}start={{ request.GET.start }}&{% endif %}{% if request.GET.end %}end={{ request.GET.end }}&{% endif %}export=1">
+      导出
+    </a>
+  </div>
+
+  <div class="col-auto ms-auto text-end">
+    <button type="button" class="btn btn-outline-secondary me-2" onclick="markAllRead()">全部已读</button>
+    <button type="button" class="btn btn-outline-primary me-2" onclick="markSelectedRead()">标记选中已读</button>
+    <button type="button" class="btn btn-outline-danger me-2" onclick="deleteSelected()">删除选中</button>
+    <!-- 如需保留后台维护入口可保留新增按钮 -->
+    <button type="button" class="btn btn-outline-primary" onclick="openModal('{% url 'notifications:notification_create' %}', '新增通知')">新增</button>
+  </div>
+</form>
+
+<table class="table table-bordered align-middle">
+  <thead class="table-light">
+    <tr>
+      <th style="width:40px;"><input id="selectAll" type="checkbox" /></th>
+      <th style="width:160px;">时间</th>
+      <th style="width:120px;">类型</th>
+      <th>内容</th>
+      <th style="width:100px;">状态</th>
+      <th style="width:180px;">操作</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for obj in page_obj %}
+    <tr class="{% if obj.status == 'UNREAD' %}table-warning{% endif %}">
+      <td><input type="checkbox" class="rowCheckbox" value="{{ obj.id }}"></td>
+      <td>{{ obj.created_at|date:"Y-m-d H:i" }}</td>
+      <td>
+        <span class="badge
+          {% if obj.type == 'APPROVAL' %} bg-primary
+          {% elif obj.type == 'DETECT' %} bg-info
+          {% else %} bg-secondary{% endif %}">
+          {{ obj.get_type_display }}
+        </span>
+      </td>
+      <td>
+        {% if obj.title %}
+          <div class="fw-semibold text-truncate" title="{{ obj.title }}">{{ obj.title }}</div>
+        {% endif %}
+        <div class="small text-muted text-truncate" title="{{ obj.content }}">
+          {% if obj.link_url %}
+            <a href="{{ obj.link_url }}" target="_blank" rel="noopener">查看详情</a> — 
+          {% endif %}
+          {{ obj.content }}
+        </div>
+      </td>
+      <td>
+        <span class="badge
+          {% if obj.status == 'UNREAD' %} bg-warning text-dark
+          {% elif obj.status == 'READ' %} bg-success
+          {% else %} bg-light text-muted{% endif %}">
+          {{ obj.get_status_display }}
+        </span>
+      </td>
+      <td>
+        <button class="btn btn-sm btn-outline-success me-1"
+                {% if obj.status == 'READ' %}disabled{% endif %}
+                onclick="markRead({{ obj.id }})">标记已读</button>
+        <button class="btn btn-sm btn-warning me-1"
+                onclick="openModal('{% url 'notifications:notification_edit' obj.id %}', '编辑通知')">修改</button>
+        <button class="btn btn-sm btn-danger"
+                onclick="postDelete('{% url 'notifications:notification_delete' obj.id %}')">删除</button>
+      </td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="6" class="text-center text-muted">暂无数据</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+{% include "system/includes/pagination.html" %}
+
+<script>
+  // 全选
+  document.getElementById('selectAll')?.addEventListener('change', function(e){
+    document.querySelectorAll('.rowCheckbox').forEach(ch => ch.checked = e.target.checked);
+  });
+
+  function getSelectedIds(){
+    return Array.from(document.querySelectorAll('.rowCheckbox:checked')).map(el => el.value);
+  }
+
+  async function markRead(id){
+    const resp = await fetch(`/api/notifications/${id}/read/`, {
+      method: 'PATCH',
+      headers: {'X-CSRFToken': getCookie('csrftoken')}
+    });
+    const data = await resp.json().catch(()=>({}));
+    if(resp.ok) location.reload();
+    else alert(data.detail || '操作失败');
+  }
+
+  async function markSelectedRead(){
+    const ids = getSelectedIds();
+    if(ids.length === 0){ alert('请选择至少一条消息'); return; }
+    for (const id of ids){
+      await markRead(id);
+    }
+  }
+
+  async function markAllRead(){
+    // 保留当前筛选（type/status/start/end）到 mark_all_read 的查询参数
+    const qs = location.search || '';
+    const resp = await fetch(`/api/notifications/mark_all_read/${qs}`, {
+      method: 'POST',
+      headers: {'X-CSRFToken': getCookie('csrftoken')}
+    });
+    const data = await resp.json().catch(()=>({}));
+    if(resp.ok) location.reload();
+    else alert(data.detail || '操作失败');
+  }
+
+  async function postDelete(url){
+    if(!confirm('确认删除？')) return;
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {'X-CSRFToken': getCookie('csrftoken')}
+    });
+    const data = await resp.json().catch(()=>({}));
+    if(resp.ok && data.success) location.reload();
+    else alert(data.detail || '删除失败');
+  }
+
+  async function deleteSelected(){
+    const ids = getSelectedIds();
+    if(ids.length === 0){ alert('请选择至少一条消息'); return; }
+    if(!confirm(`确认删除选中的 ${ids.length} 条消息？`)) return;
+    // 逐条删除（与 DeptDeleteView 一致，后端是单条 DeleteView）
+    for (const id of ids){
+      await postDelete("{% url 'notifications:notification_delete' 0 %}".replace('/0/', `/${id}/`));
+    }
+  }
+</script>
+{% endblock %}

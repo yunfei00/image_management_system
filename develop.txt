@@ -28,6 +28,14 @@ python manage.py loaddata detect_devices_initial.json
 python manage.py loaddata detect_center_config_initial.json
 python manage.py loaddata security_detect_apply_initial.json
 
+# 单文件导入
+python manage.py loaddata notifications_initial.json
+
+# 多文件导入（顺序随意）
+python manage.py loaddata notification_templates_initial.json
+python manage.py loaddata notification_settings_initial.json
+python manage.py loaddata notifications_initial.json
+
 
 python manage.py add_default_users
 
@@ -42,15 +50,9 @@ python manage.py add_default_users
 9. 添加admin 支持后台管理
 10. 初始化数据
 
-
-2. 过滤器
-3. 添加序列化
-4. 添加路径
-5. 添加form
-6. 添加视图
-7. 添加html
-8. 添加用户api
-10. 初始化数据
+放通 Windows 防火墙 8000 端口（二选一）
+图形界面：Windows Defender 防火墙 → 高级设置 → 入站规则 → 新建规则 → 端口 → TCP 8000 → 允许 → 仅勾选“专用”→ 命名“Django Dev 8000”。
+netsh advfirewall firewall add rule name="Django Dev 8000" dir=in action=allow protocol=TCP localport=8000
 
 
 

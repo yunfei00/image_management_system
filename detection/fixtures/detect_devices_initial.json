@@ -1,0 +1,74 @@
+[
+  {
+    "model": "detection.detectdevice",
+    "pk": 1,
+    "fields": {
+      "name": "绿盟-漏洞扫描",
+      "type": "NSFOCUS",
+      "api_url": "https://nsfocus.local/api/health",
+      "config": {
+        "auth": { "api_key": "NSF-XXXX", "secret": "****" },
+        "endpoints": { "scan": "/api/v1/scan", "report": "/api/v1/report" },
+        "headers": { "X-Client": "image-platform" },
+        "timeout_sec": 15
+      },
+      "status": "ACTIVE",
+      "created_at": "2025-01-02T02:00:00Z",
+      "updated_at": "2025-01-02T02:00:00Z"
+    }
+  },
+  {
+    "model": "detection.detectdevice",
+    "pk": 2,
+    "fields": {
+      "name": "小佑-代码扫描",
+      "type": "XiaoYou",
+      "api_url": "https://xiaoyou.local/api/health",
+      "config": {
+        "auth": { "token": "XY-XXXX" },
+        "endpoints": { "scan": "/v1/code/scan", "result": "/v1/code/result" },
+        "headers": { "X-Org": "SecurityCenter" },
+        "timeout_sec": 20
+      },
+      "status": "ACTIVE",
+      "created_at": "2025-01-02T02:05:00Z",
+      "updated_at": "2025-01-02T02:05:00Z"
+    }
+  },
+  {
+    "model": "detection.detectdevice",
+    "pk": 3,
+    "fields": {
+      "name": "默安-镜像安全",
+      "type": "MoreSec",
+      "api_url": "https://moresec.local/api/health",
+      "config": {
+        "auth": { "app_id": "MS-APP", "app_secret": "****" },
+        "endpoints": { "scan": "/api/scan/image", "issues": "/api/scan/issues" },
+        "headers": {},
+        "timeout_sec": 25
+      },
+      "status": "ACTIVE",
+      "created_at": "2025-01-02T02:10:00Z",
+      "updated_at": "2025-01-02T02:10:00Z"
+    }
+  },
+  {
+    "model": "detection.detectdevice",
+    "pk": 4,
+    "fields": {
+      "name": "预留-沙箱",
+      "type": "Sandbox",
+      "api_url": "https://sandbox.local/api/ping",
+      "config": {
+        "auth": {},
+        "endpoints": { "submit": "/submit", "status": "/status" },
+        "headers": {},
+        "timeout_sec": 10
+      },
+      "status": "INACTIVE",
+      "created_at": "2025-01-02T02:12:00Z",
+      "updated_at": "2025-01-02T02:12:00Z"
+    }
+  }
+]

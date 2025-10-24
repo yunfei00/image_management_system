@@ -93,3 +93,79 @@ class PreDetectRecord(BaseModel):
 
     def __str__(self):
         return f"{self.project} - {self.tool} - {self.get_status_display()}"
+
+class SecurityDetectApply(BaseModel):
+    project = models.ForeignKey(
+        'projects.Project',
+        on_delete=models.CASCADE,
+        related_name='detect_applies',
+        verbose_name="项目"
+    )
+    file_paths = models.JSONField(verbose_name="文件路径")
+    detect_items = models.CharField(max_length=256, verbose_name="检测项目")
+    description = models.TextField(verbose_name="描述")
+    assign_team = models.ForeignKey(
+        'system.User',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='assigned_detection_tasks',
+        verbose_name="指定检测团队"
+    )
+    status = models.CharField(max_length=32, choices=[
+        ('PENDING', '待处理'),
+        ('IN_PROGRESS', '进行中'),
+        ('COMPLETED', '已完成'),
+        ('FAILED', '失败')
+    ], default='PENDING', verbose_name="状态")
+    result = models.TextField(null=True, blank=True, verbose_name="检测结果")
+    feedback = models.TextField(null=True, blank=True, verbose_name="反馈意见")
+
+    class Meta:
+        verbose_name = "检测申请"
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return f"{self.project.name} - {self.detect_items}"
+
+
+class DetectCenterConfig(BaseModel):
+    name = models.CharField(max_length=64, unique=True, verbose_name="配置名称")
+    api_config = models.JSONField(verbose_name="API 配置")
+    approval_flow = models.ForeignKey(
+        'system.ApprovalFlow',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        verbose_name="审批流程"
+    )
+    device_config = models.JSONField(verbose_name="设备配置")
+    status = models.CharField(max_length=32, choices=[
+        ('ACTIVE', '启用'),
+        ('INACTIVE', '禁用')
+    ], default='ACTIVE', verbose_name="状态")
+
+    class Meta:
+        verbose_name = "检测中心配置"
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.name
+
+class DetectDevice(BaseModel):
+    name = models.CharField(max_length=64, unique=True, verbose_name="设备名称")
+    type = models.CharField(max_length=64, verbose_name="设备类型")
+    api_url = models.URLField(verbose_name="API 地址")
+    config = models.JSONField(verbose_name="设备配置")
+    status = models.CharField(max_length=32, choices=[
+        ('ACTIVE', '启用'),
+        ('INACTIVE', '禁用')
+    ], default='ACTIVE', verbose_name="状态")
+
+    class Meta:
+        verbose_name = "检测设备"
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.name
+

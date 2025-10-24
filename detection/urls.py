@@ -22,6 +22,18 @@ urlpatterns = [
     path('pre-detect/<int:pk>/edit/', views.PreDetectUpdateView.as_view(), name='pre_detect_edit'),
     path('pre-detect/<int:pk>/delete/', views.PreDetectDeleteView.as_view(), name='pre_detect_delete'),
 
+    # 检测中心配置
+    path('center/config/', views.CenterConfigListView.as_view(), name='center_config_list'),
+    path('center/config/create/', views.CenterConfigCreateView.as_view(), name='center_config_create'),
+    path('center/config/<int:pk>/edit/', views.CenterConfigUpdateView.as_view(), name='center_config_edit'),
+    path('center/config/<int:pk>/delete/', views.CenterConfigDeleteView.as_view(), name='center_config_delete'),
+
+    # 检测设备
+    path('devices/', views.DeviceListView.as_view(), name='device_list'),
+    path('devices/create/', views.DeviceCreateView.as_view(), name='device_create'),
+    path('devices/<int:pk>/edit/', views.DeviceUpdateView.as_view(), name='device_edit'),
+    path('devices/<int:pk>/delete/', views.DeviceDeleteView.as_view(), name='device_delete'),
+
 ]
 
 

@@ -20,7 +20,7 @@ from django.urls import path, include
 from rest_framework import routers
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
-from detection.views import ProjectDetectToolViewSet, PreDetectViewSet
+from detection.views import ProjectDetectToolViewSet, PreDetectViewSet, DetectDeviceViewSet, DetectCenterConfigViewSet
 from images.views import BaseImageViewSet, BusinessImageViewSet
 from projects.views import ProjectViewSet
 from repo.views import RepositoryViewSet
@@ -51,6 +51,9 @@ router.register('approval-flows', ApprovalFlowViewSet)
 router.register('detect-tools', ProjectDetectToolViewSet)
 router.register('pre-detection', PreDetectViewSet)
 router.register('repositories', RepositoryViewSet)
+
+router.register('detect-center/config', DetectCenterConfigViewSet)
+router.register('detect-devices', DetectDeviceViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),

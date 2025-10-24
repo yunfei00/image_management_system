@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content %}
+<form class="row g-2 mb-3" method="get">
+  <div class="col-auto">
+    <input class="form-control" name="name" placeholder="设备名称" value="{{ request.GET.name }}">
+  </div>
+  <div class="col-auto">
+    <select name="status" class="form-select">
+      <option value="">状态</option>
+      <option value="ACTIVE" {% if request.GET.status == 'ACTIVE' %}selected{% endif %}>启用</option>
+      <option value="INACTIVE" {% if request.GET.status == 'INACTIVE' %}selected{% endif %}>禁用</option>
+    </select>
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-primary">搜索</button>
+    <a class="btn btn-success" href="?{% if request.GET.name %}name={{ request.GET.name }}&{% endif %}{% if request.GET.status %}status={{ request.GET.status }}&{% endif %}export=1">导出</a>
+  </div>
+  <div class="col-auto ms-auto text-end">
+    <button type="button" class="btn btn-outline-primary" onclick="openModal('{% url 'detection:device_create' %}', '新增检测设备')">新增</button>
+  </div>
+</form>
+
+<table class="table table-bordered">
+  <thead class="table-light">
+    <tr><th><input id="selectAll" type="checkbox" /></th><th>设备名称</th><th>设备类型</th><th>API地址</th><th>状态</th><th>创建时间</th><th>操作</th></tr>
+  </thead>
+  <tbody>
+    {% for obj in page_obj %}
+      <tr>
+        <td><input type="checkbox" class="rowCheckbox" value="{{ obj.id }}"></td>
+        <td>{{ obj.name }}</td>
+        <td>{{ obj.type }}</td>
+        <td>{{ obj.api_url }}</td>
+        <td>{{ obj.get_status_display }}</td>
+        <td>{{ obj.created_at }}</td>
+        <td>
+          <button class="btn btn-sm btn-warning" onclick="openModal('{% url 'detection:device_edit' obj.id %}', '编辑检测设备')">修改</button>
+          <button class="btn btn-sm btn-danger" onclick="postDelete('{% url 'detection:device_delete' obj.id %}')">删除</button>
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="7" class="text-center text-muted">暂无数据</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% include "system/includes/pagination.html" %}
+
+<script>
+  document.getElementById('selectAll')?.addEventListener('change', function(e){
+    document.querySelectorAll('.rowCheckbox').forEach(ch => ch.checked = e.target.checked);
+  });
+
+  async function postDelete(url){
+    if(!confirm('确认删除？')) return;
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {'X-CSRFToken': getCookie('csrftoken')}
+    });
+    const data = await resp.json();
+    if(data.success) location.reload();
+    else alert('删除失败');
+  }
+</script>
+{% endblock %}

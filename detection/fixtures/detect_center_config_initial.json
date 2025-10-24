@@ -1,0 +1,52 @@
+[
+  {
+    "model": "detection.detectcenterconfig",
+    "pk": 1,
+    "fields": {
+      "name": "默认检测中心",
+      "api_config": {
+        "callback_url": "https://platform.local/api/callbacks/detect",
+        "retry": 2,
+        "timeout_sec": 30,
+        "webhook_headers": { "X-Token": "CB-XXXX" }
+      },
+      "approval_flow": null,
+      "device_config": {
+        "devices": [
+          { "device_id": 1, "enabled": true, "default": true,  "scopes": ["漏洞扫描"] },
+          { "device_id": 2, "enabled": true,  "default": false, "scopes": ["代码扫描"] },
+          { "device_id": 3, "enabled": true,  "default": false, "scopes": ["镜像扫描"] }
+        ],
+        "strategy": { "parallel": false, "sequence": [1, 2, 3] },
+        "limits": { "concurrency": 3, "qps": 10 }
+      },
+      "status": "ACTIVE",
+      "created_at": "2025-01-02T03:00:00Z",
+      "updated_at": "2025-01-02T03:00:00Z"
+    }
+  },
+  {
+    "model": "detection.detectcenterconfig",
+    "pk": 2,
+    "fields": {
+      "name": "备用检测中心",
+      "api_config": {
+        "callback_url": "https://platform.local/api/callbacks/detect",
+        "retry": 1,
+        "timeout_sec": 20
+      },
+      "approval_flow": null,
+      "device_config": {
+        "devices": [
+          { "device_id": 1, "enabled": true, "default": true,  "scopes": ["漏洞扫描"] },
+          { "device_id": 4, "enabled": false, "default": false, "scopes": ["动态分析"] }
+        ],
+        "strategy": { "parallel": true, "sequence": [1] },
+        "limits": { "concurrency": 2, "qps": 5 }
+      },
+      "status": "INACTIVE",
+      "created_at": "2025-01-02T03:05:00Z",
+      "updated_at": "2025-01-02T03:05:00Z"
+    }
+  }
+]

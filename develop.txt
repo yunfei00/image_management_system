@@ -36,6 +36,8 @@ python manage.py loaddata notification_templates_initial.json
 python manage.py loaddata notification_settings_initial.json
 python manage.py loaddata notifications_initial.json
 
+ python manage.py loaddata reports_initial.json
+
 
 python manage.py add_default_users
 

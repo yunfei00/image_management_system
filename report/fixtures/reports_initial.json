@@ -1,0 +1,54 @@
+[
+  {
+    "model": "report.report",
+    "pk": 1,
+    "fields": {
+      "type": "PROJECT",
+      "data": "{\"total_projects\": 5, \"completed\": 3, \"in_progress\": 2}",
+      "period": "2025-01-01 to 2025-12-31",
+      "project_status": "1",
+      "department": "技术部",
+      "created_at": "2025-01-01T08:00:00Z",
+      "updated_at": "2025-01-01T08:00:00Z"
+    }
+  },
+  {
+    "model": "report.report",
+    "pk": 2,
+    "fields": {
+      "type": "IMAGE",
+      "data": "{\"total_images\": 10, \"vulnerable_images\": 2}",
+      "period": "2025-01-01 to 2025-12-31",
+      "project_status": "1",
+      "department": "开发组",
+      "created_at": "2025-01-01T09:00:00Z",
+      "updated_at": "2025-01-01T09:00:00Z"
+    }
+  },
+  {
+    "model": "report.report",
+    "pk": 3,
+    "fields": {
+      "type": "BUSINESS_PROCESS",
+      "data": "{\"total_processes\": 4, \"successful\": 3, \"failed\": 1}",
+      "period": "2025-01-01 to 2025-06-30",
+      "project_status": "1",
+      "department": "市场部",
+      "created_at": "2025-01-01T10:00:00Z",
+      "updated_at": "2025-01-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "report.report",
+    "pk": 4,
+    "fields": {
+      "type": "BUSINESS_IMAGE",
+      "data": "{\"total_business_images\": 6, \"vulnerable_images\": 1}",
+      "period": "2025-01-01 to 2025-12-31",
+      "project_status": "1",
+      "department": "行政部",
+      "created_at": "2025-01-01T14:00:00Z",
+      "updated_at": "2025-01-01T14:00:00Z"
+    }
+  }
+]

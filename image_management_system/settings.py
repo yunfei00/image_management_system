@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "detection.apps.DetectionConfig",
     "repo.apps.RepoConfig",
     "notification.apps.NotificationConfig",
+    "report.apps.ReportConfig",
     "django_filters",
     'rest_framework',  # 必须添加，否则 DRF 模板无法被搜索到
 

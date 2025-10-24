@@ -25,6 +25,7 @@ from images.views import BaseImageViewSet, BusinessImageViewSet
 from notification.views import NotificationViewSet
 from projects.views import ProjectViewSet
 from repo.views import RepositoryViewSet
+from report.views import ReportViewSet
 from system.views.approvals_views import ApprovalFlowViewSet
 from system.views.departments import DepartmentViewSet
 from system.views.roles import RoleViewSet
@@ -57,6 +58,7 @@ router.register('detect-center/config', DetectCenterConfigViewSet)
 router.register('detect-devices', DetectDeviceViewSet)
 
 router.register(r'notifications', NotificationViewSet, basename='notifications')
+router.register(r'reports', ReportViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),

@@ -82,7 +82,7 @@ class OperationLogListView(ListView):
     model = OperationLog
     template_name = "system/operation_log_list.html"
     context_object_name = "logs"
-    paginate_by = 20
+    paginate_by = 10
 
     def get_queryset(self):
         qs = super().get_queryset().order_by('-operation_time')

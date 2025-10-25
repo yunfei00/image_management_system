@@ -3,6 +3,7 @@
 <div class="container mt-3">
   <h4 class="mb-3">注册申请审批</h4>
 
+  <!-- 搜索筛选部分 -->
   <form method="get" class="row g-2 mb-3">
     <div class="col-auto">
       <select name="status" class="form-select" onchange="this.form.submit()">
@@ -14,15 +15,17 @@
     </div>
   </form>
 
+  <!-- 显示消息提示 -->
   {% if messages %}
     {% for message in messages %}
       <div class="alert alert-{{ message.tags }}">{{ message }}</div>
     {% endfor %}
   {% endif %}
 
-  <table class="table table-striped align-middle">
-    <thead>
-      <tr>
+  <!-- 表格部分 -->
+  <table class="table table-bordered table-striped align-middle">
+    <thead class="table-light">
+      <tr class="text-center">
         <th>姓名</th>
         <th>电话</th>
         <th>公司</th>
@@ -51,13 +54,10 @@
           {% endif %}
         </td>
         <td>{{ req.created_at|date:"Y-m-d H:i" }}</td>
-        <td>
+        <td class="text-center">
           {% if req.status == 'pending' %}
-            <!-- 通过按钮 -->
-            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approveModal{{ req.id }}">通过</button>
-
-            <!-- 拒绝按钮 -->
-            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#rejectModal{{ req.id }}">拒绝</button>
+            <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#approveModal{{ req.id }}">通过</button>
+            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal{{ req.id }}">拒绝</button>
           {% else %}
             <small>{{ req.reviewer }}<br>{{ req.reviewed_at|date:"Y-m-d H:i" }}</small>
           {% endif %}
@@ -109,6 +109,7 @@
           </form>
         </div>
       </div>
+
       {% endfor %}
     </tbody>
   </table>

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-3">
+  <h4 class="mb-3">用户详情</h4>
+
+  <table class="table table-bordered">
+    <tr>
+      <th>用户名</th>
+      <td>{{ user.username }}</td>
+    </tr>
+    <tr>
+      <th>手机号</th>
+      <td>{{ user.phone }}</td>
+    </tr>
+    <tr>
+      <th>邮箱</th>
+      <td>{{ user.email }}</td>
+    </tr>
+    <tr>
+      <th>角色</th>
+      <td>{{ user.role }}</td>
+    </tr>
+    <tr>
+      <th>部门</th>
+      <td>{{ user.department }}</td>
+    </tr>
+    <tr>
+      <th>状态</th>
+      <td>{{ user.get_status_display }}</td>
+    </tr>
+    <tr>
+      <th>创建时间</th>
+      <td>{{ user.created_at|date:"Y-m-d H:i" }}</td>
+    </tr>
+  </table>
+
+  <a href="{% url 'system:user_list' %}" class="btn btn-outline-primary">返回用户列表</a>
+</div>
+{% endblock %}

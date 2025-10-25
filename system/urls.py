@@ -45,9 +45,11 @@ urlpatterns = [
 
     # 用户管理
     path('user/', users.UserListView.as_view(), name='user_list'),
+    path('users/<int:pk>/', users.UserDetailView.as_view(), name='user_detail'),
     path('user/create/', users.UserCreateView.as_view(), name='user_create'),
     path('user/<int:pk>/edit/', users.UserUpdateView.as_view(), name='user_edit'),
     path('user/<int:pk>/delete/', users.UserDeleteView.as_view(), name='user_delete'),
+    path('user/<int:pk>/reset-password/', users.AdminResetPasswordView.as_view(), name='users_reset_password'),
 
     # 检测工具管理
     path('tool/', tools.ToolListView.as_view(), name='tool_list'),

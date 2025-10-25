@@ -13,7 +13,7 @@ from .models import BaseImage, BusinessImage
 from .serializers import BaseImageSerializer, BusinessImageSerializer
 
 # 复用你项目里的工具（与 Department 一致）
-from system.utils import export_queryset_to_excel
+from system.utils import export_queryset_to_excel, print_objs
 from system.views.handle_modal_form import render_modal_form
 
 
@@ -30,11 +30,13 @@ class BusinessImageViewSet(viewsets.ModelViewSet):
 # ---------- BaseImage ----------
 class BaseImageListView(View):
     def get(self, request):
+        print(f'{self.__class__.__name__} get is {request.GET}')
         f = BaseImageFilter(request.GET, queryset=BaseImage.objects.all())
         qs = f.qs.order_by('-id')
         paginator = Paginator(qs, 10)
         page = request.GET.get('page')
         objs = paginator.get_page(page)
+        print_objs(objs)
         if 'export' in request.GET:
             cols = [
                 ('id', 'ID'), ('name', '镜像名称'), ('version', '版本'),

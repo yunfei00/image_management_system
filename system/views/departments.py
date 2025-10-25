@@ -10,7 +10,7 @@ from system.filters.department_filter import DepartmentFilter
 from system.forms import DeptForm
 from system.models import Department
 from system.serializers.department import DepartmentSerializer
-from system.utils import export_queryset_to_excel
+from system.utils import export_queryset_to_excel, print_objs
 from system.views.handle_modal_form import render_modal_form
 
 class DepartmentViewSet(viewsets.ModelViewSet):
@@ -26,6 +26,7 @@ class DeptListView(View):
         paginator = Paginator(qs, 10)
         page = request.GET.get('page')
         objs = paginator.get_page(page)
+        print_objs(objs)
         if 'export' in request.GET:
             cols = [('id','ID'), ('name','部门名称'), ('status','状态')]
             return export_queryset_to_excel(f.qs, cols, 'departments')

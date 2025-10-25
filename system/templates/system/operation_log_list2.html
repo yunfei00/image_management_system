@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<h1>操作日志</h1>
+
+<form method="get" class="row g-2 mb-3">
+  <div class="col-auto">
+    {{ search_form.module.label_tag }}<br>
+    {{ search_form.module }}
+  </div>
+  <div class="col-auto">
+    {{ search_form.operator.label_tag }}<br>
+    {{ search_form.operator }}
+  </div>
+  <div class="col-auto">
+    {{ search_form.ip.label_tag }}<br>
+    {{ search_form.ip }}
+  </div>
+  <div class="col-auto">
+    {{ search_form.start_time.label_tag }}<br>
+    {{ search_form.start_time }}
+  </div>
+  <div class="col-auto">
+    {{ search_form.end_time.label_tag }}<br>
+    {{ search_form.end_time }}
+  </div>
+  <div class="col-auto align-self-end">
+    <button class="btn btn-primary" type="submit">搜索</button>
+    <a class="btn btn-secondary" href="{% url 'system:oper_log_list' %}">重置</a>
+  </div>
+</form>
+
+<form id="bulk-form">
+  <div class="mb-2">
+    <button type="button" id="btn-export" class="btn btn-outline-success">导出（CSV）</button>
+    <button type="button" id="btn-delete" class="btn btn-danger">删除选中</button>
+  </div>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th><input type="checkbox" id="select-all" /></th>
+        <th>操作时间</th>
+        <th>系统模块</th>
+        <th>操作人员</th>
+        <th>操作IP</th>
+        <th>操作内容</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for log in logs %}
+      <tr>
+        <td><input type="checkbox" class="row-checkbox" value="{{ log.id }}" /></td>
+        <td>{{ log.operation_time }}</td>
+        <td>{{ log.module }}</td>
+        <td>{{ log.operator }}</td>
+        <td>{{ log.ip }}</td>
+        <td style="max-width:400px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ log.operation_content }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6">没有日志</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</form>
+
+<nav aria-label="Page navigation">
+  <ul class="pagination">
+    {% if logs.has_previous %}
+      <li class="page-item"><a class="page-link" href="?page={{ logs.previous_page_number }}">上一页</a></li>
+    {% endif %}
+    <li class="page-item disabled"><span class="page-link">第 {{ logs.number }} 页 / 共 {{ logs.paginator.num_pages }} 页</span></li>
+    {% if logs.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{ logs.next_page_number }}">下一页</a></li>
+    {% endif %}
+  </ul>
+</nav>
+
+<script>
+document.getElementById('select-all').addEventListener('change', function () {
+  document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = this.checked);
+});
+
+document.getElementById('btn-delete').addEventListener('click', async function () {
+  const ids = Array.from(document.querySelectorAll('.row-checkbox:checked')).map(cb => cb.value);
+  if (!ids.length) { alert('请先选择要删除的日志'); return; }
+  if (!confirm(`确认删除 ${ids.length} 条？`)) return;
+  const resp = await fetch('/api/logs/operation/bulk_delete/', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')},
+    body: JSON.stringify({ids})
+  });
+  if (resp.ok) {
+    alert('删除成功');
+    location.reload();
+  } else {
+    alert('删除失败');
+  }
+});
+
+document.getElementById('btn-export').addEventListener('click', function () {
+  // 直接跳转到 export_csv。保留当前查询字符串（包含搜索条件）
+  const qs = window.location.search || '';
+  window.location.href = `/api/logs/operation/export_csv/${qs}`;
+});
+
+// 简单获取 CSRF 函数
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i=0; i<cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.startsWith(name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+</script>
+
+{% endblock %}

@@ -67,6 +67,24 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
     ),
 }
+PERMISSION_GUARD = {
+    'ENABLED': True,
+    'WHITELIST': {
+        'system:login', 'system:logout', 'system:register',  # 按你的项目实际路由名填写
+    },
+    'PATH_WHITELIST': ['/admin/', '/healthz', '/static/', '/favicon.ico'],
+    'API_PREFIXES': ['/api/'],
+    # 仅作兜底：建议主要在视图上声明 permission_required
+    'PERMISSION_MAP': {
+        # 完整名优先匹配
+        'image:upload': ['images.image_upload'],
+        'detect:start': ['detect.detect_start'],
+        'detect:report_export': ['detect.detect_export_report'],
+        # 无 namespace 时也能按 url_name 匹配
+        'project_detail': ['projects.view_project'],
+    },
+}
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -76,6 +94,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     'system.middleware.login_required_middleware.LoginRequiredMiddleware',
+    'system.middleware.permission_guard.AuthzMiddleware',
 ]
 
 ROOT_URLCONF = "image_management_system.urls"

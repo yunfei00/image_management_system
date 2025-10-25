@@ -10,13 +10,16 @@
   <div class="col-auto">
     <input class="form-control" name="category" placeholder="分类" value="{{ request.GET.category }}">
   </div>
-  <div class="col-auto">
-    {# 你若已把 status 设为 choices，可替换为 <select>；此处提供 datalist 兼顾自由输入 #}
-    <input class="form-control" name="status" placeholder="状态" list="statusOptions" value="{{ request.GET.status }}">
-    <datalist id="statusOptions">
-      <option value="草稿"><option value="上架"><option value="下架">
-    </datalist>
-  </div>
+  {# 把这段换掉 —— 用 select 而不是 datalist #}
+<div class="col-auto">
+<select class="form-select" name="status">
+  <option value="">状态</option>
+  <option value="0" {% if request.GET.status == '0' %}selected{% endif %}>禁用</option>
+  <option value="1" {% if request.GET.status == '1' %}selected{% endif %}>启用</option>
+  <option value="2" {% if request.GET.status == '2' %}selected{% endif %}>草稿</option>
+</select>
+
+</div>
   <div class="col-auto">
     <button class="btn btn-primary">搜索</button>
     <a class="btn btn-success"

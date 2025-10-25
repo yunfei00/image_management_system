@@ -1,12 +1,16 @@
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.paginator import Paginator
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.template.loader import render_to_string
+from django.urls import reverse
 from django.views import View
 from django.views.generic import DeleteView
 from rest_framework import viewsets
 
 from system.filters.user_filter import UserFilter
-from system.forms import UserForm
+from system.forms import UserForm, AdminResetPasswordForm
 from system.models import User
 from system.serializers.user import UserSerializer
 from system.utils import export_queryset_to_excel
@@ -79,3 +83,36 @@ class UserDeleteView(DeleteView):
         self.object = self.get_object()
         self.object.delete()
         return JsonResponse({'success': True})
+
+class AdminResetPasswordView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    """
+    管理员为用户重置密码（需要有变更用户的权限）
+    """
+    permission_required = 'auth.change_user'   # 如果你自定义User模型，换成对应app_label.codename
+
+    def get(self, request, pk):
+        print('receive reset password')
+        target = get_object_or_404(User, pk=pk)
+        # 传递 user 参数而非 instance，初始化 AdminResetPasswordForm
+        form = AdminResetPasswordForm(user=target)
+        # 使用 render_modal_form 渲染模态框内容
+        return render_modal_form(request, form, context_extra={'target': target})
+
+    def post(self, request, pk):
+        target = get_object_or_404(User, pk=pk)
+        form = AdminResetPasswordForm(request.POST, user=target)
+        if form.is_valid():
+            # 保存新密码
+            new_password = form.cleaned_data['new_password']
+            target.set_password(new_password)
+            target.save()
+            return JsonResponse({'success': True, 'message': '密码重置成功'})
+
+        # 如果表单无效，返回错误的表单HTML
+        html = render_to_string('system/user_list.html', {'form': form, 'target': target}, request=request)
+        return JsonResponse({'success': False, 'html': html})
+
+class UserDetailView(View):
+    def get(self, request, pk):
+        user = get_object_or_404(User, pk=pk)
+        return render(request, 'system/user_detail.html', {'user': user})

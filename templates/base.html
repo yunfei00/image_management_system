@@ -80,6 +80,9 @@
       transition: all 0.3s ease;
       box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
       z-index: 1020;
+      height: 100vh; /* 设置侧边栏高度为视窗高度 */
+      position: fixed; /* 固定位置 */
+      overflow-y: auto; /* 允许纵向滚动 */
     }
 
     .nav-pills {
@@ -108,28 +111,11 @@
       font-weight: 500;
     }
 
-    .dropdown-menu {
-      background-color: var(--sidebar-active);
-      border: none;
-      padding: 0.5rem 0;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    .dropdown-item {
-      color: var(--text-secondary);
-      padding: 0.5rem 1.5rem;
-      transition: all 0.2s ease;
-    }
-
-    .dropdown-item:hover {
-      background-color: rgba(255, 255, 255, 0.05);
-      color: var(--text-primary);
-    }
-
     /* 主内容区 */
     #content {
       flex: 1;
       padding: 1.5rem;
+      margin-left: 240px; /* 保证右侧内容不会被侧边栏遮挡 */
       transition: all 0.3s ease;
     }
 
@@ -210,6 +196,20 @@
         padding: 1rem;
       }
     }
+  /* 让最下面的“后台管理”粘在侧栏底部，始终可见 */
+#sidebar .sticky-admin {             /* li.nav-item 上加这个类 */
+  position: sticky;                  /* 粘性定位：随着父容器滚动但“贴底” */
+  bottom: 0;                         /* 贴在父滚动容器底部 */
+  background: var(--sidebar-bg);     /* 背景一致，避免露白 */
+  padding-top: .5rem;                /* 与上方菜单留点呼吸空间 */
+  margin-top: .5rem;
+  border-top: 1px solid var(--sidebar-active);
+  z-index: 5;                        /* 避免被上方元素盖住 */
+}
+
+
+
+
   </style>
 
   {% block extra_head %}{% endblock %}
@@ -411,6 +411,18 @@
            <i class="bi bi-building me-2"></i>预检测管理
         </a>
       </li>
+          <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'dddddd' %}active{% endif %}"
+           href="{% url 'detection:pre_detect_list' %}">
+           <i class="bi bi-file-earmark-check me-2"></i> 检测申请
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'detection:center_config' %}active{% endif %}"
+           href="{% url 'detection:center_config_list' %}">
+           <i class="bi bi-gear me-2"></i> 检测中心配置
+        </a>
+      </li>
     </ul>
   </div>
 </li>
@@ -421,12 +433,83 @@
           </a>
         </li>
 
-        <li class="nav-item"><hr class="text-secondary"></li>
-        <li class="nav-item">
-          <a class="nav-link" href="/admin/">
-            <i class="bi bi-sliders"></i> 后台管理
+{#    <li class="nav-item">#}
+{#  <a class="nav-link d-flex justify-content-between align-items-center {% if '1111images' in request.path %}active{% endif %}"#}
+{#     href="#securityDetectionMenu"#}
+{#     data-bs-toggle="collapse"#}
+{#     role="button"#}
+{#     aria-expanded="{% if 'detection' in request.path %}true{% else %}false{% endif %}"#}
+{#     aria-controls="securityDetectionMenu">#}
+{#    <span><i class="bi bi-shield-lock"></i> 安全检测模块</span>#}
+{#    <span class="small text-muted">{% if 'detection' in request.path %}▾{% else %}▸{% endif %}</span>#}
+{#  </a>#}
+{##}
+{#  <div class="collapse {% if 'detection' in request.path %}show{% endif %}" id="securityDetectionMenu">#}
+{#    <ul class="nav flex-column ms-3 mt-1">#}
+{#      <li class="nav-item">#}
+{#        <a class="nav-link {% if request.resolver_match.url_name == 'dddddd' %}active{% endif %}"#}
+{#           href="{% url 'detection:pre_detect_list' %}">#}
+{#           <i class="bi bi-file-earmark-check me-2"></i> 检测申请#}
+{#        </a>#}
+{#      </li>#}
+{#      <li class="nav-item">#}
+{#        <a class="nav-link {% if request.resolver_match.url_name == 'detection:center_config' %}active{% endif %}"#}
+{#           href="{% url 'detection:center_config_list' %}">#}
+{#           <i class="bi bi-gear me-2"></i> 检测中心配置#}
+{#        </a>#}
+{#      </li>#}
+{#    </ul>#}
+{#  </div>#}
+{#</li>#}
+
+{#    <li class="nav-item">#}
+{#  <a class="nav-link d-flex justify-content-between align-items-center {% if '1111images' in request.path %}active{% endif %}"#}
+{#     href="#securityDetectionMenu"#}
+{#     data-bs-toggle="collapse"#}
+{#     role="button"#}
+{#     aria-expanded="{% if 'detection' in request.path %}true{% else %}false{% endif %}"#}
+{#     aria-controls="securityDetectionMenu">#}
+{#    <span><i class="bi bi-box-seam"></i> 安全检测模块</span>#}
+{#    <span class="small text-muted">{% if '1111images' in request.path %}▾{% else %}▸{% endif %}</span>#}
+{#  </a>#}
+{##}
+{#  <div class="collapse {% if '1111images' in request.path %}show{% endif %}" id="securityDetectionMenu">#}
+{#    <ul class="nav flex-column ms-3 mt-1">#}
+{##}
+{#      <li class="nav-item">#}
+{#        <a class="nav-link {% if '/1111images/base/' in request.path %}active{% endif %}"#}
+{#           href="{% url 'detection:pre_detect_list' %}">#}
+{#           <i class="bi bi-layers me-2"></i>检测申请#}
+{#        </a>#}
+{#      </li>#}
+{##}
+{#      <li class="nav-item">#}
+{#        <a class="nav-link {% if '/1111images/business/' in request.path %}active{% endif %}"#}
+{#           href="{% url 'detection:center_config_list' %}">#}
+{#           <i class="bi bi-building me-2"></i>检测中心配置#}
+{#        </a>#}
+{#      </li>#}
+{#    </ul>#}
+{#  </div>#}
+{#</li>#}
+              <li class="nav-item">
+          <a class="nav-link" href="{% url 'notifications:notification_list' %}">
+            <i class="bi bi-database"></i> 通知消息模块
           </a>
         </li>
+
+                    <li class="nav-item">
+          <a class="nav-link" href="{% url 'repo:repo_list' %}">
+            <i class="bi bi-database"></i> 报表模块
+          </a>
+        </li>
+
+<li class="nav-item sticky-admin"><!-- ← 新增 sticky-admin -->
+  <a class="nav-link" href="/admin/">
+    <i class="bi bi-sliders"></i> 后台管理
+  </a>
+</li>
+
       </ul>
     </aside>
 
@@ -451,13 +534,12 @@
     </div>
   </div>
 
-  <!-- 🔹 JS功能 -->
+   <!-- 🔹 JS功能 -->
   <script>
     // 侧边栏切换（支持页面刷新后保持状态）
     const btn = document.getElementById('btn-toggle-sidebar');
     const sidebar = document.getElementById('sidebar');
 
-    // 初始化侧边栏状态
     if (localStorage.getItem('sidebarHidden') === 'true') {
       sidebar.style.display = 'none';
     }
@@ -465,7 +547,7 @@
     btn?.addEventListener('click', () => {
       const isHidden = sidebar.style.display === 'none';
       sidebar.style.display = isHidden ? 'block' : 'none';
-      localStorage.setItem('sidebarHidden', !isHidden); // 保存状态到本地存储
+      localStorage.setItem('sidebarHidden', !isHidden);
     });
 
     // ---------- 打开 Modal ----------
@@ -481,7 +563,6 @@
       try {
         const resp = await fetch(url, {credentials: 'same-origin'});
         if (!resp.ok) throw new Error('网络请求失败');
-
         const data = await resp.json();
         modalBody.innerHTML = data.html || '<div class="text-warning text-center p-3">无内容</div>';
       } catch (err) {
@@ -502,7 +583,6 @@
       if (submitting) return false;
       submitting = true;
 
-      // 禁用提交按钮
       const submitBtn = form.querySelector('button[type="submit"]');
       if (submitBtn) {
         submitBtn.disabled = true;
@@ -519,7 +599,6 @@
 
         const data = await resp.json();
         if (data.success) {
-          // 关闭modal并刷新页面
           const modal = bootstrap.Modal.getInstance(document.getElementById('commonModal'));
           modal.hide();
           location.reload();
@@ -530,7 +609,6 @@
         console.error('表单提交失败:', err);
         alert('提交失败，请检查网络连接或稍后再试');
       } finally {
-        // 恢复提交按钮状态
         if (submitBtn) {
           submitBtn.disabled = false;
           submitBtn.innerHTML = '保存';
@@ -547,59 +625,76 @@
       return v ? v.pop() : '';
     }
 
-    // ---------- systemMenu 折叠菜单持久化（增强版） ----------
-    (function(){
-      const systemMenu = document.getElementById('systemMenu');
-      const systemToggle = document.querySelector('a[href="#systemMenu"]');
+    // ---------- 折叠菜单持久化通用方法 ----------
+    function setupPersistentCollapse(menuId) {
+      const menu = document.getElementById(menuId);
+      const toggle = document.querySelector(`a[href="#${menuId}"]`);
+      if (!menu || !toggle) return;
 
-      if (!systemMenu || !systemToggle) return;
-
-      // 1) 根据 localStorage 恢复初始展开状态（localStorage 优先覆盖服务器渲染）
-      const saved = localStorage.getItem('systemMenuOpen');
+      const saved = localStorage.getItem(menuId + 'Open');
       if (saved === 'true') {
-        systemMenu.classList.add('show');
-        systemToggle.setAttribute('aria-expanded', 'true');
+        menu.classList.add('show');
+        toggle.setAttribute('aria-expanded', 'true');
       } else if (saved === 'false') {
-        systemMenu.classList.remove('show');
-        systemToggle.setAttribute('aria-expanded', 'false');
+        menu.classList.remove('show');
+        toggle.setAttribute('aria-expanded', 'false');
       }
 
-      // 2) 监听 collapse 的 show/hide 来同步 localStorage（用户手动点击折叠切换时仍然有效）
-      systemMenu.addEventListener('show.bs.collapse', function(){
-        localStorage.setItem('systemMenuOpen', 'true');
+      menu.addEventListener('show.bs.collapse', () => {
+        localStorage.setItem(menuId + 'Open', 'true');
       });
-      systemMenu.addEventListener('hide.bs.collapse', function(){
-        localStorage.setItem('systemMenuOpen', 'false');
+      menu.addEventListener('hide.bs.collapse', () => {
+        localStorage.setItem(menuId + 'Open', 'false');
       });
 
-      // 3) 对子菜单链接使用捕获阶段监听：在点击的最早阶段就保存为展开，并阻止事件冒泡到折叠控件
-      const innerLinks = systemMenu.querySelectorAll('a.nav-link');
-      innerLinks.forEach(link => {
-        link.addEventListener('click', function(evt){
-          try {
-            // 马上设置为展开，确保页面导航/跳转后仍保持展开
-            localStorage.setItem('systemMenuOpen', 'true');
-            // 阻止事件冒泡到上层（防止意外触发折叠组件的 hide/show）
-            evt.stopPropagation();
-            // 允许默认行为（即导航）继续发生
-          } catch (e) {
-            // 忍受错误，不阻断导航
-            console.error('systemMenu click handler error', e);
-          }
+      // 防止点击子菜单时误触发收缩
+      menu.querySelectorAll('a.nav-link').forEach(link => {
+        link.addEventListener('click', evt => {
+          localStorage.setItem(menuId + 'Open', 'true');
+          evt.stopPropagation();
         }, {capture: true});
       });
 
-      // 4) 在页面卸载前再一次确保状态为展开（以防某些浏览器在快速跳转中未执行 click 捕获）
-      window.addEventListener('beforeunload', function(){
-        try {
-          // 如果当前 path 包含 /system 或当前 collapse 已展开，则保存为 true
-          if (location.pathname.indexOf('/system') !== -1 || systemMenu.classList.contains('show')) {
-            localStorage.setItem('systemMenuOpen', 'true');
-          }
-        } catch (e) {}
+      window.addEventListener('beforeunload', () => {
+        if (menu.classList.contains('show')) {
+          localStorage.setItem(menuId + 'Open', 'true');
+        }
       });
-    })();
+    }
+    // 保存当前滚动条位置的函数
+function saveScrollPosition() {
+  // 获取侧边栏元素
+  const sidebar = document.getElementById('sidebar');
+  // 将当前滚动条位置（scrollTop）保存到 localStorage
+  localStorage.setItem('sidebarScrollPos', sidebar.scrollTop);
+}
+
+// 恢复滚动条位置的函数
+function restoreScrollPosition() {
+  // 获取侧边栏元素
+  const sidebar = document.getElementById('sidebar');
+  // 从 localStorage 获取保存的滚动条位置
+  const savedPosition = localStorage.getItem('sidebarScrollPos');
+  // 如果有保存的滚动条位置，则设置回去
+  if (savedPosition) {
+    sidebar.scrollTop = savedPosition;
+  }
+}
+
+// 每次侧边栏滚动时，保存当前的滚动条位置
+document.getElementById('sidebar').addEventListener('scroll', saveScrollPosition);
+
+// 页面加载完成后，恢复之前保存的滚动条位置
+window.addEventListener('load', restoreScrollPosition);
+
+
+
+    // 初始化多个折叠菜单
+    setupPersistentCollapse('systemMenu');
+    setupPersistentCollapse('imageMenu');
+    setupPersistentCollapse('detectionMenu');
   </script>
+
 
   {% block extra_scripts %}{% endblock %}
 </body>

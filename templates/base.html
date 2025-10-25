@@ -285,6 +285,10 @@
         <a class="nav-link {% if request.resolver_match.url_name == 'system:user_list' %}active{% endif %}"
            href="{% url 'system:user_list' %}"><i class="bi bi-people me-2"></i>用户管理</a>
       </li>
+          <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'system:user_list' %}active{% endif %}"
+           href="{% url 'system:register_request_list' %}"><i class="bi bi-people me-2"></i>用户审批</a>
+      </li>
       <li class="nav-item">
         <a class="nav-link {% if request.resolver_match.url_name == 'system:dept_list' %}active{% endif %}"
            href="{% url 'system:dept_list' %}"><i class="bi bi-diagram-3 me-2"></i>部门管理</a>

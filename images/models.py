@@ -21,6 +21,9 @@ class BaseImage(models.Model):
     category = models.CharField(max_length=50, blank=True, default="", verbose_name="分类", db_index=True)
     description = models.TextField(blank=True, default="", verbose_name="描述")
 
+    # 新增字段：镜像文件存储字段
+    image_file = models.FileField(upload_to='business_images/', blank=True, null=True, verbose_name="镜像文件")
+
     # 下载相关：可存本地/NFS 相对路径，或对象存储(OSS/MinIO/S3)的 Key
     artifact_path = models.CharField(max_length=255, blank=True, default="", verbose_name="镜像包路径")
     # 部门可见性：为空表示全员可见；否则取交集

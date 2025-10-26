@@ -170,3 +170,7 @@ AUTH_USER_MODEL = "system.User"
 
 LOGIN_URL = "/login"
 LOGOUT_URL = "/logout"
+
+# 媒体文件配置
+MEDIA_URL = '/media/'  # 用于访问上传文件的URL
+MEDIA_ROOT = BASE_DIR / 'media'  # 存储上传文件的本地路径

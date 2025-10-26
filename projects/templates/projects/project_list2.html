@@ -84,8 +84,9 @@
         <td>{{ obj.plan_online_date|date:'Y-m-d' }}</td>
         <td>{{ obj.submit_at|date:'Y-m-d H:i' }}</td>
         <td>
-<a href="{% url 'projects:project_detail' obj.id %}?return={{ request.get_full_path|urlencode }}">
-  详情
+              <a class="btn btn-sm btn-info"
+     href="{% url 'projects:project_detail' obj.id %}?return={{ request.get_full_path|urlencode }}">
+     详情
   </a>
           <button class="btn btn-sm btn-warning" onclick="openModal('{% url 'projects:project_edit' obj.id %}', '编辑项目')">修改</button>
           <button class="btn btn-sm btn-danger" onclick="postDelete('{% url 'projects:project_delete' obj.id %}')">删除</button>

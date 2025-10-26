@@ -1,12 +1,14 @@
 # images/views.py
+from django.core.files.storage import FileSystemStorage
 from django.core.paginator import Paginator
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import DeleteView
 from rest_framework import viewsets
 
+from projects.models import Project
 from .filters import BaseImageFilter, BusinessImageFilter
 from .forms import BaseImageForm, BusinessImageForm
 from .models import BaseImage, BusinessImage
@@ -135,3 +137,39 @@ class BusinessImageDeleteView(DeleteView):
         self.object = self.get_object()
         self.object.delete()
         return JsonResponse({'success': True})
+
+
+def upload_business_image(request):
+    if request.method == 'POST' and request.FILES['image']:
+        # 获取表单数据
+        image_file = request.FILES['image']
+        image_name = request.POST['name']
+        image_version = request.POST['version']
+        project_id = request.POST['project']
+
+        # 获取所属项目
+        project = Project.objects.get(id=project_id)
+
+        # 保存文件
+        fs = FileSystemStorage()
+        filename = fs.save(image_file.name, image_file)
+        file_url = fs.url(filename)
+
+        # 获取文件大小（以MB为单位）
+        file_size = image_file.size / (1024 * 1024)  # 转换为MB
+
+        # 保存镜像数据
+        BusinessImage.objects.create(
+            name=image_name,
+            version=image_version,
+            project=project,
+            image_id=filename,  # 也可以直接使用文件名作为镜像ID
+            size=file_size,
+            image_file=filename  # 保存上传的镜像文件路径
+        )
+
+        return redirect('projects:user_dashboard')  # 上传成功后重定向到用户主页
+
+    # 获取项目列表用于显示在表单中
+    projects = Project.objects.all()
+    return render(request, 'upload_business_image.html', {'projects': projects})

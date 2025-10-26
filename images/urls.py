@@ -5,6 +5,7 @@ from . import views
 app_name = 'images'
 
 urlpatterns = [
+    path('upload/', views.upload_business_image, name='biz_create'),
     path('images/base/', views.BaseImageListView.as_view(), name='base_list'),
     path('images/base/create/', views.BaseImageCreateView.as_view(), name='base_create'),
     path('images/base/<int:pk>/edit/', views.BaseImageUpdateView.as_view(), name='base_edit'),

@@ -16,7 +16,7 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
-            messages.success(request, "登录成功！")
+            # messages.success(request, "登录成功！")
             return redirect('system:home')  # 登录成功后跳转到首页
         else:
             messages.error(request, "用户名或密码错误！")

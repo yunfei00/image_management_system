@@ -10,11 +10,12 @@ python manage.py loaddata users_initial.json
 python manage.py loaddata login_logs_initial.json
 
 python manage.py seed_operation_logs --count 100
-
+python manage.py loaddata base_images_initial.json
+python manage.py loaddata projects_initial.json
 python manage.py loaddata detect_tools_initial.json
 python manage.py loaddata detects_initial.json
 python manage.py loaddata menus_initial.json
-python manage.py loaddata base_images_initial.json
+
 
 python manage.py loaddata approvals_initial.json
 
@@ -28,10 +29,6 @@ python manage.py loaddata detect_devices_initial.json
 python manage.py loaddata detect_center_config_initial.json
 python manage.py loaddata security_detect_apply_initial.json
 
-# 单文件导入
-python manage.py loaddata notifications_initial.json
-
-# 多文件导入（顺序随意）
 python manage.py loaddata notification_templates_initial.json
 python manage.py loaddata notification_settings_initial.json
 python manage.py loaddata notifications_initial.json

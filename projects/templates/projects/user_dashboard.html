@@ -1,0 +1,249 @@
+<!-- templates/projects/user_dashboard.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- 顶部操作区：创建项目 / 上传业务镜像 -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">我的主页</h4>
+    <div class="d-flex gap-2">
+      <!-- 创建项目按钮 -->
+{#      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createProjectModal">#}
+          <button type="button" class="btn btn-primary" onclick="openModal('{% url 'projects:project_create' %}', '新增项目')">
+        创建项目
+      </button>
+      <!-- 上传业务镜像按钮 -->
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#uploadBizImageModal">
+        上传业务镜像
+      </button>
+    </div>
+  </div>
+
+  <!-- 我的项目 -->
+  <div class="card mt-4">
+    <div class="card-header">
+      <h5>我的项目</h5>
+    </div>
+    <div class="card-body">
+      {% if projects %}
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>项目名称</th>
+                <th>项目描述</th>
+                <th>部门</th>
+                <th>基础镜像</th>
+              <th>审批状态</th>
+              <th>提交时间</th>
+                <th>预计上线时间</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for project in projects %}
+              <tr>
+                <td>{{ project.name }}</td>
+                <td>{{ project.description }}</td>
+                  <td>{{ project.department }}</td>
+                  <td>{{ project.base_image }}</td>
+                <td>{{ project.get_approval_status_display }}</td>
+                <td>{{ project.submit_at|date:"Y-m-d H:i" }}</td>
+                  <td>{{ project.plan_online_date|date:"Y-m-d" }}</td>
+                <td>
+                  <!-- 你原来写的是 project_list，这里保持不改动；若是详情页建议换成 project_detail -->
+{#                  <a href="{% url 'projects:project_edit' project.pk %}" class="btn btn-info btn-sm">查看</a>#}
+               <a href="{% url 'projects:project_detail' project.id %}?return={{ request.get_full_path|urlencode }}">
+  查看详情
+  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>您还没有创建任何项目。</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- 我的镜像入库 -->
+  <div class="card mt-4">
+    <div class="card-header">
+      <h5>我的镜像入库</h5>
+    </div>
+    <div class="card-body">
+      {% if image_repositories %}
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>镜像名称</th>
+              <th>版本</th>
+              <th>上传时间</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for repo in image_repositories %}
+              <tr>
+                <td>{{ repo.name }}</td>
+                <td>{{ repo.version }}</td>
+                <td>{{ repo.created_at|date:"Y-m-d H:i" }}</td>
+                <td>
+                  <!-- 你原来写的是 images:base_edit，这里保持不改；若是业务镜像详情可换成 images:business_detail -->
+                  <a href="{% url 'images:base_edit' repo.pk %}" class="btn btn-info btn-sm">查看</a>
+
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>您还没有上传任何镜像。</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- 系统基础镜像 -->
+  <div class="card mt-4">
+    <div class="card-header">
+      <h5>系统基础镜像</h5>
+    </div>
+    <div class="card-body">
+      {% if base_images %}
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>镜像名称</th>
+              <th>版本</th>
+              <th>描述</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for base_image in base_images %}
+              <tr>
+                <td>{{ base_image.name }}</td>
+                <td>{{ base_image.version }}</td>
+                <td>{{ base_image.description }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>没有基础镜像。</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- 创建项目 Modal -->
+<div class="modal fade" id="createProjectModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <form method="post" action="{% url 'projects:project_create' %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title">创建项目</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">项目名称</label>
+              <input name="name" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">项目编码</label>
+              <input name="code" class="form-control" required>
+            </div>
+
+            <!-- 部门建议后端默认用当前用户部门；若需选择可在上下文里传 departments 后改为下拉 -->
+            <div class="col-md-6">
+              <label class="form-label">最终用户</label>
+              <input name="end_user" class="form-control" placeholder="如：内部平台部/终端用户">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">基础镜像</label>
+              <select name="base_image" class="form-select" required>
+                <option value="">请选择</option>
+                {% for bi in base_images %}
+                  <option value="{{ bi.id }}">{{ bi.name }}:{{ bi.version }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">预计上线时间</label>
+              <input type="date" name="plan_online_date" class="form-control">
+            </div>
+            <div class="col-12">
+              <label class="form-label">项目描述</label>
+              <textarea name="description" class="form-control" rows="3" placeholder="用途、范围、依赖等"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">取消</button>
+          <button class="btn btn-primary" type="submit">提交创建</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- 上传业务镜像 Modal -->
+<div class="modal fade" id="uploadBizImageModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <form method="post" action="{% url 'images:biz_create' %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title">上传业务镜像</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">所属项目</label>
+              <select name="project" class="form-select" required>
+                <option value="">请选择</option>
+                {% for p in projects %}
+                  <option value="{{ p.id }}">{{ p.name }} ({{ p.code }})</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">镜像名称</label>
+              <input name="name" class="form-control" placeholder="仓库/镜像名" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">版本</label>
+              <input name="version" class="form-control" placeholder="例如 1.0.0" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">大小（MB）</label>
+              <input name="size" type="number" step="0.01" min="0" class="form-control" placeholder="可不填">
+            </div>
+
+            <!-- 如果你的 BusinessImage 需要绑定某个底层镜像实体，可取消注释并在视图里处理 -->
+            {#
+            <div class="col-md-6">
+              <label class="form-label">绑定基础镜像（可选）</label>
+              <select name="image" class="form-select">
+                <option value="">不绑定</option>
+                {% for bi in base_images %}
+                  <option value="{{ bi.id }}">{{ bi.name }}:{{ bi.version }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            #}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">取消</button>
+          <button class="btn btn-success" type="submit">确认上传</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

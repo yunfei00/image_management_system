@@ -2,7 +2,6 @@ from django.db import models
 
 # Create your models here.
 from django.conf import settings
-from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
@@ -32,13 +31,23 @@ class Project(models.Model):
     description = models.TextField(blank=True, verbose_name="项目描述")
     plan_online_date = models.DateField(null=True, blank=True, verbose_name="预计上线时间")
 
-    # ★ 改为外键：基础镜像（禁止被误删）
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name="创建人",
+        on_delete=models.PROTECT,
+        related_name="created_projects",
+        editable=False,                 # ★ 前台/接口不可编辑，必须后端写入当前用户
+        db_index=True,                  # ★ “我的项目”查询性能更好
+        blank=True,
+        null=True,
+    )
+
+    # 基础镜像（禁止被误删）
     base_image = models.ForeignKey(
         "images.BaseImage", on_delete=models.PROTECT,
         related_name="projects", verbose_name="基础镜像"
     )
 
-    # 其他组件：给默认值，避免 Null
     components = models.JSONField(default=list, blank=True, verbose_name="其他组件")
 
     status = models.PositiveSmallIntegerField(
@@ -48,10 +57,14 @@ class Project(models.Model):
         choices=ApprovalStatus.choices, default=ApprovalStatus.PENDING, verbose_name="审批状态"
     )
 
-    # 可选关联：审批流程配置模块存在时启用
-    # approval_flow = models.ForeignKey(
-    #     "workflow.ApprovalFlow", null=True, blank=True, on_delete=models.SET_NULL, verbose_name="审批流程"
-    # )
+    # ★ 审批对接的补充字段（便于统计与审计）
+    approval_required = models.BooleanField("是否需要审批", default=True, db_index=True)  # 某些小项目可跳过
+    approved_at = models.DateTimeField("审批通过时间", null=True, blank=True)             # 审批通过时写入
+    rejected_at = models.DateTimeField("审批拒绝时间", null=True, blank=True)            # 审批拒绝时写入
+
+    # ★ 归档（软删除/隐藏）能力，避免物理删除
+    is_archived = models.BooleanField("是否归档", default=False, db_index=True)
+    archived_at = models.DateTimeField("归档时间", null=True, blank=True)
 
     submit_at = models.DateTimeField(auto_now_add=True, verbose_name="提交时间")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="更新时间")
@@ -65,9 +78,14 @@ class Project(models.Model):
             models.Index(fields=["approval_status"]),
             models.Index(fields=["department", "status"]),
             models.Index(fields=["base_image", "status"]),
+            models.Index(fields=["created_by", "status", "approval_status"]),  # ★ “我的项目”+状态页常用组合
+            models.Index(fields=["submit_at"]),                                 # ★ 与默认排序配合
+            models.Index(fields=["is_archived"]),                               # ★ 归档筛选
         ]
         constraints = [
             models.UniqueConstraint(fields=["name", "department"], name="uniq_project_name_in_department"),
+            # ★ 若使用 PostgreSQL，建议改为大小写不敏感唯一（替换上面的 code=unique=True）：
+            # models.UniqueConstraint(Lower("code"), name="uniq_project_code_ci"),
         ]
 
     def __str__(self):
@@ -75,11 +93,12 @@ class Project(models.Model):
 
     @property
     def base_image_version(self) -> str:
-        """
-        便于兼容旧模板：直接取基础镜像的版本字段。
-        如果你的 BaseImage 不是 'version' 字段，请改这里。
-        """
         return getattr(self.base_image, "version", "")
+
+    # ★ 可选：便捷判断
+    @property
+    def need_approval(self) -> bool:
+        return self.approval_required and self.approval_status == self.ApprovalStatus.PENDING
 
 
 class ProjectMember(models.Model):
@@ -105,6 +124,7 @@ class ProjectMember(models.Model):
 
     def __str__(self):
         return f"{self.project.code}:{self.user}({self.role})"
+
 
 
 # class ProjectApproval(models.Model):

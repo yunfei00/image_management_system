@@ -141,6 +141,7 @@ class BusinessImageDeleteView(DeleteView):
 
 def upload_business_image(request):
     if request.method == 'POST' and request.FILES['image']:
+        print(f'upload_business_image receve post data is {request.POST}')
         # 获取表单数据
         image_file = request.FILES['image']
         image_name = request.POST['name']
@@ -158,18 +159,19 @@ def upload_business_image(request):
         # 获取文件大小（以MB为单位）
         file_size = image_file.size / (1024 * 1024)  # 转换为MB
 
-        # 保存镜像数据
-        BusinessImage.objects.create(
+        # 保存镜像数据到数据库
+        business_image = BusinessImage.objects.create(
             name=image_name,
             version=image_version,
             project=project,
-            image_id=filename,  # 也可以直接使用文件名作为镜像ID
+            image_id=filename,  # 也可以使用文件名作为镜像ID
             size=file_size,
             image_file=filename  # 保存上传的镜像文件路径
         )
 
-        return redirect('projects:user_dashboard')  # 上传成功后重定向到用户主页
+        # 上传后重定向到用户主页，显示镜像
+        return redirect('projects:user_dashboard')  # 假设用户主页的URL名是'user_dashboard'
 
-    # 获取项目列表用于显示在表单中
+    # 获取所有项目列表，用于显示在表单中
     projects = Project.objects.all()
-    return render(request, 'upload_business_image.html', {'projects': projects})
+    return render(request, 'projects/user_dashboard.html', {'projects': projects})

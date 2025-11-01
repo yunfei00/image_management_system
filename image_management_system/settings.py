@@ -174,3 +174,9 @@ LOGOUT_URL = "/logout"
 # 媒体文件配置
 MEDIA_URL = '/media/'  # 用于访问上传文件的URL
 MEDIA_ROOT = BASE_DIR / 'media'  # 存储上传文件的本地路径
+
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Redis 的默认配置
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load filesize %}
 {% block content %}
 <form class="row g-2 mb-3" method="get">
   <div class="col-auto">
@@ -31,7 +32,7 @@
   </div>
   <div class="col-auto ms-auto text-end">
     <button type="button" class="btn btn-outline-primary"
-            onclick="openModal('{% url 'images:biz_create' %}', '登记业务镜像')">登记</button>
+            onclick="openModal('{% url 'images:biz_create' %}', '登记业务镜像')">新增</button>
   </div>
 </form>
 
@@ -60,13 +61,15 @@
         <td>{{ obj.project }}</td>
         <td>{{ obj.get_detect_status_display|default:obj.detect_status }}</td>
         <td>{{ obj.get_approve_status_display|default:obj.approve_status }}</td>
-        <td>{{ obj.size }}</td>
+        <td>{{ obj.size|filesize_fmt }}</td>
         <td>{{ obj.created_at|date:"Y-m-d H:i" }}</td>
         <td>
           <button class="btn btn-sm btn-warning"
                   onclick="openModal('{% url 'images:biz_edit' obj.id %}', '编辑业务镜像')">修改</button>
           <button class="btn btn-sm btn-danger"
                   onclick="postDeleteBiz('{% url 'images:biz_delete' obj.id %}')">删除</button>
+          <a href="{% url 'images:business_details' obj.id %}" class="btn btn-sm btn-info">查看详情</a> <!-- 查看详情按钮 -->
+          <a href="{% url 'images:business_download' obj.id %}" class="btn btn-sm btn-primary">下载</a> <!-- 下载按钮 -->
         </td>
       </tr>
     {% empty %}

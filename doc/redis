@@ -1,0 +1,31 @@
+docker run -d --name redis `
+  -p 6379:6379 `
+  -v C:\redis\data:/data `
+  redis:7 `
+  --appendonly yes
+
+
+PS D:\> docker run -d --name redis `
+>>   -p 6379:6379 `
+>>   -v C:\redis\data:/data `
+>>   redis:7 `
+>>   --appendonly yes
+Unable to find image 'redis:7' locally
+7: Pulling from library/redis
+477049afe86c: Pull complete
+4f4fb700ef54: Pull complete
+e08a885b7860: Pull complete
+4c23e505b671: Pull complete
+abe1fea37542: Pull complete
+87862acd3083: Pull complete
+7985e01408e3: Pull complete
+b1f4ace27ff2: Pull complete
+Digest: sha256:a9cc41d6d01da2aa26c219e4f99ecbeead955a7b656c1c499cce8922311b2514
+Status: Downloaded newer image for redis:7
+39138c28e42ae9c9ddffb48bae10c5994c01a72b3466e70e53af5bf439617fff
+PS D:\> docker run -d --name redis `
+>>   -p 6379:6379 `
+>>   -v C:\redis\data:/data `
+>>   redis:7 `
+>>   --appendonly yes
+docker: Error response from daemon: Conflict. The container name "/redis" is already in use by container "39138c28e42ae9c9ddffb48bae10c5994c01a72b3466e70e53af5bf439617fff". You have to remove (or rename) that container to be able to reuse that name.

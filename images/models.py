@@ -55,6 +55,10 @@ class BaseImage(models.Model):
             s /= 1024
         return f"{s:.1f}EB"
 
+    def get_image_file_path(self):
+        # Return the absolute path to the image file
+        return self.image_file.path  # This assumes you have an image_file field
+
 
 class BusinessImage(models.Model):
     name = models.CharField(max_length=255, verbose_name="镜像名称", db_index=True)
@@ -78,3 +82,8 @@ class BusinessImage(models.Model):
 
     def __str__(self):
         return f"{self.name}:{self.version}"
+
+    def get_image_file_path(self):
+        # Return the absolute path to the image file
+        return self.image_file.path  # This assumes you have an image_file field
+

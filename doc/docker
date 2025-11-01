@@ -1,0 +1,66 @@
+要在Windows上安装Docker Desktop，请按照以下步骤操作：
+
+1. 系统要求
+
+Windows 10 64-bit: Pro, Enterprise 或 Education 版本，支持 Hyper-V 和 Containers 功能。
+
+Windows 11: 任何版本都可以支持。
+
+2. 安装 Docker Desktop
+
+下载 Docker Desktop 安装包:
+访问 Docker 官方网站：Docker Desktop 下载最新版本的安装包。
+
+启动安装程序:
+双击下载的 .exe 文件，启动安装程序。
+
+启用 Hyper-V 和 Containers 功能:
+安装过程中，Docker 会提示启用 Hyper-V 和 Containers 功能（如果尚未启用）。这些功能是 Docker 在 Windows 上运行所需的。
+
+打开 控制面板，选择 程序 -> 启用或关闭Windows功能。
+
+确保 Hyper-V 和 Containers 选项已勾选。
+
+如果没有这两个选项，您需要升级到 Windows 10 Pro 或更高版本。
+
+完成安装:
+按照提示完成 Docker 的安装，安装完成后，Docker Desktop 会自动启动。
+
+3. 配置 Docker Desktop
+
+启动 Docker Desktop 后，您可以在其设置中进行一些配置，比如调整 Docker 的资源使用（如 CPU 和内存）。
+
+Docker Desktop 会在后台启动 Docker 引擎，并在系统托盘中显示 Docker 图标，表示其正常运行。
+
+4. 测试安装
+
+打开 命令提示符 或 PowerShell，输入以下命令检查 Docker 是否正确安装：
+
+docker --version
+
+
+如果正确安装，您将看到 Docker 的版本信息。
+
+5. 配置 WSL 2
+
+Docker Desktop 依赖于 WSL 2（Windows Subsystem for Linux），如果您的系统没有启用 WSL 2，Docker 会自动帮助您安装并配置它。如果没有自动配置，可以手动安装 WSL 2：
+
+打开 PowerShell，并运行以下命令：
+
+wsl --set-default-version 2
+
+
+安装一个 Linux 发行版（如 Ubuntu）从 Microsoft Store。
+
+完成后，重新启动 Docker Desktop。
+
+6. 验证 Docker Desktop 是否运行
+
+您可以通过以下命令验证 Docker 是否工作正常：
+
+docker run hello-world
+
+
+这会下载一个测试镜像并运行。如果看到欢迎信息，说明 Docker 已成功安装。
+
+以上步骤应该能帮助你在 Windows 上安装和配置 Docker Desktop。如果遇到问题，请检查系统要求和设置，确保启用了必要的功能。

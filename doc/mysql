@@ -1,0 +1,135 @@
+在阿里云的Ubuntu系统上搭建MySQL数据库，可以按照以下步骤进行：
+
+1. 更新系统
+
+首先，确保你的Ubuntu系统是最新的。打开终端并执行以下命令：
+
+sudo apt update
+sudo apt upgrade
+
+2. 安装MySQL
+
+在Ubuntu上，你可以通过APT包管理器安装MySQL。执行以下命令安装MySQL服务器：
+
+sudo apt install mysql-server
+
+3. 启动并验证MySQL服务
+
+安装完成后，MySQL服务会自动启动。你可以使用以下命令验证MySQL服务是否正在运行：
+
+sudo systemctl status mysql
+
+
+如果服务未启动，可以使用以下命令启动它：
+
+sudo systemctl start mysql
+
+4. 安全配置MySQL
+
+MySQL提供了一个安全配置脚本，可以帮助你设置root密码、删除匿名用户、禁用远程root登录等。运行以下命令来执行这个脚本：
+
+sudo mysql_secure_installation
+
+
+按照提示进行操作，设置MySQL root用户密码，选择“Y”来删除匿名用户，禁止root远程登录，以及清除测试数据库。
+
+5. 登录MySQL
+
+使用以下命令登录到MySQL：
+
+sudo mysql -u root -p
+
+
+输入你在上一步设置的密码。
+
+6. 创建数据库和用户
+
+进入MySQL后，你可以创建一个新的数据库以及与之关联的用户。例如，创建名为mydatabase的数据库并创建一个用户myuser，为其设置密码并授权：
+
+CREATE DATABASE mydatabase;
+CREATE USER 'myuser'@'localhost' IDENTIFIED BY 'mypassword';
+GRANT ALL PRIVILEGES ON mydatabase.* TO 'myuser'@'localhost';
+FLUSH PRIVILEGES;
+
+7. 配置远程访问（如果需要）
+
+如果你需要远程访问MySQL数据库，你需要修改MySQL配置文件，允许外部主机连接。编辑/etc/mysql/mysql.conf.d/mysqld.cnf文件：
+
+sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
+
+
+找到并修改bind-address为0.0.0.0，使MySQL可以接受所有IP的连接：
+
+bind-address = 0.0.0.0
+
+
+保存并关闭文件，然后重新启动MySQL服务：
+
+sudo systemctl restart mysql
+
+8. 防火墙配置（如果需要）
+
+如果你启用了防火墙，需要开放MySQL的默认端口（3306）：
+
+sudo ufw allow 3306
+
+
+如果使用的是其他防火墙管理工具，请根据工具的文档进行相应配置。
+
+9. 测试连接
+
+现在，你可以使用MySQL客户端或其他工具（例如Navicat、DBeaver等）从远程机器连接到数据库。
+
+这样，你就成功在阿里云Ubuntu系统上搭建了MySQL数据库，并进行了基本配置。如果你需要进一步优化配置或设置其他功能，可以根据项目需求进行调整。
+
+
+密码82865348
+CREATE DATABASE image_managerment;
+从你提供的输出信息来看，mysql_secure_installation 工具已经成功运行并配置了MySQL的安全设置。以下是执行的操作及其结果：
+
+设置密码验证组件（VALIDATE PASSWORD）：
+你选择了启用密码验证组件，并设置了密码强度策略为 LOW（最小长度8个字符）。
+
+root用户密码设置：
+由于你的系统使用了 auth_socket 插件进行身份验证（默认配置），这意味着 root 用户使用系统的操作系统认证，而不是使用密码登录。因此，mysql_secure_installation 没有让你为 root 用户设置密码。如果你想改为使用密码进行登录，可以使用 ALTER USER 命令修改 root 用户的认证方式。
+
+删除匿名用户：
+你选择了删除匿名用户，这样只有拥有有效账户的用户才能登录 MySQL，增加了安全性。
+
+禁止远程登录：
+你选择了禁用 root 用户的远程登录，这意味着 root 用户只能在本地进行登录，防止了远程密码猜测攻击。
+
+删除测试数据库：
+测试数据库已成功删除，这也提高了系统的安全性，因为测试数据库默认对所有用户开放。
+
+重新加载权限表：
+所有更改已成功生效，权限表已经重新加载。
+
+后续步骤
+
+修改 root 用户认证方式（如果需要）：
+如果你希望使用密码认证而非 auth_socket，可以执行以下命令修改 root 用户的认证方式：
+
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'your_password';
+FLUSH PRIVILEGES;
+
+
+记得将 'your_password' 替换为你希望设置的 root 密码。
+
+验证 root 密码：
+你可以尝试用设置的密码登录 MySQL：
+
+mysql -u root -p
+
+
+然后输入你设置的密码进行登录。
+
+其他用户配置：
+如果需要为其他用户设置密码或者创建新用户，可以使用类似以下的 SQL 命令：
+
+CREATE USER 'username'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON database.* TO 'username'@'localhost';
+FLUSH PRIVILEGES;
+
+
+这表示你已经完成了 MySQL 的基本安全配置，确保了系统的安全性。如果有任何其他问题，欢迎随时询问！

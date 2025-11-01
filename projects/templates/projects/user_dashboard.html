@@ -84,7 +84,8 @@
                 <td>{{ repo.version }}</td>
                 <td>{{ repo.created_at|date:"Y-m-d H:i" }}</td>
                 <td>
-                  <a href="{% url 'images:base_edit' repo.pk %}" class="btn btn-info btn-sm">查看</a>
+                  <a href="{% url 'images:business_details' repo.pk %}" class="btn btn-info btn-sm">查看详情</a>
+                    <a href="{% url 'images:business_download' repo.pk %}" class="btn btn-info btn-sm">下载</a>
                 </td>
               </tr>
             {% endfor %}
@@ -119,7 +120,8 @@
                 <td>{{ base_image.version }}</td>
                 <td>{{ base_image.description }}</td>
                 <td>
-                  <a href="{% url 'images:base_edit' base_image.pk %}" class="btn btn-info btn-sm">查看</a>
+                                 <a href="{% url 'images:base_details' base_image.pk %}" class="btn btn-info btn-sm">查看详情</a>
+                    <a href="{% url 'images:base_download' base_image.pk %}" class="btn btn-info btn-sm">下载</a>
                 </td>
               </tr>
             {% endfor %}

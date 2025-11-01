@@ -1,183 +1,107 @@
 # images/forms.py
+import hashlib
+
 from django import forms
 from .models import BaseImage, BusinessImage
 
 class BaseImageForm(forms.ModelForm):
     class Meta:
         model = BaseImage
-        fields = ['name', 'version', 'image_id', 'size', 'status', 'category', 'description']
+        fields = ['name', 'version', 'image_file', 'image_id', 'size', 'status', 'category', 'description']
+        exclude = ['size']  # 或者 fields = [... 不含 size ...]
 
-#
+
 # class BusinessImageForm(forms.ModelForm):
 #     class Meta:
 #         model = BusinessImage
 #         # 如果你的模型字段还是 project_id，就把 'project' 改为 'project_id'
 #         fields = ['name', 'version', 'image_file', 'image_id', 'project', 'detect_status', 'approve_status', 'size']
-#
-#
-# class BusinessImageForm(forms.ModelForm):
-#     # 新增：文件上传字段（放在前面，渲染时更直观）
-#     image_file = forms.FileField(
-#         required=True,
-#         label="镜像文件",
-#         widget=forms.ClearableFileInput(attrs={
-#             "class": "form-control",
-#             "accept": ".tar,.tar.gz,.tgz,.img,.zip,.gz",  # 可按需调整
-#             "style": "border: 1px solid #ddd; padding: 5px;"
-#         })
-#     )
-#
-#     class Meta:
-#         model = BusinessImage
-#         # 保留你原来的字段 + 新增 image_file
-#         fields = ['name', 'version', 'image_file', 'image_id', 'project', 'detect_status', 'approve_status', 'size']
-#
-#         widgets = {
-#             'name': forms.TextInput(attrs={
-#                 'class': 'form-control',
-#                 'placeholder': '请输入镜像名称',
-#                 'style': 'border: 1px solid #ddd; padding: 5px;'
-#             }),
-#             'version': forms.TextInput(attrs={
-#                 'class': 'form-control',
-#                 'placeholder': '请输入镜像版本',
-#                 'style': 'border: 1px solid #ddd; padding: 5px;'
-#             }),
-#             'image_id': forms.TextInput(attrs={
-#                 'class': 'form-control',
-#                 'placeholder': '镜像ID（可自动生成）',
-#                 'style': 'border: 1px solid #ddd; padding: 5px;',
-#                 'readonly': 'readonly'  # 假设该字段自动生成，不需要用户输入
-#             }),
-#             'project': forms.Select(attrs={
-#                 'class': 'form-select',
-#                 'style': 'border: 1px solid #ddd; padding: 5px;'
-#             }),
-#             'detect_status': forms.TextInput(attrs={
-#                 'class': 'form-control',
-#                 'style': 'border: 1px solid #ddd; padding: 5px;',
-#                 'readonly': 'readonly'  # 可设置为只读，如果你希望用户不能修改它
-#             }),
-#             'approve_status': forms.TextInput(attrs={
-#                 'class': 'form-control',
-#                 'style': 'border: 1px solid #ddd; padding: 5px;',
-#                 'readonly': 'readonly'  # 可设置为只读，如果你希望用户不能修改它
-#             }),
-#             'size': forms.NumberInput(attrs={
-#                 'class': 'form-control',
-#                 'placeholder': '自动生成，用户不可修改',
-#                 'readonly': 'readonly',
-#                 'style': 'border: 1px solid #ddd; padding: 5px;'
-#             })
-#         }
-#
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         # 这三个字段通常不让用户手填（避免必填报错）
-#         self.fields['image_id'].required = False
-#         self.fields['detect_status'].required = False
-#         self.fields['approve_status'].required = False
-#         self.fields['size'].required = False
-#         # 给默认值，避免校验不通过
-#         self.fields['detect_status'].initial = self.fields['detect_status'].initial or '待检测'
-#         self.fields['approve_status'].initial = self.fields['approve_status'].initial or '无需'
-#
-#     def clean(self):
-#         """如果用户没填 size / image_id，这里用文件自动补上"""
-#         cleaned = super().clean()
-#         f = cleaned.get('image_file')
-#         if f:
-#             # 用文件大小（字节）回填数据库的 size（你也可以换成 MB，注意字段类型）
-#             cleaned['size'] = f.size
-#             # 如果没填写 image_id，就自动给一个（也可以在视图里做）
-#             if not cleaned.get('image_id'):
-#                 import hashlib
-#                 hasher = hashlib.sha256()
-#                 for chunk in f.chunks():
-#                     hasher.update(chunk)
-#                 cleaned['image_id'] = hasher.hexdigest()[:32]
-#         return cleaned
 
 
 class BusinessImageForm(forms.ModelForm):
-    # 新增：文件上传字段（放在前面，渲染时更直观）
+    # 文件上传字段（名字必须叫 image_file，和模型字段一致）
     image_file = forms.FileField(
-        required=True,
         label="镜像文件",
+        required=True,  # 需要用户必须上传
         widget=forms.ClearableFileInput(attrs={
             "class": "form-control",
-            "accept": ".tar,.tar.gz,.tgz,.img,.zip,.gz",  # 可按需调整
-            "style": "border: 1px solid #ddd; padding: 5px;"
+            "accept": ".tar,.tar.gz,.tgz,.img,.zip,.gz"  # 按需调整
         })
     )
 
     class Meta:
         model = BusinessImage
-        # 保留你原来的字段 + 新增 image_file
-        fields = ['name', 'version', 'image_file', 'image_id', 'project', 'detect_status', 'approve_status', 'size']
-
+        # 建议把“用户可编辑的字段”排前面，系统生成的放后面
+        fields = [
+            "project", "name", "version",
+            "image_file",              # ← 必须和模板中的 name 匹配
+            "image_id", "detect_status", "approve_status", "size"
+        ]
+        labels = {
+            "project": "所属项目",
+            "name": "镜像名称",
+            "version": "版本",
+            "image_id": "镜像ID",
+            "detect_status": "检测状态",
+            "approve_status": "审批状态",
+            "size": "大小（字节）",
+        }
         widgets = {
-            'name': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': '请输入镜像名称',
-                'style': 'border: 1px solid #ddd; padding: 10px; font-size: 14px;'
-            }),
-            'version': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': '请输入镜像版本',
-                'style': 'border: 1px solid #ddd; padding: 10px; font-size: 14px;'
-            }),
-            'image_id': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': '镜像ID（可自动生成）',
-                'style': 'border: 1px solid #ddd; padding: 10px; font-size: 14px;',
-                'readonly': 'readonly'  # 假设该字段自动生成，不需要用户输入
-            }),
-            'project': forms.Select(attrs={
-                'class': 'form-select',
-                'style': 'border: 1px solid #ddd; padding: 10px; font-size: 14px;'
-            }),
-            'detect_status': forms.TextInput(attrs={
-                'class': 'form-control',
-                'style': 'border: 1px solid #ddd; padding: 10px; font-size: 14px;',
-                'readonly': 'readonly'  # 可设置为只读，如果你希望用户不能修改它
-            }),
-            'approve_status': forms.TextInput(attrs={
-                'class': 'form-control',
-                'style': 'border: 1px solid #ddd; padding: 10px; font-size: 14px;',
-                'readonly': 'readonly'  # 可设置为只读，如果你希望用户不能修改它
-            }),
-            'size': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'placeholder': '自动生成，用户不可修改',
-                'readonly': 'readonly',
-                'style': 'border: 1px solid #ddd; padding: 10px; font-size: 14px;'
-            })
+            "project": forms.Select(attrs={"class": "form-select"}),
+            "name": forms.TextInput(attrs={"class": "form-control", "placeholder": "仓库/镜像名"}),
+            "version": forms.TextInput(attrs={"class": "form-control", "placeholder": "例如 1.0.0"}),
+            # 下三项通常由后端生成/回填，表单里只读展示
+            "image_id": forms.TextInput(attrs={"class": "form-control", "placeholder": "自动生成", "readonly": True}),
+            "detect_status": forms.TextInput(attrs={"class": "form-control", "placeholder": "自动填充：待检测", "readonly": True}),
+            "approve_status": forms.TextInput(attrs={"class": "form-control", "placeholder": "自动填充：无需", "readonly": True}),
+            "size": forms.NumberInput(attrs={"class": "form-control", "placeholder": "自动回填（字节）", "readonly": True}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # 这三个字段通常不让用户手填（避免必填报错）
-        self.fields['image_id'].required = False
-        self.fields['detect_status'].required = False
-        self.fields['approve_status'].required = False
-        self.fields['size'].required = False
-        # 给默认值，避免校验不通过
-        self.fields['detect_status'].initial = self.fields['detect_status'].initial or '待检测'
-        self.fields['approve_status'].initial = self.fields['approve_status'].initial or '无需'
+        # 这三个给默认值且不强制
+        self.fields["image_id"].required = False
+        self.fields["detect_status"].required = False
+        self.fields["approve_status"].required = False
+        self.fields["size"].required = False
 
+        if not self.initial.get("detect_status"):
+            self.initial["detect_status"] = "待检测"
+        if not self.initial.get("approve_status"):
+            self.initial["approve_status"] = "无需"
+
+    # 单字段校验：格式/大小限制
+    def clean_image_file(self):
+        f = self.cleaned_data.get("image_file")
+        if not f:
+            return f
+        # 大小限制（例：5GB）
+        if f.size > 5 * 1024 * 1024 * 1024:
+            raise forms.ValidationError("文件过大（>5GB）。")
+        # 简单后缀校验
+        allowed = (".tar", ".tar.gz", ".tgz", ".img", ".zip", ".gz")
+        name = f.name.lower()
+        if not any(name.endswith(ext) for ext in allowed):
+            raise forms.ValidationError("仅支持文件类型：" + ", ".join(allowed))
+        return f
+
+    # 表单总校验：自动生成 image_id / 回填 size，并把文件指针回卷
     def clean(self):
-        """如果用户没填 size / image_id，这里用文件自动补上"""
         cleaned = super().clean()
-        f = cleaned.get('image_file')
+        f = cleaned.get("image_file")
         if f:
-            # 用文件大小（字节）回填数据库的 size（你也可以换成 MB，注意字段类型）
-            cleaned['size'] = f.size
-            # 如果没填写 image_id，就自动给一个（也可以在视图里做）
-            if not cleaned.get('image_id'):
-                import hashlib
-                hasher = hashlib.sha256()
-                for chunk in f.chunks():
-                    hasher.update(chunk)
-                cleaned['image_id'] = hasher.hexdigest()[:32]
+            # 读取计算 hash 会把文件指针推到末尾，必须回卷！
+            hasher = hashlib.sha256()
+            for chunk in f.chunks():
+                hasher.update(chunk)
+            if not cleaned.get("image_id"):
+                cleaned["image_id"] = hasher.hexdigest()[:32]
+            cleaned["size"] = f.size
+            try:
+                f.seek(0)  # ← 关键：回到文件开头，避免保存成空文件
+            except Exception:
+                pass
+        # 默认状态兜底
+        cleaned["detect_status"] = cleaned.get("detect_status") or "待检测"
+        cleaned["approve_status"] = cleaned.get("approve_status") or "无需"
         return cleaned

@@ -6,10 +6,13 @@ from .views import (departments, roles, post, users, tools, login_log, oper_log,
 from .views.home import home
 from .views.menu import MenuUpdateView, MenuDeleteView
 
+from projects.views import UserDashboardView
+
 app_name = 'system'
 
 urlpatterns = [
-    path('', home, name='home'),
+    # path('', home, name='home'),
+    path('', UserDashboardView.as_view(), name='home'),
 
     path('register/', register.register_view, name='register'),
     path('login/', auth_views.login_view, name='login'),

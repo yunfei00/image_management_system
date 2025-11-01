@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load filesize %}
+
 {% block content %}
 <form class="row g-2 mb-3" method="get">
   <div class="col-auto">
@@ -10,16 +12,14 @@
   <div class="col-auto">
     <input class="form-control" name="category" placeholder="分类" value="{{ request.GET.category }}">
   </div>
-  {# 把这段换掉 —— 用 select 而不是 datalist #}
-<div class="col-auto">
-<select class="form-select" name="status">
-  <option value="">状态</option>
-  <option value="0" {% if request.GET.status == '0' %}selected{% endif %}>禁用</option>
-  <option value="1" {% if request.GET.status == '1' %}selected{% endif %}>启用</option>
-  <option value="2" {% if request.GET.status == '2' %}selected{% endif %}>草稿</option>
-</select>
-
-</div>
+  <div class="col-auto">
+    <select class="form-select" name="status">
+      <option value="">状态</option>
+      <option value="0" {% if request.GET.status == '0' %}selected{% endif %}>禁用</option>
+      <option value="1" {% if request.GET.status == '1' %}selected{% endif %}>启用</option>
+      <option value="2" {% if request.GET.status == '2' %}selected{% endif %}>草稿</option>
+    </select>
+  </div>
   <div class="col-auto">
     <button class="btn btn-primary">搜索</button>
     <a class="btn btn-success"
@@ -59,13 +59,15 @@
         <td class="text-truncate" style="max-width:320px;" title="{{ obj.image_id }}">{{ obj.image_id }}</td>
         <td>{{ obj.category }}</td>
         <td>{{ obj.get_status_display|default:obj.status }}</td>
-        <td>{{ obj.size }}</td>
+        <td>{{ obj.size|filesize_fmt }}</td>
         <td>{{ obj.created_at|date:"Y-m-d H:i" }}</td>
         <td>
           <button class="btn btn-sm btn-warning"
                   onclick="openModal('{% url 'images:base_edit' obj.id %}', '编辑基础镜像')">修改</button>
           <button class="btn btn-sm btn-danger"
                   onclick="postDelete('{% url 'images:base_delete' obj.id %}')">删除</button>
+          <a href="{% url 'images:base_details' obj.id %}" class="btn btn-sm btn-info">查看详情</a> <!-- 查看详情按钮 -->
+          <a href="{% url 'images:base_download' obj.id %}" class="btn btn-sm btn-primary">下载</a> <!-- 下载按钮 -->
         </td>
       </tr>
     {% empty %}

@@ -1,0 +1,5 @@
+windows上power shell执行：
+winget install sigstore.cosign
+
+C:\Users\yunfei\AppData\Local\Microsoft\WinGet\Packages\Sigstore.Cosign_Microsoft.Winget.Source_8wekyb3d8bbwe
+cosign-windows-amd64.exe

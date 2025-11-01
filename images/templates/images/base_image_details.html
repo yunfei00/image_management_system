@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load filesize %}
+
+{% block content %}
+<h3>镜像详情</h3>
+<p><strong>镜像名称:</strong> {{ image.name }}</p>
+<p><strong>版本:</strong> {{ image.version }}</p>
+<p><strong>镜像ID:</strong> {{ image.image_id }}</p>
+<p><strong>分类:</strong> {{ image.category }}</p>
+<p><strong>创建时间:</strong> {{ image.created_at }}</p>
+<p><strong>大小:</strong>{{ image.size|filesize_fmt }}</p>
+<p><strong>描述:</strong> {{ image.description }}</p>
+{% endblock %}
